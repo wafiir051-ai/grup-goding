@@ -8,36 +8,36 @@ export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
   const openModal = (msg) => { setPendingMessage(msg); setIsModalOpen(true); };
-  const handleSelectNumber = (phoneNumber, message) => {
-    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
-    setIsModalOpen(false);
+  const handleSelectNumber = (phoneNumber, message) => { 
+    window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank'); 
+    setIsModalOpen(false); 
   };
 
   return (
-    <footer className="bg-black text-white pt-16 pb-8 relative z-10">
+    <footer className="bg-black text-white pt-12 md:pt-20 pb-8 md:pb-10 relative z-10 px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           <RevealOnScroll componentName="footer">
-            <div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-700 to-cyan-500 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">G</span>
+            <div className="text-center md:text-left">
+              <div className="flex items-center gap-2 md:gap-3 justify-center md:justify-start">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-700 to-cyan-500 rounded-xl flex items-center justify-center">
+                  <span className="text-white font-bold text-xl md:text-2xl">G</span>
                 </div>
-                <span className="text-2xl font-bold">goding</span>
+                <span className="text-2xl md:text-3xl font-bold">goding</span>
               </div>
-              <p className="mt-4 text-zinc-400 text-sm sm:text-base max-w-md">
+              <p className="mt-3 md:mt-4 text-zinc-400 text-base md:text-lg max-w-md mx-auto md:mx-0">
                 Menciptakan pengalaman digital premium yang membantu bisnis Anda tumbuh.
               </p>
             </div>
           </RevealOnScroll>
-
+          
           <RevealOnScroll componentName="footer">
             <div className="text-center md:text-right">
-              <h3 className="text-xl sm:text-2xl font-semibold">Siap membuat website luar biasa?</h3>
-              <button
-                onClick={() => openModal('Halo, saya tertarik untuk konsultasi dengan Goding.')}
-                className="mt-4 px-6 py-2 sm:px-8 sm:py-3 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-xl text-sm sm:text-base font-semibold hover:scale-105 transition"
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">Siap membuat website luar biasa?</h3>
+              <button 
+                onClick={() => openModal('Halo, saya tertarik untuk konsultasi dengan Goding.')} 
+                className="mt-4 md:mt-6 px-6 md:px-10 py-3 md:py-4 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-xl text-base md:text-lg font-semibold hover:scale-105 transition-all duration-300"
               >
                 Hubungi Kami
               </button>
@@ -45,15 +45,14 @@ export default function Footer() {
           </RevealOnScroll>
         </div>
 
-        {/* MARQUEE - dipisahkan dengan border dan margin besar */}
-        <div className="mt-16 mb-10 py-5 border-t-2 border-b-2 border-white/20">
+        <div className="mt-10 md:mt-20 mb-6 md:mb-10 py-4 md:py-6 border-t-2 border-b-2 border-white/20">
           <MarqueeText />
         </div>
 
         <VisitorStats />
-
+        
         <RevealOnScroll componentName="footer">
-          <div className="text-center text-xs sm:text-sm text-zinc-500 pt-6">
+          <div className="text-center text-xs md:text-sm text-zinc-500 pt-4 md:pt-6">
             © 2026 Goding Grup. Semua hak dilindungi.
           </div>
         </RevealOnScroll>

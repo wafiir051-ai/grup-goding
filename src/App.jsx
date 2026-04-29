@@ -15,6 +15,7 @@ import TestimonialsPage from './TestimonialsPage';
 import AnimatedCursor from './components/AnimatedCursor';
 import ParticleBackground from './components/ParticleBackground';
 import WaveDivider from './components/WaveDivider';
+import WaveDividerDark from './components/WaveDividerDark';
 
 function App() {
   const [path, setPath] = useState(window.location.pathname);
@@ -65,19 +66,17 @@ function App() {
       <AnimatedCursor />
       <ParticleBackground />
       <div className="relative z-10 min-h-screen overflow-x-hidden">
+        <Navbar />
         <Hero />
-        <WaveDivider bgColor="#ffffff" />
+        <WaveDivider />
         <BentoServices />
-        <WaveDivider bgColor="#ffffff" />
         <ProcessSticky />
-        <WaveDivider bgColor="#ffffff" />
         <ClientsSection />
-        <WaveDivider bgColor="#0a0a0a" />
+        <WaveDividerDark />
         <Pricing />
-        <WaveDivider bgColor="#ffffff" />
-        <div className="bg-white">
-          <EnvelopeTestimonials />
-        </div>
+        <WaveDivider />
+        <EnvelopeTestimonials />
+        <WaveDividerDark />
         <Footer />
       </div>
     </AuthProvider>
