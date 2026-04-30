@@ -41,13 +41,16 @@ export default function Pricing() {
                 <p className="text-zinc-400 text-sm sm:text-base mt-2">{p.description}</p>
                 
                 {/* Fitur utama */}
-                <ul className="mt-4 space-y-1 md:space-y-2 flex-1">
-                  {p.features?.map((f, i) => (
-                    <li key={i} className="text-zinc-300 text-sm sm:text-base flex items-start gap-2">
-                      <span className="text-cyan-400">✓</span> {f}
-                    </li>
-                  ))}
-                </ul>
+                <div className="mt-4">
+                  <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2">Fitur Utama</p>
+                  <ul className="space-y-1 md:space-y-2 flex-1">
+                    {p.features?.map((f, i) => (
+                      <li key={i} className="text-zinc-300 text-sm sm:text-base flex items-start gap-2">
+                        <span className="text-cyan-400">✓</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
                 {/* Teknologi yang digunakan */}
                 {p.tech_stack && p.tech_stack.length > 0 && (
