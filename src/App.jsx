@@ -49,18 +49,30 @@ function App() {
     return () => document.removeEventListener('click', handleLinkClick);
   }, []);
 
-  const Layout = ({ children }) => (
-    <>
-      <Navbar />
-      {children}
-      <Footer />
-    </>
-  );
+  // Halaman yang TIDAK perlu Navbar & Footer dari komponen utama
+  if (path === '/portfolio') {
+    return (
+      <AuthProvider>
+        <PortfolioPage />
+      </AuthProvider>
+    );
+  }
+  if (path === '/testimonials') {
+    return (
+      <AuthProvider>
+        <TestimonialsPage />
+      </AuthProvider>
+    );
+  }
+  if (path === '/admin') {
+    return (
+      <AuthProvider>
+        <AdminPanel />
+      </AuthProvider>
+    );
+  }
 
-  if (path === '/portfolio') return <AuthProvider><Layout><PortfolioPage /></Layout></AuthProvider>;
-  if (path === '/testimonials') return <AuthProvider><Layout><TestimonialsPage /></Layout></AuthProvider>;
-  if (path === '/admin') return <AuthProvider><Layout><AdminPanel /></Layout></AuthProvider>;
-
+  // Halaman utama (dengan Navbar & Footer)
   return (
     <AuthProvider>
       <AnimatedCursor />
