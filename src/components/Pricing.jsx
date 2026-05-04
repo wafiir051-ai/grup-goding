@@ -14,8 +14,9 @@ export default function Pricing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
+    loop: false, 
     align: 'start',
+    containScroll: 'trimSnaps',
     breakpoints: {
       '(min-width: 768px)': { align: 'center' }
     }
@@ -37,27 +38,27 @@ export default function Pricing() {
   if (plans.length === 0) return null;
 
   return (
-    <section id="pricing" className="py-16 md:py-20 bg-[#0a0a0a] px-4 sm:px-6 relative">
+    <section id="pricing" className="py-16 md:py-20 bg-[#0a0a0a] px-4 sm:px-6 relative overflow-hidden">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="pricing">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-8 md:mb-12">Paket Harga</h2>
         </RevealOnScroll>
 
-        <div className="relative">
+        <div className="relative px-8 md:px-12">
           {/* Carousel wrapper */}
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4 md:gap-6">
+            <div className="flex gap-5 md:gap-6">
               {plans.map((p) => (
                 <div key={p.id} className="flex-[0_0_85%] sm:flex-[0_0_45%] lg:flex-[0_0_30%] xl:flex-[0_0_23%] min-w-0">
-                  <div className="bg-zinc-900/80 p-4 sm:p-5 md:p-6 rounded-2xl border border-white/10 hover:border-cyan-400 transition-all h-full flex flex-col">
+                  <div className="bg-zinc-900/80 p-5 md:p-6 rounded-2xl border border-white/10 hover:border-cyan-400 transition-all h-full flex flex-col">
                     <div className="flex justify-between items-start">
                       <h3 className="text-xl sm:text-2xl text-cyan-400 font-bold">{p.name}</h3>
                       {p.popular && <span className="bg-cyan-500 text-black text-xs px-2 py-1 rounded-full shrink-0 ml-2">Populer</span>}
                     </div>
-                    <div className="text-2xl sm:text-3xl text-white font-bold mt-2">
-                      Rp {formatPrice(p.price)}
-                      <span className="text-sm font-normal text-zinc-400">/{p.period || 'sekali bayar'}</span>
+                    <div className="mt-2">
+                      <span className="text-2xl sm:text-3xl text-white font-bold">Rp {formatPrice(p.price)}</span>
+                      <span className="text-sm font-normal text-zinc-400 ml-1">/{p.period || 'sekali bayar'}</span>
                     </div>
                     <p className="text-zinc-400 text-sm sm:text-base mt-2">{p.description}</p>
                     
@@ -70,7 +71,7 @@ export default function Pricing() {
                           </li>
                         ))}
                         {p.features?.length > 5 && (
-                          <li className="text-zinc-500 text-xs">+{p.features.length - 5} fitur lainnya</li>
+                          <li className="text-zinc-500 text-xs mt-1">+{p.features.length - 5} fitur lainnya</li>
                         )}
                       </ul>
                     </div>
@@ -101,19 +102,19 @@ export default function Pricing() {
             </div>
           </div>
 
-          {/* Tombol navigasi (muncul jika lebih dari 1 slide) */}
+          {/* Tombol navigasi */}
           {plans.length > 1 && (
             <>
               <button
                 onClick={scrollPrev}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 md:-translate-x-5 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10 shadow-lg"
                 aria-label="Previous"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={scrollNext}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 md:translate-x-5 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10 shadow-lg"
                 aria-label="Next"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -122,16 +123,18 @@ export default function Pricing() {
           )}
         </div>
 
-        {/* Indikator slide (opsional) */}
-        <div className="flex justify-center gap-2 mt-6">
-          {plans.map((_, idx) => (
-            <button
-              key={idx}
-              className="w-2 h-2 rounded-full bg-white/30 hover:bg-white/60 transition"
-              onClick={() => emblaApi && emblaApi.scrollTo(idx)}
-            />
-          ))}
-        </div>
+        {/* Indikator slide */}
+        {plans.length > 1 && (
+          <div className="flex justify-center gap-2 mt-6">
+            {plans.map((_, idx) => (
+              <button
+                key={idx}
+                className="w-2 h-2 rounded-full bg-white/30 hover:bg-white/60 transition-all duration-300"
+                onClick={() => emblaApi && emblaApi.scrollTo(idx)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
