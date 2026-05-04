@@ -43,7 +43,7 @@ export default function Pricing() {
   if (plans.length === 0) {
     return (
       <section id="pricing" className="py-16 md:py-20 bg-[#0a0a0a] px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto text-center text-white">Tidak ada paket harga.</div>
+        <div className="max-w-7xl mx-auto text-center text-white">Tidak ada paket harga. Silakan tambah di admin panel.</div>
       </section>
     );
   }
@@ -64,8 +64,10 @@ export default function Pricing() {
                   {plan.popular && <span className="bg-cyan-500 text-black text-xs px-2 py-1 rounded-full">Populer</span>}
                 </div>
                 <div className="mt-2">
-                  <span className="text-2xl md:text-3xl text-white font-bold">Rp {formatPrice(plan.price)}</span>
-                  <span className="text-sm text-zinc-400 ml-1">/{plan.period}</span>
+                  <div className="text-2xl md:text-3xl text-white font-bold">Rp {formatPrice(plan.price)}</div>
+                  {plan.period && plan.period !== '' && (
+                    <div className="text-sm text-zinc-400 mt-1">/{plan.period}</div>
+                  )}
                 </div>
                 <p className="text-zinc-400 text-sm mt-2">{plan.description}</p>
 
