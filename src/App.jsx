@@ -13,8 +13,7 @@ import AdminPanel from './components/AdminPanel';
 import PortfolioPage from './PortfolioPage';
 import TestimonialsPage from './TestimonialsPage';
 import AnimatedCursor from './components/AnimatedCursor';
-import Scene3D from './components/Scene3D';
-import WaveDivider from './components/WaveDivider';
+import ParticleBackground from './components/ParticleBackground';
 
 function App() {
   const [path, setPath] = useState(window.location.pathname);
@@ -63,26 +62,15 @@ function App() {
   return (
     <AuthProvider>
       <AnimatedCursor />
-      {/* Canvas 3D background — hanya di section hitam */}
-      <Scene3D />
-
-      <div className="relative z-10 min-h-screen overflow-x-hidden">
+      <ParticleBackground />
+      <div className="relative z-10 bg-[#0a0a0a]/80 text-white min-h-screen overflow-x-hidden">
+        <Navbar />
         <Hero />
-
-        {/* hitam → putih */}
-        <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
         <BentoServices />
         <ProcessSticky />
         <ClientsSection />
-
-        {/* putih → hitam */}
-        <WaveDivider fromColor="#ffffff" toColor="#0a0a0a" />
         <Pricing />
-
-        {/* hitam → putih */}
-        <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
         <EnvelopeTestimonials />
-
         <Footer />
       </div>
     </AuthProvider>

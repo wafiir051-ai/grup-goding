@@ -4,24 +4,8 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 const noop = {
-  from: () => ({
-    select: () => ({
-      single: () => Promise.resolve({ data: null, error: null }),
-      order: () => Promise.resolve({ data: [], error: null }),
-      eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
-    }),
-    eq: () => ({ single: () => Promise.resolve({ data: null, error: null }) }),
-    order: () => Promise.resolve({ data: [], error: null }),
-    insert: () => Promise.resolve({ data: null, error: null }),
-    upsert: () => Promise.resolve({ data: null, error: null }),
-  }),
-  auth: {
-    signIn: () => Promise.resolve({ error: null }),
-    signOut: () => Promise.resolve({ error: null }),
-    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
-    getSession: () => Promise.resolve({ data: { session: null } }),
-  },
-  channel: () => ({ on: () => ({ subscribe: () => {} }) }),
+  from: () => ({ select: () => ({ order: () => Promise.resolve({ data: [] }), single: () => Promise.resolve({ data: null }) }) }),
+  auth: { getUser: () => Promise.resolve({ data: { user: null } }), getSession: () => Promise.resolve({ data: { session: null } }) }
 };
 
 export const supabase = (supabaseUrl && supabaseAnonKey && supabaseAnonKey.startsWith('eyJ'))
