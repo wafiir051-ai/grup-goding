@@ -13,7 +13,7 @@ import AdminPanel from './components/AdminPanel';
 import PortfolioPage from './PortfolioPage';
 import TestimonialsPage from './TestimonialsPage';
 import AnimatedCursor from './components/AnimatedCursor';
-import ParticleBackground from './components/ParticleBackground';
+import Scene3D from './components/Scene3D';
 import WaveDivider from './components/WaveDivider';
 
 function App() {
@@ -63,7 +63,9 @@ function App() {
   return (
     <AuthProvider>
       <AnimatedCursor />
-      <ParticleBackground />
+      {/* Canvas 3D background — hanya di section hitam */}
+      <Scene3D />
+
       <div className="relative z-10 min-h-screen overflow-x-hidden">
         <Hero />
 
