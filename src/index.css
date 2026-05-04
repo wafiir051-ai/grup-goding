@@ -33,3 +33,8 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
+
+/* 3D global fix */
+* { box-sizing: border-box; }
+.perspective-1000 { perspective: 1000px; }
+[style*="preserve-3d"] { transform-style: preserve-3d; }

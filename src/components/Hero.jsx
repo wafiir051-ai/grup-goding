@@ -1,146 +1,189 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import Navbar from './Navbar';
 
+const float = (delay = 0, y = 14) => ({
+  animate: { y: [0, -y, 0] },
+  transition: { duration: 3.5 + delay, repeat: Infinity, ease: 'easeInOut', delay },
+});
+
 export default function Hero() {
   const ref = useRef(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const springX = useSpring(mouseX, { stiffness: 60, damping: 20 });
-  const springY = useSpring(mouseY, { stiffness: 60, damping: 20 });
-  const rotateX = useTransform(springY, [-300, 300], [12, -12]);
-  const rotateY = useTransform(springX, [-300, 300], [-12, 12]);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 50, damping: 18 });
+  const sy = useSpring(my, { stiffness: 50, damping: 18 });
+  const rotX = useTransform(sy, [-300, 300], [10, -10]);
+  const rotY = useTransform(sx, [-300, 300], [-10, 10]);
 
-  const handleMouseMove = (e) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseX.set(e.clientX - rect.left - rect.width / 2);
-    mouseY.set(e.clientY - rect.top - rect.height / 2);
+  const onMove = (e) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    mx.set(e.clientX - r.left - r.width / 2);
+    my.set(e.clientY - r.top - r.height / 2);
   };
-  const handleMouseLeave = () => { mouseX.set(0); mouseY.set(0); };
 
   return (
     <section
       ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="min-h-screen flex items-center justify-center pt-16 md:pt-20 pb-12 md:pb-20 relative px-4 sm:px-6 overflow-hidden"
+      onMouseMove={onMove}
+      onMouseLeave={() => { mx.set(0); my.set(0); }}
+      className="min-h-screen flex flex-col items-center justify-center pt-20 pb-16 relative px-4 sm:px-6 overflow-hidden bg-[#0a0a0a]"
       style={{ perspective: '1200px' }}
     >
       <Navbar />
 
-      {/* Animated bg orbs */}
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.3, 0.15] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500 rounded-full blur-3xl pointer-events-none"
-        style={{ zIndex: 1 }}
-      />
-      <motion.div
-        animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.25, 0.1] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-600 rounded-full blur-3xl pointer-events-none"
-        style={{ zIndex: 1 }}
-      />
-      <motion.div
-        animate={{ scale: [1, 1.3, 1], opacity: [0.08, 0.2, 0.08] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
-        className="absolute top-1/2 right-1/3 w-64 h-64 bg-purple-600 rounded-full blur-3xl pointer-events-none"
-        style={{ zIndex: 1 }}
+      {/* BG orbs */}
+      {[
+        { cl: 'top-1/4 left-1/4 w-[500px] h-[500px] bg-cyan-500/20', d: 0 },
+        { cl: 'bottom-1/3 right-1/4 w-[400px] h-[400px] bg-blue-600/20', d: 2 },
+        { cl: 'top-1/2 right-1/3 w-[300px] h-[300px] bg-purple-600/15', d: 4 },
+      ].map((o, i) => (
+        <motion.div
+          key={i}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 6 + o.d, repeat: Infinity, ease: 'easeInOut', delay: o.d }}
+          className={`absolute rounded-full blur-3xl pointer-events-none ${o.cl}`}
+        />
+      ))}
+
+      {/* Grid lines bg */}
+      <div className="absolute inset-0 pointer-events-none opacity-5"
+        style={{
+          backgroundImage: 'linear-gradient(#06b6d4 1px, transparent 1px), linear-gradient(90deg, #06b6d4 1px, transparent 1px)',
+          backgroundSize: '60px 60px'
+        }}
       />
 
-      {/* Main 3D card */}
-      <motion.div
-        style={{ rotateX, rotateY, transformStyle: 'preserve-3d', zIndex: 2 }}
-        className="relative text-center max-w-5xl mx-auto"
-      >
-        {/* Floating badge */}
+      {/* Floating emoji orbits — ala Assistantly */}
+      {[
+        { emoji: '🚀', top: '18%', left: '8%', delay: 0, size: 'text-4xl' },
+        { emoji: '💎', top: '30%', right: '7%', delay: 0.8, size: 'text-3xl' },
+        { emoji: '⚡', bottom: '35%', left: '10%', delay: 1.4, size: 'text-3xl' },
+        { emoji: '🌐', top: '15%', right: '18%', delay: 0.5, size: 'text-2xl' },
+        { emoji: '✨', bottom: '28%', right: '10%', delay: 1.8, size: 'text-4xl' },
+        { emoji: '🎯', top: '55%', left: '5%', delay: 2.2, size: 'text-2xl' },
+      ].map((item, i) => (
         <motion.div
-          animate={{ y: [-6, 6, -6] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          className="inline-flex items-center gap-2 bg-white/5 border border-cyan-500/30 rounded-full px-5 py-2 mb-8 backdrop-blur-sm"
-          style={{ transform: 'translateZ(40px)' }}
+          key={i}
+          {...float(item.delay)}
+          className={`absolute ${item.size} select-none pointer-events-none hidden md:block`}
+          style={{ top: item.top, left: item.left, right: item.right, bottom: item.bottom, filter: 'drop-shadow(0 0 12px rgba(6,182,212,0.6))' }}
+        >
+          {item.emoji}
+        </motion.div>
+      ))}
+
+      {/* Main 3D content */}
+      <motion.div
+        style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+        className="relative z-10 text-center max-w-5xl mx-auto w-full"
+      >
+        {/* Badge */}
+        <motion.div
+          {...float(0, 6)}
+          style={{ transform: 'translateZ(50px)' }}
+          className="inline-flex items-center gap-2 bg-white/5 border border-cyan-500/40 rounded-full px-5 py-2 mb-8 backdrop-blur-sm"
         >
           <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-          <span className="text-cyan-400 text-sm font-medium">Platform Digital Terpercaya</span>
+          <span className="text-cyan-400 text-sm font-semibold tracking-wide">Platform Digital Terpercaya #1</span>
         </motion.div>
 
-        {/* Title */}
+        {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 60 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          style={{ transform: 'translateZ(60px)' }}
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-tight mb-6"
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          style={{ transform: 'translateZ(70px)' }}
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[1.05] mb-6 tracking-tight"
         >
-          Solusi Digital{' '}
-          <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Terbaik
+          Website{' '}
+          <span className="relative inline-block">
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Premium
+            </span>
+            <motion.span
+              animate={{ scaleX: [0, 1] }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="absolute -bottom-1 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full origin-left"
+            />
           </span>
-          <br />untuk Bisnis Anda
+          <br />
+          untuk Bisnis Anda
         </motion.h1>
 
-        {/* Subtitle */}
+        {/* Sub */}
         <motion.p
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-          style={{ transform: 'translateZ(30px)' }}
-          className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-10"
-        >
-          Kami membangun website modern, cepat, dan profesional untuk membawa bisnis Anda ke level berikutnya.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          style={{ transform: 'translateZ(50px)' }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+          transition={{ duration: 0.8, delay: 0.25 }}
+          style={{ transform: 'translateZ(40px)' }}
+          className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+        >
+          Kami membangun website modern, cepat, dan profesional. Dari tampilan premium hingga fitur lengkap — semua dalam satu paket.
+        </motion.p>
+
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.4 }}
+          style={{ transform: 'translateZ(60px)' }}
+          className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
         >
           <motion.a
             href="#pricing"
-            whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(6,182,212,0.5)' }}
+            whileHover={{ scale: 1.06, boxShadow: '0 0 40px rgba(6,182,212,0.5)' }}
             whileTap={{ scale: 0.97 }}
-            className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl text-lg shadow-lg cursor-pointer"
+            className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl text-lg shadow-xl cursor-pointer"
           >
-            Lihat Paket Harga
+            🚀 Lihat Paket Harga
           </motion.a>
           <motion.a
             href="#services"
-            whileHover={{ scale: 1.05, backgroundColor: 'rgba(255,255,255,0.1)' }}
+            whileHover={{ scale: 1.06, backgroundColor: 'rgba(255,255,255,0.1)', boxShadow: '0 0 30px rgba(255,255,255,0.08)' }}
             whileTap={{ scale: 0.97 }}
             className="px-8 py-4 bg-white/5 border border-white/20 text-white font-bold rounded-2xl text-lg backdrop-blur-sm cursor-pointer"
           >
-            Lihat Layanan
+            Lihat Layanan ✨
           </motion.a>
         </motion.div>
 
-        {/* Floating stats */}
+        {/* Floating stat cards — ala Assistantly */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-          style={{ transform: 'translateZ(20px)' }}
-          className="mt-16 grid grid-cols-3 gap-6 max-w-lg mx-auto"
+          transition={{ delay: 0.7 }}
+          style={{ transform: 'translateZ(30px)' }}
+          className="grid grid-cols-3 gap-4 max-w-xl mx-auto"
         >
           {[
-            { num: '50+', label: 'Project Selesai' },
-            { num: '100%', label: 'Kepuasan Klien' },
-            { num: '24/7', label: 'Support Aktif' },
+            { num: '50+', label: 'Project Selesai', icon: '🏆' },
+            { num: '100%', label: 'Kepuasan Klien', icon: '💯' },
+            { num: '24/7', label: 'Support Aktif', icon: '⚡' },
           ].map((s, i) => (
             <motion.div
               key={i}
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 3 + i, repeat: Infinity, ease: 'easeInOut', delay: i * 0.5 }}
-              className="text-center"
+              {...float(i * 0.6, 8)}
+              whileHover={{ scale: 1.08, boxShadow: '0 0 25px rgba(6,182,212,0.25)' }}
+              className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm cursor-default"
             >
-              <div className="text-2xl font-black text-cyan-400">{s.num}</div>
-              <div className="text-xs text-zinc-500 mt-1">{s.label}</div>
+              <div className="text-2xl mb-1">{s.icon}</div>
+              <div className="text-xl font-black text-cyan-400">{s.num}</div>
+              <div className="text-xs text-zinc-500 mt-0.5 leading-tight">{s.label}</div>
             </motion.div>
           ))}
         </motion.div>
+      </motion.div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        animate={{ y: [0, 10, 0], opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-zinc-500 text-xs"
+      >
+        <span>scroll</span>
+        <div className="w-px h-8 bg-gradient-to-b from-zinc-500 to-transparent" />
       </motion.div>
     </section>
   );
