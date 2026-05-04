@@ -14,8 +14,6 @@ import PortfolioPage from './PortfolioPage';
 import TestimonialsPage from './TestimonialsPage';
 import AnimatedCursor from './components/AnimatedCursor';
 import ParticleBackground from './components/ParticleBackground';
-import WaveDivider from './components/WaveDivider';
-import WaveDividerDark from './components/WaveDividerDark';
 
 function App() {
   const [path, setPath] = useState(window.location.pathname);
@@ -49,46 +47,29 @@ function App() {
     return () => document.removeEventListener('click', handleLinkClick);
   }, []);
 
-  // Halaman yang TIDAK perlu Navbar & Footer dari komponen utama
-  if (path === '/portfolio') {
-    return (
-      <AuthProvider>
-        <PortfolioPage />
-      </AuthProvider>
-    );
-  }
-  if (path === '/testimonials') {
-    return (
-      <AuthProvider>
-        <TestimonialsPage />
-      </AuthProvider>
-    );
-  }
-  if (path === '/admin') {
-    return (
-      <AuthProvider>
-        <AdminPanel />
-      </AuthProvider>
-    );
-  }
+  const Layout = ({ children }) => (
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
+  );
 
-  // Halaman utama (dengan Navbar & Footer)
+  if (path === '/portfolio') return <AuthProvider><Layout><PortfolioPage /></Layout></AuthProvider>;
+  if (path === '/testimonials') return <AuthProvider><Layout><TestimonialsPage /></Layout></AuthProvider>;
+  if (path === '/admin') return <AuthProvider><AdminPanel /></AuthProvider>;
+
   return (
     <AuthProvider>
       <AnimatedCursor />
       <ParticleBackground />
       <div className="relative z-10 min-h-screen overflow-x-hidden">
-        <Navbar />
         <Hero />
-        <WaveDivider />
         <BentoServices />
         <ProcessSticky />
         <ClientsSection />
-        <WaveDividerDark />
         <Pricing />
-        <WaveDivider />
         <EnvelopeTestimonials />
-        <WaveDividerDark />
         <Footer />
       </div>
     </AuthProvider>
