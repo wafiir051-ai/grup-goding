@@ -24,3 +24,12 @@
     border: 1px solid rgba(255,255,255,0.6); 
   }
 }
+
+/* Perbaikan untuk pricing cards */
+#pricing .grid {
+  align-items: stretch;
+}
+#pricing .bg-zinc-900\/80 {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
