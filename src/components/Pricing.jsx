@@ -14,10 +14,9 @@ export default function Pricing() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: false,
+    loop: false, 
     align: 'start',
-    containScroll: 'trimSnaps',
-    dragFree: false
+    containScroll: 'trimSnaps'
   });
 
   useEffect(() => {
@@ -44,45 +43,51 @@ export default function Pricing() {
         </RevealOnScroll>
 
         <div className="relative">
-          {/* Carousel container */}
+          {/* Carousel container dengan padding untuk tombol */}
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4 md:gap-6" style={{ gap: '1rem' }}>
+            <div className="flex gap-5">
               {plans.map((p) => (
-                <div 
-                  key={p.id} 
-                  className="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] lg:min-w-[280px] xl:min-w-[300px] flex-shrink-0"
-                >
-                  <div className="bg-zinc-900/80 p-4 sm:p-5 md:p-6 rounded-2xl border border-white/10 hover:border-cyan-400 transition-all h-full flex flex-col">
-                    <div className="flex justify-between items-start">
-                      <h3 className="text-xl sm:text-2xl text-cyan-400 font-bold">{p.name}</h3>
-                      {p.popular && <span className="bg-cyan-500 text-black text-xs px-2 py-1 rounded-full shrink-0 ml-2">Populer</span>}
+                <div key={p.id} className="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] lg:min-w-[380px] max-w-[280px] sm:max-w-[320px] md:max-w-[350px] lg:max-w-[380px] flex-shrink-0">
+                  <div className="bg-zinc-900/80 p-5 rounded-2xl border border-white/10 hover:border-cyan-400 transition-all h-full flex flex-col">
+                    {/* Nama paket */}
+                    <div className="flex justify-between items-start gap-2">
+                      <h3 className="text-xl md:text-2xl text-cyan-400 font-bold break-words">{p.name}</h3>
+                      {p.popular && <span className="bg-cyan-500 text-black text-xs px-2 py-1 rounded-full shrink-0">Populer</span>}
                     </div>
-                    <div className="text-2xl sm:text-3xl text-white font-bold mt-2">
-                      Rp {formatPrice(p.price)}
-                      <span className="text-sm font-normal text-zinc-400">/{p.period || 'sekali bayar'}</span>
-                    </div>
-                    <p className="text-zinc-400 text-sm sm:text-base mt-2">{p.description}</p>
                     
+                    {/* Harga */}
+                    <div className="mt-2">
+                      <div className="text-2xl md:text-3xl text-white font-bold">
+                        Rp {formatPrice(p.price)}
+                      </div>
+                      <div className="text-sm text-zinc-400">/{p.period || 'sekali bayar'}</div>
+                    </div>
+                    
+                    <p className="text-zinc-400 text-sm mt-2 line-clamp-2">{p.description}</p>
+                    
+                    {/* Fitur Utama */}
                     <div className="mt-4">
                       <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2">Fitur Utama</p>
-                      <ul className="space-y-1 md:space-y-2">
+                      <ul className="space-y-1.5">
                         {p.features?.slice(0, 5).map((f, i) => (
-                          <li key={i} className="text-zinc-300 text-sm sm:text-base flex items-start gap-2">
-                            <span className="text-cyan-400 shrink-0">✓</span> <span className="break-words">{f}</span>
+                          <li key={i} className="text-zinc-300 text-sm flex items-start gap-2">
+                            <span className="text-cyan-400 shrink-0 mt-0.5">✓</span> 
+                            <span className="break-words line-clamp-2">{f}</span>
                           </li>
                         ))}
                         {p.features?.length > 5 && (
-                          <li className="text-zinc-500 text-xs">+{p.features.length - 5} fitur lainnya</li>
+                          <li className="text-zinc-500 text-xs pl-5">+{p.features.length - 5} fitur lainnya</li>
                         )}
                       </ul>
                     </div>
 
+                    {/* Teknologi */}
                     {p.tech_stack && p.tech_stack.length > 0 && (
                       <div className="mt-4 pt-3 border-t border-white/10">
                         <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2">Teknologi</p>
                         <div className="flex flex-wrap gap-1.5">
                           {p.tech_stack.slice(0, 4).map((tech, idx) => (
-                            <span key={idx} className="bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded-full">{tech}</span>
+                            <span key={idx} className="bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded-full whitespace-nowrap">{tech}</span>
                           ))}
                           {p.tech_stack.length > 4 && (
                             <span className="bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded-full">+{p.tech_stack.length - 4}</span>
@@ -108,14 +113,14 @@ export default function Pricing() {
             <>
               <button
                 onClick={scrollPrev}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 md:-translate-x-5 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 md:-translate-x-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
                 aria-label="Previous"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={scrollNext}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 md:translate-x-5 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 md:translate-x-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full backdrop-blur-sm transition z-10"
                 aria-label="Next"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -124,16 +129,18 @@ export default function Pricing() {
           )}
         </div>
 
-        {/* Indikator slide */}
-        <div className="flex justify-center gap-2 mt-6">
-          {plans.map((_, idx) => (
-            <button
-              key={idx}
-              className="w-2 h-2 rounded-full bg-white/30 hover:bg-white/60 transition"
-              onClick={() => emblaApi && emblaApi.scrollTo(idx)}
-            />
-          ))}
-        </div>
+        {/* Indikator dot */}
+        {plans.length > 1 && (
+          <div className="flex justify-center gap-2 mt-6">
+            {plans.map((_, idx) => (
+              <button
+                key={idx}
+                className="w-2 h-2 rounded-full bg-white/30 hover:bg-white/60 transition-all duration-300"
+                onClick={() => emblaApi && emblaApi.scrollTo(idx)}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
