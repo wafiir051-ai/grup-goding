@@ -4,6 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/goding/',
+  base: '/',
   build: { chunkSizeWarningLimit: 1000 },
 });
