@@ -1,48 +1,48 @@
-import { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import useEmblaCarousel from 'embla-carousel-react';
-import Autoplay from 'embla-carousel-autoplay';
-import { supabase } from '../lib/supabase';
-import RevealOnScroll from './RevealOnScroll';
+import { useEffect, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { supabase } from "../lib/supabase";
+import RevealOnScroll from "./RevealOnScroll";
 
 const DEFAULTS = {
   plans: [
     {
-      id: '1', name: 'BASIC', price: 3000000, period: '3 Bulan',
-      description: 'Starter Plan untuk pemula',
-      features: ['Template Dasar','3 Halaman','Responsive Design','Hosting 3 Bulan','Support 3 Bulan'],
-      tech_stack: ['HTML5','CSS3','JavaScript','Tailwind CSS'],
-      popular: false,
+      id: "1", name: "BASIC", price: 3000000, period: "3 Bulan",
+      description: "Starter Plan untuk pemula",
+      features: ["Template Dasar","3 Halaman","Responsive Design","Hosting 3 Bulan","Support 3 Bulan"],
+      tech_stack: ["HTML5","CSS3","JavaScript","Tailwind CSS"],
+      popular: false
     },
     {
-      id: '2', name: 'PROFESSIONAL', price: 8000000, period: 'Tahun',
-      description: 'Untuk bisnis yang ingin tampil premium',
-      features: ['Unlimited Pages','Custom Domain 1 Tahun','Luxury Design + Motion','Priority Support 1 Tahun'],
-      tech_stack: ['React.js','Next.js','Tailwind CSS','Framer Motion','Supabase'],
-      popular: false,
+      id: "2", name: "PROFESSIONAL", price: 8000000, period: "Tahun",
+      description: "Untuk bisnis yang ingin tampil premium",
+      features: ["Unlimited Pages","Custom Domain 1 Tahun","Luxury Design + Motion","Priority Support 1 Tahun"],
+      tech_stack: ["React.js","Next.js","Tailwind CSS","Framer Motion","Supabase"],
+      popular: false
     },
     {
-      id: '3', name: 'PESANTREN MADANI', price: 10000000, period: 'Tahun',
-      description: 'Paket Untuk Pondok Pesantren',
-      features: ['Profil Digital Eksklusif','Google Search & Indexing','WhatsApp Direct Chat','Google Analytics Dashboard'],
-      tech_stack: ['React.js + Next.js','Supabase + Realtime','Vercel Edge Ready','Tailwind CSS'],
-      popular: false,
+      id: "3", name: "PESANTREN MADANI", price: 10000000, period: "Tahun",
+      description: "Paket Untuk Pondok Pesantren",
+      features: ["Profil Digital Eksklusif","Google Search & Indexing","WhatsApp Direct Chat","Google Analytics Dashboard"],
+      tech_stack: ["React.js + Next.js","Supabase + Realtime","Vercel Edge Ready","Tailwind CSS"],
+      popular: false
     },
     {
-      id: '4', name: 'ESSENTIAL', price: 20000000, period: 'Tahun',
-      description: 'Paket paling laris untuk UMKM',
-      features: ['5 Halaman Custom','Custom Domain 1 Tahun','Premium UI/UX','Hosting 1 Tahun','Support 6 Bulan'],
-      tech_stack: ['React.js','Tailwind CSS','Framer Motion','Supabase','SEO Friendly'],
-      popular: true,
+      id: "4", name: "ESSENTIAL", price: 20000000, period: "Tahun",
+      description: "Paket paling laris untuk UMKM",
+      features: ["5 Halaman Custom","Custom Domain 1 Tahun","Premium UI/UX","Hosting 1 Tahun","Support 6 Bulan"],
+      tech_stack: ["React.js","Tailwind CSS","Framer Motion","Supabase","SEO Friendly"],
+      popular: true
     },
     {
-      id: '5', name: 'ENTERPRISE', price: 30000000, period: '3 Tahun',
-      description: 'Solusi lengkap untuk perusahaan',
-      features: ['Google Search Console & Indexing','Custom Admin Dashboard','Integrasi WhatsApp Business','Multi-Language Support','Google Analytics Integration'],
-      tech_stack: ['React.js + Next.js','TypeScript','Tailwind CSS','Framer Motion','Supabase + Realtime'],
-      popular: false,
-    },
-  ],
+      id: "5", name: "ENTERPRISE", price: 30000000, period: "3 Tahun",
+      description: "Solusi lengkap untuk perusahaan",
+      features: ["Google Search Console & Indexing","Custom Admin Dashboard","Integrasi WhatsApp Business","Multi-Language Support","Google Analytics Integration"],
+      tech_stack: ["React.js + Next.js","TypeScript","Tailwind CSS","Framer Motion","Supabase + Realtime"],
+      popular: false
+    }
+  ]
 };
 
 function TechSlide({ name }) {
@@ -75,14 +75,14 @@ function Card3D({ children, isPopular, className }) {
     <motion.div
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { x.set(0); y.set(0); }}
-      style={{ rotateX: rotX, rotateY: rotY, transformStyle: 'preserve-3d' }}
+      style={{ rotateX: rotX, rotateY: rotY, transformStyle: "preserve-3d" }}
       className={`relative rounded-2xl border p-6 backdrop-blur-md transition-shadow duration-300 ${
         isPopular
-          ? 'border-cyan-500/40 bg-zinc-900/80 shadow-lg shadow-cyan-500/10'
-          : 'border-zinc-800 bg-zinc-900/50 hover:border-zinc-700'
+          ? "border-cyan-500/40 bg-zinc-900/80 shadow-lg shadow-cyan-500/10"
+          : "border-zinc-800 bg-zinc-900/50 hover:border-zinc-700"
       } ${className}`}
     >
-      <div style={{ transform: 'translateZ(40px)' }}>
+      <div style={{ transform: "translateZ(40px)" }}>
         {children}
       </div>
     </motion.div>
@@ -91,7 +91,7 @@ function Card3D({ children, isPopular, className }) {
 
 function EmblaCarousel({ slides, options }) {
   const [emblaRef] = useEmblaCarousel(
-    { ...options, align: 'start', slidesToScroll: 1 },
+    { ...options, align: "start", slidesToScroll: 1 },
     [Autoplay({ delay: 3000, stopOnInteraction: false })]
   );
 
@@ -111,9 +111,9 @@ export default function Pricing() {
 
   useEffect(() => {
     supabase
-      .from('pricing_plans')
-      .select('*')
-      .order('price', { ascending: true })
+      .from("pricing_plans")
+      .select("*")
+      .order("price", { ascending: true })
       .then(({ data }) => {
         if (data && data.length > 0) setPlans(data);
       })
@@ -121,9 +121,9 @@ export default function Pricing() {
   }, []);
 
   const formatPrice = (price) =>
-    new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
       minimumFractionDigits: 0,
     }).format(price);
 
@@ -135,7 +135,7 @@ export default function Pricing() {
             Pilihan Paket
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Investasi Digital untuk{' '}
+            Investasi Digital untuk{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
               Bisnis Anda
             </span>
@@ -192,15 +192,15 @@ export default function Pricing() {
               )}
 
               <motion.a
-                href={`https://wa.me/6281234567890?text=Halo%20Goding,%20saya%20tertarik%20paket%20${encodeURIComponent(plan.name)}`}
+                href={"https://wa.me/6281234567890?text=Halo%20Goding,%20saya%20tertarik%20paket%20" + encodeURIComponent(plan.name)}
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className={`mt-6 inline-flex items-center justify-center px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
                   plan.popular
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white'
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40"
+                    : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white"
                 }`}
               >
                 Pilih Paket
