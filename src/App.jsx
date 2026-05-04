@@ -55,7 +55,14 @@ function App() {
     </>
   );
 
-  if (path === '/portfolio') return <AuthProvider><Layout><PortfolioPage /></Layout></AuthProvider>;
+  // Halaman portfolio tidak pakai navbar/footer dari layout
+  if (path === '/portfolio') {
+    return (
+      <AuthProvider>
+        <PortfolioPage />
+      </AuthProvider>
+    );
+  }
   if (path === '/testimonials') return <AuthProvider><Layout><TestimonialsPage /></Layout></AuthProvider>;
   if (path === '/admin') return <AuthProvider><AdminPanel /></AuthProvider>;
 

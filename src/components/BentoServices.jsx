@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Zap, Users, Globe } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, Globe } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
 import WhatsAppModal from './WhatsAppModal';
 
@@ -8,7 +8,6 @@ const services = [
   { title: 'Branding & Identity', span: 'col-span-1', color: 'bg-blue-50', icon: Sparkles, desc: 'Bangun identitas merek yang kuat dan berkesan.', msg: 'Saya tertarik dengan layanan Branding & Identity.' },
   { title: 'Website Premium', span: 'col-span-1 md:col-span-2 md:row-span-2', color: 'bg-cyan-50', icon: Globe, desc: 'Website modern dengan performa tinggi dan animasi memukau.', msg: 'Saya tertarik dengan layanan Website Premium.' },
   { title: 'Motion & Animation', span: 'col-span-1', color: 'bg-sky-50', icon: Zap, desc: 'Animasi dinamis yang menghidupkan setiap interaksi.', msg: 'Saya tertarik dengan Motion & Animation.' },
-  { title: 'Digital Marketing', span: 'col-span-1', color: 'bg-indigo-50', icon: Users, desc: 'Tingkatkan visibilitas dan jangkauan bisnis Anda.', msg: 'Saya tertarik dengan Digital Marketing.' },
   { title: 'Webflow & Framer', span: 'col-span-1 md:col-span-2', color: 'bg-teal-50', icon: Globe, desc: 'Platform no-code terbaik untuk pengembangan website cepat.', msg: 'Saya tertarik dengan Webflow & Framer.' }
 ];
 

@@ -7,11 +7,23 @@ const formatPrice = (price) => new Intl.NumberFormat('id-ID').format(price);
 
 export default function Pricing() {
   const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
 
   useEffect(() => {
-    supabase.from('pricing_plans').select('*').order('price').then(({ data }) => setPlans(data || []));
+    const fetchPlans = async () => {
+      try {
+        const { data, error } = await supabase.from('pricing_plans').select('*').order('price');
+        if (error) throw error;
+        setPlans(data || []);
+      } catch (err) {
+        console.error('Error fetching pricing plans:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlans();
   }, []);
 
   const openModal = (msg) => { setPendingMessage(msg); setIsModalOpen(true); };
@@ -19,6 +31,22 @@ export default function Pricing() {
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
     setIsModalOpen(false);
   };
+
+  if (loading) {
+    return (
+      <section id="pricing" className="py-16 md:py-20 bg-[#0a0a0a] px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto text-center text-white">Memuat paket harga...</div>
+      </section>
+    );
+  }
+
+  if (plans.length === 0) {
+    return (
+      <section id="pricing" className="py-16 md:py-20 bg-[#0a0a0a] px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto text-center text-white">Tidak ada paket harga.</div>
+      </section>
+    );
+  }
 
   return (
     <section id="pricing" className="py-16 md:py-20 bg-[#0a0a0a] px-4 sm:px-6">
