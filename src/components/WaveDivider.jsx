@@ -1,4 +1,4 @@
-export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#1a1a2e' }) {
+export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#ffffff' }) {
   return (
     <div style={{ backgroundColor: fromColor, lineHeight: 0, display: 'block' }}>
       <svg
