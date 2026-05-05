@@ -1,18 +1,14 @@
-export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#ffffff' }) {
+export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#1a1a2e' }) {
   return (
-    <div
-      className="w-full overflow-hidden leading-none"
-      style={{ backgroundColor: fromColor, marginBottom: '-3px' }}
-    >
+    <div style={{ backgroundColor: fromColor, lineHeight: 0, display: 'block' }}>
       <svg
-        viewBox="0 0 1440 160"
+        viewBox="0 0 1440 120"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
-        className="w-full h-32 md:h-48 lg:h-56"
-        style={{ display: 'block' }}
+        style={{ display: 'block', width: '100%', height: '120px' }}
       >
         <path
-          d="M0,60 C200,160 400,0 600,80 C800,160 1000,10 1200,80 C1320,120 1390,40 1440,70 L1440,160 L0,160 Z"
+          d="M0,40 C180,120 360,0 540,60 C720,120 900,0 1080,60 C1260,120 1380,20 1440,50 L1440,120 L0,120 Z"
           fill={toColor}
         />
       </svg>

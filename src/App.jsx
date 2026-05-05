@@ -65,15 +65,14 @@ function App() {
       <AnimatedCursor />
       <ParticleBackground />
       <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden">
-        <Navbar />
         <Hero />
-        <WaveDivider fromColor="#0a0a0a" toColor="#111111" />
+        <WaveDivider fromColor="#0a0a0a" toColor="#1a1a2e" />
         <BentoServices />
         <ProcessSticky />
         <ClientsSection />
-        <WaveDivider fromColor="#111111" toColor="#0a0a0a" />
+        <WaveDivider fromColor="#1a1a2e" toColor="#0a0a0a" />
         <Pricing />
-        <WaveDivider fromColor="#0a0a0a" toColor="#111111" />
+        <WaveDivider fromColor="#0a0a0a" toColor="#1a1a2e" />
         <EnvelopeTestimonials />
         <Footer />
       </div>
