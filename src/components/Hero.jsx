@@ -1,4 +1,5 @@
-import ThreeBackground from './ThreeBackground';
+import { lazy, Suspense } from 'react';
+const ThreeBackground = lazy(() => import('./ThreeBackground'));
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
@@ -26,7 +27,7 @@ export default function Hero() {
 
   return (
     <>
-    <ThreeBackground />
+    <Suspense fallback={null}><ThreeBackground /></Suspense>
     <section className="min-h-screen flex items-center pt-24 md:pt-32 pb-12 md:pb-20 relative px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto w-full">
