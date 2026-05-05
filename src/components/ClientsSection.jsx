@@ -1,4 +1,3 @@
-import SectionCanvas from './SectionCanvas';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import RevealOnScroll from './RevealOnScroll';
@@ -19,7 +18,7 @@ export default function ClientsSection() {
   if (loading || clients.length === 0) return null;
 
   return (
-    <section id="clients" className="py-24 md:py-32 bg-white px-6 sm:px-8"><SectionCanvas type="orbits" opacity={0.3} />
+    <section id="clients" className="py-24 md:py-32 bg-white px-6 sm:px-8">
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="clients" direction="up" className="text-center mb-16 md:mb-20">
           <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-800">Dipercaya Oleh</h2>

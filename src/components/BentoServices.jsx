@@ -1,4 +1,3 @@
-import SectionCanvas from './SectionCanvas';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, Globe, Zap, ArrowRight, Code, Palette, ShoppingBag, BarChart } from 'lucide-react';
@@ -32,7 +31,7 @@ export default function BentoServices() {
 
   return (
     <section id="services" style={{position:"relative"}} className="py-20 md:py-28 bg-white relative overflow-hidden px-4 sm:px-6">
-      <SectionCanvas type="particles" opacity={0.35} />
+      
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="services">

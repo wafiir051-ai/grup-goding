@@ -1,4 +1,3 @@
-import SectionCanvas from './SectionCanvas';
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -102,7 +101,7 @@ export default function Pricing() {
   };
 
   return (
-    <section id="pricing" style={{position:"relative", overflow:"hidden"}} className="py-16 md:py-24 bg-[#0a0a0a] px-4 sm:px-6"><SectionCanvas type="ripple" opacity={0.2} />
+    <section id="pricing" style={{position:"relative", overflow:"hidden"}} className="py-16 md:py-24 bg-[#0a0a0a] px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="pricing">

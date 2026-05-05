@@ -1,4 +1,3 @@
-import SectionCanvas from './SectionCanvas';
 import RevealOnScroll from './RevealOnScroll';
 
 const steps = [
