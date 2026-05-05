@@ -135,7 +135,7 @@ export default function Pricing() {
                   )}
                   <h3 className="text-lg md:text-xl text-cyan-400 font-bold mt-1">{plan.name}</h3>
                   <div className="mt-2">
-                    <span className="text-2xl md:text-3xl text-white font-bold" style={{fontSize: "clamp(1rem, 3.5vw, 2rem)", whiteSpace: "nowrap", display: "block", width: "100%", overflow: "hidden", textOverflow: "ellipsis"}}>
+                    <span className="text-white font-bold" style={{fontSize: "clamp(0.85rem, 2.5vw, 1.6rem)", wordBreak: "break-all", lineHeight: "1.1", display: "block"}}>
                       Rp{formatPrice(plan.price)}
                     </span>
                     <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
