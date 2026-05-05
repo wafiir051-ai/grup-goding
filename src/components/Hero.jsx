@@ -28,7 +28,7 @@ export default function Hero() {
   return (
     <>
     <Suspense fallback={null}><ThreeBackground /></Suspense>
-    <section className="min-h-screen flex items-center pt-24 md:pt-32 pb-12 md:pb-20 relative px-4 sm:px-6">
+    <section className="min-h-screen flex items-center pt-24 md:pt-32 pb-12 md:pb-20 relative overflow-hidden px-4 sm:px-6" style={{background: "transparent"}}>
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
