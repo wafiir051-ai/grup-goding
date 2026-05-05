@@ -63,7 +63,7 @@ function App() {
   return (
     <AuthProvider>
       <AnimatedCursor />
-      <ParticleBackground />
+      {/* ParticleBackground dinonaktifkan */}
       <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden">
         <Navbar />
         <Hero />

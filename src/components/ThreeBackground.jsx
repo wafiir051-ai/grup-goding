@@ -144,7 +144,7 @@ export default function ThreeBackground() {
     }
 
     function loop() {
-      t += 0.014;
+      t += 0.012;
       targetRotY += 0.002;
       rotX += (targetRotX - rotX) * 0.05;
       rotY += (targetRotY - rotY) * 0.05;
