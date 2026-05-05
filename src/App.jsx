@@ -64,7 +64,8 @@ function App() {
     <AuthProvider>
       <AnimatedCursor />
       <ParticleBackground />
-      <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden">
+      <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden"><Navbar />
+        <Navbar />
         <Hero />
         <WaveDivider fromColor="#000000" toColor="#18181b" />
         <BentoServices />

@@ -109,7 +109,7 @@ export default function Pricing() {
             Paket Harga
           </h2>
         </RevealOnScroll>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {plans.map((plan, idx) => {
             const hoverEffect = threeDSettings.enabled ? {
               rotateX: threeDSettings.intensity * 6,
