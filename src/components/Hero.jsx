@@ -1,3 +1,4 @@
+import ThreeBackground from './ThreeBackground';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
@@ -24,6 +25,8 @@ export default function Hero() {
   const goPortfolio = () => window.location.href = '/portfolio';
 
   return (
+    <>
+    <ThreeBackground />
     <section className="min-h-screen flex items-center pt-24 md:pt-32 pb-12 md:pb-20 relative px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto w-full">
@@ -55,5 +58,6 @@ export default function Hero() {
         </div>
       </div>
     </section>
+    </>
   );
 }
