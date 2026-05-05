@@ -51,7 +51,7 @@ export default function Hero() {
               </div>
             </RevealOnScroll>
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center pt-16 lg:pt-24">
             <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} className="w-56 h-56 md:w-80 md:h-80 rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm">
               {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" /> : <div className="text-white text-6xl font-bold">G</div>}
             </motion.div>
