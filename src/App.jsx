@@ -66,13 +66,13 @@ function App() {
       <ParticleBackground />
       <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden">
         <Hero />
-        <WaveDivider fromColor="#0a0a0a" toColor="#1a1a2e" />
+        <WaveDivider fromColor="#000000" toColor="#18181b" />
         <BentoServices />
         <ProcessSticky />
         <ClientsSection />
-        <WaveDivider fromColor="#1a1a2e" toColor="#0a0a0a" />
+        <WaveDivider fromColor="#18181b" toColor="#000000" />
         <Pricing />
-        <WaveDivider fromColor="#0a0a0a" toColor="#1a1a2e" />
+        <WaveDivider fromColor="#000000" toColor="#18181b" />
         <EnvelopeTestimonials />
         <Footer />
       </div>

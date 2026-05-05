@@ -138,7 +138,7 @@ export default function Pricing() {
                     <span className="text-2xl md:text-3xl text-white font-bold">
                       Rp{formatPrice(plan.price)}
                     </span>
-                    <span className="text-xs text-zinc-400 ml-1">/{plan.period}</span>
+                    <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
                   </div>
                   <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{plan.description}</p>
                   <div className="mt-4 flex-1">
