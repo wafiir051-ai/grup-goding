@@ -67,7 +67,7 @@ export default function PortfolioPage() {
               className="flex flex-wrap justify-center gap-4 mt-10"
             >
               <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
-                <span className="text-2xl font-bold text-blue-600">10+</span>
+                <span className="text-2xl font-bold text-blue-600">{projects.length}+</span>
                 <span className="text-sm text-gray-500">Proyek Selesai</span>
               </div>
               <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
