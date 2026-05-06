@@ -29,33 +29,64 @@ export default function Hero() {
         <Suspense fallback={null}><ThreeBackground /></Suspense>
         <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
 
-        <div className="min-h-screen flex items-center">
-          <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 relative z-10 py-24">
-            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'center'}}
-                 className="grid-cols-1-mobile">
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="w-full max-w-screen-2xl mx-auto px-8 sm:px-12 md:px-16 lg:px-24 xl:px-32 2xl:px-40 relative z-10 py-28">
 
-              <div className="flex flex-col items-start text-left">
-                <h1 className="font-bold text-white leading-tight text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 xl:gap-24">
+
+              {/* Teks - mobile: tengah, desktop: kiri */}
+              <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1">
+                <h1 className="font-bold text-white leading-tight
+                  text-4xl
+                  sm:text-5xl
+                  md:text-6xl
+                  lg:text-6xl
+                  xl:text-7xl
+                  2xl:text-8xl">
                   <span className="block">Solusi Digital</span>
-                  <span className="block mt-2">Premium untuk</span>
-                  <span className="block mt-2"><TextGradient>Bisnis Modern</TextGradient></span>
+                  <span className="block mt-3">Premium untuk</span>
+                  <span className="block mt-3"><TextGradient>Bisnis Modern</TextGradient></span>
                 </h1>
-                <p className="mt-5 text-zinc-400 max-w-lg text-sm sm:text-base md:text-lg">
+                <p className="mt-6 text-zinc-400 max-w-xl mx-auto lg:mx-0
+                  text-base
+                  sm:text-lg
+                  md:text-xl
+                  2xl:text-2xl">
                   Kami menciptakan digital experience modern dengan motion physics, desain timeless, dan performa tinggi.
                 </p>
-                <div className="mt-7 flex flex-wrap gap-3 sm:gap-4">
-                  <button onClick={() => openModal('Halo, saya tertarik dengan layanan website premium Goding.')} className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl font-semibold hover:scale-105 transition text-sm sm:text-base">Mulai Proyek</button>
-                  <button onClick={() => window.location.href = '/portfolio'} className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-cyan-500 text-cyan-400 rounded-2xl font-semibold hover:bg-cyan-500/10 transition text-sm sm:text-base">Lihat Portfolio</button>
+                <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
+                  <button
+                    onClick={() => openModal('Halo, saya tertarik dengan layanan website premium Goding.')}
+                    className="px-6 sm:px-8 2xl:px-10 py-3 sm:py-4 2xl:py-5 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl font-semibold hover:scale-105 transition text-sm sm:text-base 2xl:text-lg"
+                  >
+                    Mulai Proyek
+                  </button>
+                  <button
+                    onClick={() => window.location.href = '/portfolio'}
+                    className="px-6 sm:px-8 2xl:px-10 py-3 sm:py-4 2xl:py-5 border-2 border-cyan-500 text-cyan-400 rounded-2xl font-semibold hover:bg-cyan-500/10 transition text-sm sm:text-base 2xl:text-lg"
+                  >
+                    Lihat Portfolio
+                  </button>
                 </div>
               </div>
 
-              <div style={{display:'flex', alignItems:'center', justifyContent:'flex-end'}}>
+              {/* Logo - mobile: bawah teks, desktop: kanan sejajar tengah */}
+              <div className="flex items-center justify-center lg:justify-end flex-shrink-0">
                 <motion.div
-                  animate={{ y: [0, -12, 0] }}
+                  animate={{ y: [0, -14, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 xl:w-80 xl:h-80 rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm"
+                  className="rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm
+                    w-44 h-44
+                    sm:w-56 sm:h-56
+                    md:w-64 md:h-64
+                    lg:w-72 lg:h-72
+                    xl:w-80 xl:h-80
+                    2xl:w-[28rem] 2xl:h-[28rem]"
                 >
-                  {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" /> : <div className="text-white text-6xl font-bold">G</div>}
+                  {logoUrl
+                    ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" />
+                    : <div className="text-white font-bold" style={{fontSize:'clamp(3rem, 8vw, 8rem)'}}>G</div>
+                  }
                 </motion.div>
               </div>
 
