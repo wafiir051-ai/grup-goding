@@ -58,7 +58,7 @@ export default function Navbar() {
           {/* Logo */}
           <a href="/" className="flex items-center gap-2 md:gap-3">
             {logoUrl ? (
-              <img src={logoUrl} alt="Logo" className="h-8 md:h-9 w-auto object-contain" />
+              <img src={logoUrl} alt="Logo" className="h-8 w-8 md:h-9 md:w-9 object-cover rounded-full" />
             ) : (
               <div className="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-xl flex items-center justify-center">
                 <span className="text-white font-bold text-lg md:text-xl">G</span>
