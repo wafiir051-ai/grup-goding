@@ -66,12 +66,21 @@ export default function Navbar() {
           </div>
 
           {/* Desktop CTA */}
-
+          <div className="hidden lg:flex items-center gap-2">
             <button
-            className="hidden lg:block px-4 xl:px-6 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl text-xs xl:text-sm font-semibold text-white shadow-lg hover:scale-105 transition"
-          >
-            Konsultasi VIP
-          </button>
+              onClick={() => setDark(!dark)}
+              className="w-9 h-9 flex items-center justify-center rounded-xl border border-white/20 text-white hover:bg-white/10 transition text-base"
+              title="Ganti tema"
+            >
+              {dark ? '☀️' : '🌙'}
+            </button>
+            <button
+              onClick={() => openModal('Halo, saya ingin konsultasi VIP dengan Goding.')}
+              className="px-4 xl:px-6 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl text-xs xl:text-sm font-semibold text-white shadow-lg hover:scale-105 transition"
+            >
+              Konsultasi VIP
+            </button>
+          </div>
 
           {/* Mobile Menu Button */}
           <button 
