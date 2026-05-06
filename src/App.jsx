@@ -46,15 +46,21 @@ function App() {
           if (pagePath === '' || pagePath === '/') {
             // Sudah di homepage, langsung scroll
             const el = document.getElementById(hash);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
+            if (el) {
+              const top = el.getBoundingClientRect().top + window.scrollY - 80;
+              window.scrollTo({ top, behavior: 'smooth' });
+            }
           } else {
             // Pindah halaman dulu, lalu scroll setelah render
             window.history.pushState({}, '', href);
             setPath(pagePath || '/');
             setTimeout(() => {
               const el = document.getElementById(hash);
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }, 300);
+              if (el) {
+                const top = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top, behavior: 'smooth' });
+              }
+            }, 500);
           }
         } else {
           e.preventDefault();
