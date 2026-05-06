@@ -6,6 +6,9 @@ import { Edit2, Trash2, LogOut, Save } from 'lucide-react';
 export default function AdminPanel() {
   const { user, signIn, signOut } = useAuth();
   const [plans, setPlans] = useState([]);
+  const [portfolios, setPortfolios] = useState([]);
+  const [editingPortfolio, setEditingPortfolio] = useState(null);
+  const [portfolioForm, setPortfolioForm] = useState({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', year: '2025', category: 'Web App', order_index: 0, is_active: true });
   const [testimonials, setTestimonials] = useState([]);
   const [clients, setClients] = useState([]);
   const [marquee, setMarquee] = useState({ text: '', speed: 20, is_active: true });
@@ -33,7 +36,9 @@ export default function AdminPanel() {
     const { data: t } = await supabase.from('testimonials').select('*').order('created_at', { ascending: false });
     const { data: c } = await supabase.from('clients').select('*').order('order_index');
     const { data: m } = await supabase.from('marquee_settings').select('*').maybeSingle();
+    const { data: port } = await supabase.from('portfolios').select('*').order('order_index');
     const { data: logo } = await supabase.from('site_settings').select('value').eq('key', 'logo_url').single();
+    setPortfolios(port || []);
     setPlans(p || []); setTestimonials(t || []); setClients(c || []);
     if (m) setMarquee(m);
     if (logo) setLogoUrl(logo.value);
@@ -105,6 +110,22 @@ export default function AdminPanel() {
     reader.readAsDataURL(logoFile);
   };
 
+  const handlePortfolioSubmit = async (e) => {
+    e.preventDefault();
+    const tagsArr = portfolioForm.tags.split(',').map(s => s.trim()).filter(Boolean);
+    const payload = { title: portfolioForm.title, description: portfolioForm.description, full_desc: portfolioForm.full_desc, tags: tagsArr, link: portfolioForm.link, gradient: portfolioForm.gradient, image_letter: portfolioForm.image_letter, year: portfolioForm.year, category: portfolioForm.category, order_index: parseInt(portfolioForm.order_index), is_active: portfolioForm.is_active };
+    if (editingPortfolio) { await supabase.from('portfolios').update(payload).eq('id', editingPortfolio.id); setMessage('Portfolio diupdate!'); }
+    else { await supabase.from('portfolios').insert([payload]); setMessage('Portfolio ditambahkan!'); }
+    setPortfolioForm({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', year: '2025', category: 'Web App', order_index: 0, is_active: true });
+    setEditingPortfolio(null); fetchAll();
+  };
+  const deletePortfolio = async (id) => { if (confirm('Hapus portfolio ini?')) { await supabase.from('portfolios').delete().eq('id', id); fetchAll(); } };
+  const editPortfolio = (p) => {
+    setEditingPortfolio(p);
+    setPortfolioForm({ title: p.title, description: p.description || '', full_desc: p.full_desc || '', tags: p.tags?.join(',') || '', link: p.link || '', gradient: p.gradient || 'from-blue-600 via-indigo-600 to-purple-600', image_letter: p.image_letter || 'P', year: p.year || '2025', category: p.category || 'Web App', order_index: p.order_index || 0, is_active: p.is_active });
+    window.scrollTo(0, 0);
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-6">
@@ -135,6 +156,7 @@ export default function AdminPanel() {
           <button onClick={() => setActiveTab('testimonials')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'testimonials' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Testimonial</button>
           <button onClick={() => setActiveTab('clients')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'clients' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Klien</button>
           <button onClick={() => setActiveTab('marquee')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'marquee' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Marquee</button>
+          <button onClick={() => setActiveTab('portfolio')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'portfolio' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Portfolio</button>
           <button onClick={() => setActiveTab('settings')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'settings' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Pengaturan</button>
         </div>
 
@@ -220,6 +242,67 @@ export default function AdminPanel() {
             <label className="flex gap-3 text-white mb-4"><input type="checkbox" checked={marquee.is_active} onChange={e => setMarquee({ ...marquee, is_active: e.target.checked })} /> Aktif</label>
             <button onClick={handleMarqueeUpdate} className="px-6 py-2 bg-blue-600 rounded-xl">Simpan</button>
           </div>
+        )}
+
+
+        {activeTab === 'portfolio' && (
+          <>
+            <form onSubmit={handlePortfolioSubmit} className="bg-zinc-900 p-8 rounded-3xl mb-12">
+              <h2 className="text-2xl mb-2 text-white font-bold">{editingPortfolio ? 'Edit Portfolio' : 'Tambah Portfolio Baru'}</h2>
+              <p className="text-zinc-500 text-sm mb-6">Data akan langsung tampil di halaman /portfolio</p>
+              <div className="grid md:grid-cols-2 gap-6">
+                <input placeholder="Judul Proyek *" value={portfolioForm.title} onChange={e => setPortfolioForm({ ...portfolioForm, title: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" required />
+                <input placeholder="Link Website (https://...)" value={portfolioForm.link} onChange={e => setPortfolioForm({ ...portfolioForm, link: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
+                <textarea placeholder="Deskripsi singkat *" rows="2" value={portfolioForm.description} onChange={e => setPortfolioForm({ ...portfolioForm, description: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 focus:border-blue-500 outline-none" required />
+                <textarea placeholder="Deskripsi lengkap (opsional)" rows="3" value={portfolioForm.full_desc} onChange={e => setPortfolioForm({ ...portfolioForm, full_desc: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 focus:border-blue-500 outline-none" />
+                <input placeholder="Tags (pisahkan koma, cth: React,Supabase,UI)" value={portfolioForm.tags} onChange={e => setPortfolioForm({ ...portfolioForm, tags: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 focus:border-blue-500 outline-none" />
+                <div>
+                  <label className="block text-zinc-400 text-sm mb-2">Warna Kartu</label>
+                  <select value={portfolioForm.gradient} onChange={e => setPortfolioForm({ ...portfolioForm, gradient: e.target.value })} className="w-full p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none">
+                    <option value="from-blue-600 via-indigo-600 to-purple-600">🔵 Biru - Ungu</option>
+                    <option value="from-rose-500 via-pink-500 to-orange-500">🔴 Merah - Orange</option>
+                    <option value="from-green-500 via-emerald-500 to-teal-500">🟢 Hijau - Teal</option>
+                    <option value="from-yellow-500 via-orange-500 to-red-500">🟡 Kuning - Merah</option>
+                    <option value="from-cyan-500 via-blue-500 to-indigo-500">🩵 Cyan - Indigo</option>
+                    <option value="from-purple-600 via-pink-500 to-rose-500">💜 Ungu - Pink</option>
+                  </select>
+                </div>
+                <input placeholder="Huruf pada kartu (1 huruf, cth: G)" maxLength="2" value={portfolioForm.image_letter} onChange={e => setPortfolioForm({ ...portfolioForm, image_letter: e.target.value.toUpperCase() })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
+                <input placeholder="Tahun (cth: 2025)" value={portfolioForm.year} onChange={e => setPortfolioForm({ ...portfolioForm, year: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
+                <input placeholder="Kategori (cth: Web App / Company Profile)" value={portfolioForm.category} onChange={e => setPortfolioForm({ ...portfolioForm, category: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
+                <input placeholder="Urutan tampil (angka, 1 = paling atas)" type="number" value={portfolioForm.order_index} onChange={e => setPortfolioForm({ ...portfolioForm, order_index: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
+                <label className="flex gap-3 text-white items-center cursor-pointer"><input type="checkbox" className="w-4 h-4" checked={portfolioForm.is_active} onChange={e => setPortfolioForm({ ...portfolioForm, is_active: e.target.checked })} /> Tampilkan di halaman portfolio</label>
+              </div>
+              <div className="mt-6 flex items-center gap-4 p-4 bg-zinc-800 rounded-2xl w-fit">
+                <div className={"w-16 h-16 rounded-2xl bg-gradient-to-br " + portfolioForm.gradient + " flex items-center justify-center text-white text-2xl font-black shadow-lg"}>{portfolioForm.image_letter || 'P'}</div>
+                <div><p className="text-white font-semibold">{portfolioForm.title || 'Judul Proyek'}</p><p className="text-zinc-400 text-sm">{portfolioForm.category} · {portfolioForm.year}</p></div>
+              </div>
+              <div className="flex gap-4 mt-6">
+                <button type="submit" className="px-10 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-2xl flex gap-2 font-semibold hover:opacity-90 transition"><Save size={20} /> {editingPortfolio ? 'Simpan Perubahan' : 'Tambah Portfolio'}</button>
+                {editingPortfolio && <button type="button" onClick={() => { setEditingPortfolio(null); setPortfolioForm({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', year: '2025', category: 'Web App', order_index: 0, is_active: true }); }} className="px-6 py-4 bg-zinc-700 text-white rounded-2xl hover:bg-zinc-600 transition">Batal Edit</button>}
+              </div>
+            </form>
+            <h3 className="text-xl font-bold text-white mb-4">Daftar Portfolio ({portfolios.length})</h3>
+            <div className="grid gap-4">
+              {portfolios.map(p => (
+                <div key={p.id} className={"bg-zinc-900 p-6 rounded-3xl flex justify-between items-center gap-4 border " + (p.is_active ? "border-zinc-800" : "border-zinc-800 opacity-50")}>
+                  <div className="flex items-center gap-4">
+                    <div className={"w-14 h-14 rounded-2xl bg-gradient-to-br " + p.gradient + " flex items-center justify-center text-white text-xl font-black flex-shrink-0 shadow-lg"}>{p.image_letter}</div>
+                    <div>
+                      <div className="flex items-center gap-2"><h3 className="text-lg font-semibold text-white">{p.title}</h3>{!p.is_active && <span className="text-xs bg-zinc-700 text-zinc-400 px-2 py-0.5 rounded-full">Disembunyikan</span>}</div>
+                      <p className="text-zinc-500 text-sm">{p.category} · {p.year} · Urutan #{p.order_index}</p>
+                      <div className="flex gap-1 mt-1 flex-wrap">{p.tags?.map(t => <span key={t} className="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full">{t}</span>)}</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 flex-shrink-0">
+                    <button onClick={() => editPortfolio(p)} className="p-3 bg-zinc-800 hover:bg-zinc-700 rounded-2xl transition" title="Edit"><Edit2 size={18} className="text-white" /></button>
+                    <button onClick={() => deletePortfolio(p.id)} className="p-3 bg-red-900/40 hover:bg-red-900/70 rounded-2xl transition" title="Hapus"><Trash2 size={18} className="text-red-400" /></button>
+                  </div>
+                </div>
+              ))}
+              {portfolios.length === 0 && <div className="text-center py-16 text-zinc-500"><p className="text-lg">Belum ada portfolio</p><p className="text-sm mt-1">Tambahkan proyek pertama kamu di form atas</p></div>}
+            </div>
+          </>
         )}
 
         {activeTab === 'settings' && (
