@@ -39,31 +39,42 @@ const stats = [
 
 export default function PortfolioPage() {
   const [hovered, setHovered] = useState(null);
+  const [dark, setDark] = useState(true);
 
   return (
-    <div className="min-h-screen bg-[#05080f] text-white">
+    <div className={`min-h-screen transition-colors duration-500 ${dark ? "bg-[#05080f] text-white" : "bg-white text-gray-900"}`}>
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+        {dark && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />}
 
         <div className="max-w-6xl mx-auto relative z-10">
 
-          <motion.button
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={() => window.history.back()}
-            className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-12 group"
+          <div className="flex items-center justify-between mb-12">
+            <motion.button
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => window.history.back()}
+            className={`flex items-center gap-2 transition-colors mb-12 group ${dark ? 'text-zinc-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Kembali ke Beranda
-          </motion.button>
+              Kembali ke Beranda
+            </motion.button>
+            <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              onClick={() => setDark(!dark)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-semibold transition-all ${dark ? "border-white/20 bg-white/10 text-white hover:bg-white/20" : "border-gray-300 bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+            >
+              {dark ? "☀️ Light" : "🌙 Dark"}
+            </motion.button>
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-semibold px-4 py-2 rounded-full mb-6"
+            className={`inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full mb-6 border ${dark ? "bg-blue-500/10 border-blue-500/20 text-blue-400" : "bg-blue-100 border-blue-200 text-blue-700"}`}
           >
             <Sparkles className="w-4 h-4" /> PORTFOLIO KAMI
           </motion.div>
@@ -85,28 +96,10 @@ export default function PortfolioPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-lg text-zinc-400 max-w-2xl mb-16"
+            className={`text-lg max-w-2xl mb-16 ${dark ? "text-zinc-400" : "text-gray-600"}`}
           >
             Setiap proyek adalah bukti komitmen kami dalam menghadirkan solusi digital terbaik.
           </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4"
-          >
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-5">
-                  <Icon className="w-5 h-5 text-blue-400 mb-3" />
-                  <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-sm text-zinc-500">{stat.label}</div>
-                </div>
-              );
-            })}
-          </motion.div>
         </div>
       </section>
 
@@ -121,7 +114,7 @@ export default function PortfolioPage() {
                   onHoverEnd={() => setHovered(null)}
                   whileHover={{ y: -6 }}
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:border-white/20 transition-all duration-300"
+                  className={`border rounded-3xl overflow-hidden transition-all duration-300 ${dark ? "bg-white/5 border-white/10 hover:border-white/20" : "bg-gray-50 border-gray-200 hover:border-gray-400 shadow-md hover:shadow-xl"}`}
                 >
                   <div className={"relative h-56 bg-gradient-to-br " + project.gradient + " flex items-center justify-center overflow-hidden"}>
                     <motion.span
@@ -140,12 +133,12 @@ export default function PortfolioPage() {
                   </div>
 
                   <div className="p-7">
-                    <h2 className="text-2xl font-bold text-white mb-2">{project.title}</h2>
-                    <p className="text-zinc-400 text-sm mb-4 leading-relaxed">{project.description}</p>
-                    <p className="text-sm text-zinc-500 mb-5 border-l-2 border-blue-500/50 pl-4 italic leading-relaxed">{project.fullDesc}</p>
+                    <h2 className={`text-2xl font-bold mb-2 ${dark ? "text-white" : "text-gray-900"}`}>{project.title}</h2>
+                    <p className={`text-sm mb-4 leading-relaxed ${dark ? "text-zinc-400" : "text-gray-600"}`}>{project.description}</p>
+                    <p className={`text-sm mb-5 border-l-2 border-blue-500/50 pl-4 italic leading-relaxed ${dark ? "text-zinc-500" : "text-gray-500"}`}>{project.fullDesc}</p>
                     <div className="flex flex-wrap gap-2 mb-6">
                       {project.tags.map((tag, i) => (
-                        <span key={i} className="text-xs font-medium px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-zinc-300">
+                        <span key={i} className={`text-xs font-medium px-3 py-1.5 rounded-full border ${dark ? "bg-white/5 border-white/10 text-zinc-300" : "bg-gray-100 border-gray-200 text-gray-600"}`}>
                           {tag}
                         </span>
                       ))}
@@ -166,9 +159,9 @@ export default function PortfolioPage() {
           </div>
 
           <RevealOnScroll>
-            <div className="mt-16 text-center bg-gradient-to-r from-blue-600/10 to-cyan-500/10 border border-blue-500/20 rounded-3xl p-10">
-              <h3 className="text-3xl font-bold text-white mb-3">Mau Website Seperti Ini?</h3>
-              <p className="text-zinc-400 mb-6">Konsultasi gratis, kami siap bantu wujudkan proyek digital kamu.</p>
+            <div className={`mt-16 text-center rounded-3xl p-10 border ${dark ? "bg-gradient-to-r from-blue-600/10 to-cyan-500/10 border-blue-500/20" : "bg-blue-50 border-blue-200"}`}>
+              <h3 className={`text-3xl font-bold mb-3 ${dark ? "text-white" : "text-gray-900"}`}>Mau Website Seperti Ini?</h3>
+              <p className={`mb-6 ${dark ? "text-zinc-400" : "text-gray-600"}`}>Konsultasi gratis, kami siap bantu wujudkan proyek digital kamu.</p>
               <button
                 onClick={() => window.open("https://wa.me/6281234567890?text=Halo, saya tertarik membuat website seperti di portfolio Goding.", "_blank")}
                 className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold px-8 py-4 rounded-2xl hover:opacity-90 hover:scale-105 transition-all"
