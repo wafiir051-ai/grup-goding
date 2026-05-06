@@ -35,7 +35,33 @@ function App() {
 
   useEffect(() => {
     const handleLinkClick = (e) => {
-      const target = e.target.closest('a');
+    const href = e.currentTarget?.getAttribute('href');
+    if (!href) return;
+
+    if (href.includes('#')) {
+      e.preventDefault();
+      const hash = href.split('#')[1];
+      const el = document.getElementById(hash);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    } else if (href.startsWith('/') && !href.startsWith('//')) {
+      e.preventDefault();
+      window.history.pushState({}, '', href);
+      // setPath logic jika ada
+    }
+  };
+    if (href && href.includes('#')) {
+      e.preventDefault();
+      const hash = href.split('#')[1];
+      const el = document.getElementById(hash);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }
+  };
       if (!target) return;
       const href = target.getAttribute('href');
       if (href && href.startsWith('/') && !href.startsWith('//') && href !== '#') {
