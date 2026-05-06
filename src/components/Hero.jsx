@@ -27,14 +27,14 @@ export default function Hero() {
 
   return (
     <>
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6" style={{background: "#050810"}}>
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-0" style={{background: "#050810"}}>
       <Suspense fallback={null}><ThreeBackground /></Suspense>
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
-      <div className="max-w-7xl mx-auto w-full relative z-10 pl-8 md:pl-16 lg:pl-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="text-center lg:text-left flex flex-col justify-center lg:pl-16 xl:pl-24">
+      <div className="max-w-7xl mx-auto w-full relative z-10 px-4 sm:px-8 md:px-12 lg:px-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-center">
+          <div className="text-center lg:text-left flex flex-col justify-center">
             <RevealOnScroll componentName="hero">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+              <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
                 <span className="block">Solusi Digital</span>
                 <span className="block mt-2">Premium untuk <TextGradient>Bisnis Modern</TextGradient></span>
               </h1>
@@ -51,8 +51,8 @@ export default function Hero() {
               </div>
             </RevealOnScroll>
           </div>
-          <div className="flex justify-center lg:justify-end items-center lg:translate-y-8">
-            <div className="w-56 h-56 md:w-80 md:h-80 rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm">
+          <div className="flex justify-center lg:justify-end items-center mt-6 lg:mt-0 lg:translate-y-8">
+            <div className="w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm">
               {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" /> : <div className="text-white text-6xl font-bold">G</div>}
             </div>
           </div>
