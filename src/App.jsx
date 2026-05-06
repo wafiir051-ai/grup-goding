@@ -46,6 +46,13 @@ function App() {
         const top = el.getBoundingClientRect().top + window.scrollY - 80;
         window.scrollTo({ top, behavior: 'smooth' });
       }
+    } else if (href.startsWith('/') && !href.startsWith('//') && href !== '/') {
+      e.preventDefault();
+      window.history.pushState({}, '', href);
+      // setPath logic jika ada di component
+    }
+  };);
+      }
     } else if (href.startsWith('/') && !href.startsWith('//')) {
       e.preventDefault();
       window.history.pushState({}, '', href);
