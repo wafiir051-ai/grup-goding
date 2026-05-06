@@ -8,7 +8,7 @@ export default function AdminPanel() {
   const [plans, setPlans] = useState([]);
   const [portfolios, setPortfolios] = useState([]);
   const [editingPortfolio, setEditingPortfolio] = useState(null);
-  const [portfolioForm, setPortfolioForm] = useState({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', year: '2025', category: 'Web App', order_index: 0, is_active: true });
+  const [portfolioForm, setPortfolioForm] = useState({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', image_url: null, year: '2025', category: 'Web App', order_index: 0, is_active: true });
   const [testimonials, setTestimonials] = useState([]);
   const [clients, setClients] = useState([]);
   const [marquee, setMarquee] = useState({ text: '', speed: 20, is_active: true });
@@ -28,6 +28,8 @@ export default function AdminPanel() {
   const [clientLogoFile, setClientLogoFile] = useState(null);
   const [clientLogoPreview, setClientLogoPreview] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [portfolioImageFile, setPortfolioImageFile] = useState(null);
+  const [portfolioImagePreview, setPortfolioImagePreview] = useState('');
 
   useEffect(() => { if (user) fetchAll(); }, [user]);
 
@@ -107,20 +109,34 @@ export default function AdminPanel() {
     reader.readAsDataURL(logoFile);
   };
 
+  // Portfolio Image Upload
+  const handlePortfolioImageFile = (e) => {
+    const file = e.target.files[0];
+    if (file) { setPortfolioImageFile(file); setPortfolioImagePreview(URL.createObjectURL(file)); }
+  };
+  const uploadPortfolioImageBase64 = () => new Promise((resolve) => {
+    if (!portfolioImageFile) resolve(null);
+    else { const reader = new FileReader(); reader.onloadend = () => resolve(reader.result); reader.readAsDataURL(portfolioImageFile); }
+  });
+
   // Portfolio CRUD
   const handlePortfolioSubmit = async (e) => {
     e.preventDefault();
     const tagsArr = portfolioForm.tags.split(',').map(s => s.trim()).filter(Boolean);
-    const payload = { title: portfolioForm.title, description: portfolioForm.description, full_desc: portfolioForm.full_desc, tags: tagsArr, link: portfolioForm.link, gradient: portfolioForm.gradient, image_letter: portfolioForm.image_letter, year: portfolioForm.year, category: portfolioForm.category, order_index: parseInt(portfolioForm.order_index), is_active: portfolioForm.is_active };
+    let imageUrl = portfolioForm.image_url || null;
+    if (portfolioImageFile) imageUrl = await uploadPortfolioImageBase64();
+    const payload = { title: portfolioForm.title, description: portfolioForm.description, full_desc: portfolioForm.full_desc, tags: tagsArr, link: portfolioForm.link, gradient: portfolioForm.gradient, image_letter: portfolioForm.image_letter, image_url: imageUrl, year: portfolioForm.year, category: portfolioForm.category, order_index: parseInt(portfolioForm.order_index), is_active: portfolioForm.is_active };
     if (editingPortfolio) { await supabase.from('portfolios').update(payload).eq('id', editingPortfolio.id); setMessage('Portfolio diupdate!'); }
     else { await supabase.from('portfolios').insert([payload]); setMessage('Portfolio ditambahkan!'); }
-    setPortfolioForm({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', year: '2025', category: 'Web App', order_index: 0, is_active: true });
+    setPortfolioForm({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', image_url: null, year: '2025', category: 'Web App', order_index: 0, is_active: true });
+    setPortfolioImageFile(null); setPortfolioImagePreview('');
     setEditingPortfolio(null); fetchAll();
   };
   const deletePortfolio = async (id) => { if (confirm('Hapus portfolio ini?')) { await supabase.from('portfolios').delete().eq('id', id); fetchAll(); } };
   const editPortfolio = (p) => {
     setEditingPortfolio(p);
-    setPortfolioForm({ title: p.title, description: p.description || '', full_desc: p.full_desc || '', tags: p.tags?.join(',') || '', link: p.link || '', gradient: p.gradient || 'from-blue-600 via-indigo-600 to-purple-600', image_letter: p.image_letter || 'P', year: p.year || '2025', category: p.category || 'Web App', order_index: p.order_index || 0, is_active: p.is_active });
+    setPortfolioForm({ title: p.title, description: p.description || '', full_desc: p.full_desc || '', tags: p.tags?.join(',') || '', link: p.link || '', gradient: p.gradient || 'from-blue-600 via-indigo-600 to-purple-600', image_letter: p.image_letter || 'P', image_url: p.image_url || null, year: p.year || '2025', category: p.category || 'Web App', order_index: p.order_index || 0, is_active: p.is_active });
+    setPortfolioImagePreview(p.image_url || ''); setPortfolioImageFile(null);
     window.scrollTo(0, 0);
   };
 
@@ -252,6 +268,16 @@ export default function AdminPanel() {
                 <input placeholder="Link Website (https://...)" value={portfolioForm.link} onChange={e => setPortfolioForm({ ...portfolioForm, link: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none" />
                 <textarea placeholder="Deskripsi singkat *" rows="2" value={portfolioForm.description} onChange={e => setPortfolioForm({ ...portfolioForm, description: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 outline-none" required />
                 <textarea placeholder="Deskripsi lengkap (opsional)" rows="3" value={portfolioForm.full_desc} onChange={e => setPortfolioForm({ ...portfolioForm, full_desc: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 outline-none" />
+                <div className="md:col-span-2">
+                  <label className="block text-zinc-400 text-sm mb-2">Gambar Proyek (opsional, akan menggantikan huruf)</label>
+                  <input type="file" accept="image/*" onChange={handlePortfolioImageFile} className="text-white text-sm mb-3 block" />
+                  {(portfolioImagePreview || portfolioForm.image_url) && (
+                    <div className="relative w-fit">
+                      <img src={portfolioImagePreview || portfolioForm.image_url} alt="preview" className="h-32 w-auto rounded-2xl object-cover border border-zinc-700" />
+                      <button type="button" onClick={() => { setPortfolioImageFile(null); setPortfolioImagePreview(''); setPortfolioForm({ ...portfolioForm, image_url: null }); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center">✕</button>
+                    </div>
+                  )}
+                </div>
                 <input placeholder="Tags (pisahkan koma)" value={portfolioForm.tags} onChange={e => setPortfolioForm({ ...portfolioForm, tags: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 outline-none" />
                 <div>
                   <label className="block text-zinc-400 text-sm mb-2">Warna Kartu</label>
@@ -271,7 +297,11 @@ export default function AdminPanel() {
                 <label className="flex gap-3 text-white items-center cursor-pointer"><input type="checkbox" className="w-4 h-4" checked={portfolioForm.is_active} onChange={e => setPortfolioForm({ ...portfolioForm, is_active: e.target.checked })} /> Tampilkan di halaman portfolio</label>
               </div>
               <div className="mt-6 flex items-center gap-4 p-4 bg-zinc-800 rounded-2xl w-fit">
-                <div className={"w-16 h-16 rounded-2xl bg-gradient-to-br " + portfolioForm.gradient + " flex items-center justify-center text-white text-2xl font-black shadow-lg"}>{portfolioForm.image_letter || 'P'}</div>
+                {(portfolioImagePreview || portfolioForm.image_url) ? (
+                  <img src={portfolioImagePreview || portfolioForm.image_url} alt="preview" className="w-16 h-16 rounded-2xl object-cover" />
+                ) : (
+                  <div className={"w-16 h-16 rounded-2xl bg-gradient-to-br " + portfolioForm.gradient + " flex items-center justify-center text-white text-2xl font-black shadow-lg"}>{portfolioForm.image_letter || 'P'}</div>
+                )}
                 <div><p className="text-white font-semibold">{portfolioForm.title || 'Judul Proyek'}</p><p className="text-zinc-400 text-sm">{portfolioForm.category} - {portfolioForm.year}</p></div>
               </div>
               <div className="flex gap-4 mt-6">
@@ -284,7 +314,11 @@ export default function AdminPanel() {
               {portfolios.map(p => (
                 <div key={p.id} className="bg-zinc-900 p-6 rounded-3xl flex justify-between items-center gap-4 border border-zinc-800">
                   <div className="flex items-center gap-4">
-                    <div className={"w-14 h-14 rounded-2xl bg-gradient-to-br " + p.gradient + " flex items-center justify-center text-white text-xl font-black flex-shrink-0"}>{p.image_letter}</div>
+{p.image_url ? (
+                      <img src={p.image_url} alt={p.title} className="w-14 h-14 rounded-2xl object-cover flex-shrink-0" />
+                    ) : (
+                      <div className={"w-14 h-14 rounded-2xl bg-gradient-to-br " + p.gradient + " flex items-center justify-center text-white text-xl font-black flex-shrink-0"}>{p.image_letter}</div>
+                    )}
                     <div>
                       <h3 className="text-lg font-semibold text-white">{p.title} <span className="text-sm text-zinc-500">({p.year})</span></h3>
                       <p className="text-zinc-500 text-sm">{p.category} - #{p.order_index} {!p.is_active && <span className="text-xs bg-zinc-700 text-zinc-400 px-2 py-0.5 rounded-full ml-1">Disembunyikan</span>}</p>
