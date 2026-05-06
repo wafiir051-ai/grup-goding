@@ -75,7 +75,7 @@ export default function PortfolioPage() {
                 <span className="text-sm text-gray-500">Klien Puas</span>
               </div>
               <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
-                <span className="text-2xl font-bold text-blue-600">3+</span>
+                <span className="text-2xl font-bold text-blue-600">&lt;1</span>
                 <span className="text-sm text-gray-500">Tahun Pengalaman</span>
               </div>
             </motion.div>
