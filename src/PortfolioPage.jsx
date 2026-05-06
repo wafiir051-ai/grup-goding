@@ -31,20 +31,6 @@ export default function PortfolioPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      {/* Navbar khusus portfolio */}
-      <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={goBack}>
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-700 to-cyan-500 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">G</span>
-            </div>
-            <span className="font-semibold text-xl text-gray-800">goding</span>
-          </div>
-          <MagneticButton onClick={goBack} className="px-5 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-xl text-sm font-semibold flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" /> Kembali ke Beranda
-          </MagneticButton>
-        </div>
-      </nav>
 
       <main className="pt-24 pb-20 px-6 max-w-7xl mx-auto">
         <RevealOnScroll componentName="portfolio" direction="up" className="text-center mb-16">
