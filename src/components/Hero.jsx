@@ -36,16 +36,16 @@ export default function Hero() {
 
               {/* Teks - mobile: tengah, desktop: kiri */}
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1">
-                <h1 className="font-bold text-white leading-tight
-                  text-4xl
-                  sm:text-5xl
-                  md:text-6xl
-                  lg:text-6xl
-                  xl:text-7xl
-                  2xl:text-8xl">
-                  <span className="block">Solusi Digital</span>
-                  <span className="block mt-1">Premium untuk</span>
-                  <span className="block mt-1"><TextGradient>Bisnis Modern</TextGradient></span>
+                <h1 className="font-bold text-white leading-[1.1]
+                  text-3xl
+                  sm:text-4xl
+                  md:text-5xl
+                  lg:text-5xl
+                  xl:text-6xl
+                  2xl:text-6xl">
+                  <span className="block">Solusi Digital Premium</span>
+                  <span className="block">untuk</span>
+                  <span className="block"><TextGradient>Bisnis Modern</TextGradient></span>
                 </h1>
                 <p className="mt-3 text-zinc-400 max-w-xl mx-auto lg:mx-0
                   text-base
