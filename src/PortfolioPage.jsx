@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from './context/ThemeContext';
 import { ExternalLink, Sparkles, ArrowLeft, Globe, Code2, Layers } from 'lucide-react';
 import RevealOnScroll from './components/RevealOnScroll';
 
@@ -38,8 +39,8 @@ const stats = [
 ];
 
 export default function PortfolioPage() {
+  const { dark } = useTheme();
   const [hovered, setHovered] = useState(null);
-  const [dark, setDark] = useState(true);
 
   return (
     <div className={`min-h-screen transition-colors duration-500 ${dark ? "bg-[#05080f] text-white" : "bg-white text-gray-900"}`}>
@@ -50,8 +51,7 @@ export default function PortfolioPage() {
 
         <div className="max-w-6xl mx-auto relative z-10">
 
-          <div className="flex items-center justify-between mb-12">
-            <motion.button
+          <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               onClick={() => window.history.back()}
@@ -68,8 +68,6 @@ export default function PortfolioPage() {
             >
               {dark ? "☀️ Light" : "🌙 Dark"}
             </motion.button>
-          </div>
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
