@@ -56,7 +56,7 @@ function App() {
     </>
   );
 
-  if (path === '/portfolio') return <AuthProvider><Layout><PortfolioPage /></Layout></AuthProvider>;
+  if (path === '/portfolio') return <AuthProvider><PortfolioPage /></AuthProvider>;
   if (path === '/testimonials') return <AuthProvider><Layout><TestimonialsPage /></Layout></AuthProvider>;
   if (path === '/admin') return <AuthProvider><AdminPanel /></AuthProvider>;
 
