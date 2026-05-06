@@ -8,6 +8,15 @@ export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
+  const [logoUrl, setLogoUrl] = useState('');
+
+  useEffect(() => {
+    import('../lib/supabase').then(({ supabase }) => {
+      supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
+        if (data && data.value) setLogoUrl(data.value);
+      });
+    });
+  }, []);
 
   const openModal = (msg) => { setPendingMessage(msg); setIsModalOpen(true); };
   const handleSelectNumber = (phoneNumber, message) => { 
@@ -47,12 +56,16 @@ export default function Navbar() {
           className="bg-black/90 backdrop-blur-xl rounded-3xl px-4 md:px-6 py-3 md:py-4 flex items-center justify-between border border-white/20 shadow-2xl"
         >
           {/* Logo */}
-          <div className="flex items-center gap-2 md:gap-3">
-            <div className="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg md:text-xl">G</span>
-            </div>
-            <span className="font-semibold text-lg md:text-xl lg:text-2xl tracking-tight text-white">goding</span>
-          </div>
+          <a href="/" className="flex items-center gap-2 md:gap-3">
+            {logoUrl ? (
+              <img src={logoUrl} alt="Logo" className="h-8 md:h-9 w-auto object-contain" />
+            ) : (
+              <div className="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-br from-blue-600 to-cyan-400 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-lg md:text-xl">G</span>
+              </div>
+            )}
+            <span className="font-semibold text-lg md:text-xl lg:text-2xl tracking-tight text-white">Goding</span>
+          </a>
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium">
