@@ -66,21 +66,12 @@ export default function Navbar() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center gap-2">
-            <button
-              onClick={() => setDark(!dark)}
-              className="w-9 h-9 flex items-center justify-center rounded-xl border border-white/20 text-white hover:bg-white/10 transition text-base"
-              title="Ganti tema"
-            >
-              {dark ? '☀️' : '🌙'}
-            </button>
-            <button
-              onClick={() => openModal('Halo, saya ingin konsultasi VIP dengan Goding.')}
-              className="px-4 xl:px-6 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl text-xs xl:text-sm font-semibold text-white shadow-lg hover:scale-105 transition"
-            >
-              Konsultasi VIP
-            </button>
-          </div>
+          <button
+            onClick={() => openModal('Halo, saya ingin konsultasi VIP dengan Goding.')}
+            className="hidden lg:block px-4 xl:px-6 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl text-xs xl:text-sm font-semibold text-white shadow-lg hover:scale-105 transition"
+          >
+            Konsultasi VIP
+          </button>
 
           {/* Mobile Menu Button */}
           <button 
@@ -123,12 +114,6 @@ export default function Navbar() {
                   )
                 ))}
                 <div className="pt-2 border-t border-white/10 mt-2">
-                  <button
-                    onClick={() => setDark(!dark)}
-                    className="w-full px-4 py-3 flex items-center gap-2 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition text-sm font-medium"
-                  >
-                    {dark ? '☀️ Light Mode' : '🌙 Dark Mode'}
-                  </button>
                   <button 
                     onClick={() => { setIsMobileMenuOpen(false); openModal('Halo, saya ingin konsultasi VIP dengan Goding.'); }}
                     className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-xl text-sm font-semibold text-white"
