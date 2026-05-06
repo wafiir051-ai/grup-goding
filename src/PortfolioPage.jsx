@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from './context/ThemeContext';
 import { ExternalLink, Sparkles, ArrowLeft, Globe, Code2, Layers } from 'lucide-react';
 import RevealOnScroll from './components/RevealOnScroll';
 
@@ -39,7 +38,7 @@ const stats = [
 ];
 
 export default function PortfolioPage() {
-  const { dark } = useTheme();
+  const [dark, setDark] = useState(false);
   const [hovered, setHovered] = useState(null);
 
   return (
