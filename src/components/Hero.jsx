@@ -30,7 +30,7 @@ export default function Hero() {
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6" style={{background: "#050810"}}>
       <Suspense fallback={null}><ThreeBackground /></Suspense>
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
-      <div className="max-w-7xl mx-auto w-full relative z-10">
+      <div className="max-w-7xl mx-auto w-full relative z-10 pl-8 md:pl-16 lg:pl-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left flex flex-col justify-center lg:pl-16 xl:pl-24">
             <RevealOnScroll componentName="hero">
