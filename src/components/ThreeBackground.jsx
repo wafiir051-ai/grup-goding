@@ -13,8 +13,8 @@ export default function ThreeBackground() {
     let mouseX = 0, mouseY = 0;
 
     function resize() {
-      W = canvas.width = canvas.parentElement.clientWidth || window.innerWidth;
-      H = canvas.height = canvas.parentElement.clientHeight || window.innerHeight;
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
     }
 
     function project(x, y, z, cx, cy) {
