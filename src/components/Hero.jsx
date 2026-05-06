@@ -37,7 +37,7 @@ export default function Hero() {
 
           {/* Mobile & Tablet: stack vertikal, logo di atas */}
           {/* Desktop: dua kolom berdampingan */}
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-6 xl:gap-12">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-6 xl:gap-16 min-h-[60vh]">
 
             {/* Kolom Kiri - Teks */}
             <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1">
@@ -85,7 +85,7 @@ export default function Hero() {
             </div>
 
             {/* Kolom Kanan - Logo */}
-            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end order-1 lg:order-2">
+            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end items-center order-1 lg:order-2">
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
