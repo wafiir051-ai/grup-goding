@@ -31,18 +31,19 @@ export default function Hero() {
 
         <div className="min-h-screen flex items-center">
           <div className="w-full max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 relative z-10 py-24">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16" style={{alignItems:'center'}}>
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4rem', alignItems:'center'}}
+                 className="grid-cols-1-mobile">
 
-              <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+              <div className="flex flex-col items-start text-left">
                 <h1 className="font-bold text-white leading-tight text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl">
                   <span className="block">Solusi Digital</span>
                   <span className="block mt-2">Premium untuk</span>
                   <span className="block mt-2"><TextGradient>Bisnis Modern</TextGradient></span>
                 </h1>
-                <p className="mt-5 text-zinc-400 max-w-lg mx-auto lg:mx-0 text-sm sm:text-base md:text-lg">
+                <p className="mt-5 text-zinc-400 max-w-lg text-sm sm:text-base md:text-lg">
                   Kami menciptakan digital experience modern dengan motion physics, desain timeless, dan performa tinggi.
                 </p>
-                <div className="mt-7 flex flex-wrap gap-3 sm:gap-4 justify-center lg:justify-start">
+                <div className="mt-7 flex flex-wrap gap-3 sm:gap-4">
                   <button onClick={() => openModal('Halo, saya tertarik dengan layanan website premium Goding.')} className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl font-semibold hover:scale-105 transition text-sm sm:text-base">Mulai Proyek</button>
                   <button onClick={() => window.location.href = '/portfolio'} className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-cyan-500 text-cyan-400 rounded-2xl font-semibold hover:bg-cyan-500/10 transition text-sm sm:text-base">Lihat Portfolio</button>
                 </div>
