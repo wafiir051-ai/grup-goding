@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import RevealOnScroll from './RevealOnScroll';
 import MarqueeText from './MarqueeText';
 import WhatsAppModal from './WhatsAppModal';
@@ -7,6 +7,15 @@ import VisitorStats from './VisitorStats';
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
+  const [logoUrl, setLogoUrl] = useState('');
+
+  useEffect(() => {
+    import('../lib/supabase').then(({ supabase }) => {
+      supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
+        if (data && data.value) setLogoUrl(data.value);
+      });
+    });
+  }, []);
   const openModal = (msg) => { setPendingMessage(msg); setIsModalOpen(true); };
   const handleSelectNumber = (phoneNumber, message) => { 
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank'); 
@@ -21,10 +30,14 @@ export default function Footer() {
           <RevealOnScroll componentName="footer">
             <div className="text-center md:text-left">
               <div className="flex items-center gap-2 md:gap-3 justify-center md:justify-start">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-700 to-cyan-500 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-xl md:text-2xl">G</span>
-                </div>
-                <span className="text-2xl md:text-3xl font-bold">goding</span>
+                {logoUrl ? (
+                  <img src={logoUrl} alt="Logo" className="h-10 w-10 md:h-12 md:w-12 object-cover rounded-full" />
+                ) : (
+                  <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-700 to-cyan-500 rounded-xl flex items-center justify-center">
+                    <span className="text-white font-bold text-xl md:text-2xl">G</span>
+                  </div>
+                )}
+                <span className="text-2xl md:text-3xl font-bold">Goding</span>
               </div>
               <p className="mt-3 md:mt-4 text-zinc-400 text-base md:text-lg max-w-md mx-auto md:mx-0">
                 Menciptakan pengalaman digital premium yang membantu bisnis Anda tumbuh.
