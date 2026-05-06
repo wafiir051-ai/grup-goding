@@ -44,17 +44,17 @@ export default function Hero() {
                   xl:text-7xl
                   2xl:text-8xl">
                   <span className="block">Solusi Digital</span>
-                  <span className="block mt-3">Premium untuk</span>
-                  <span className="block mt-3"><TextGradient>Bisnis Modern</TextGradient></span>
+                  <span className="block mt-1">Premium untuk</span>
+                  <span className="block mt-1"><TextGradient>Bisnis Modern</TextGradient></span>
                 </h1>
-                <p className="mt-6 text-zinc-400 max-w-xl mx-auto lg:mx-0
+                <p className="mt-3 text-zinc-400 max-w-xl mx-auto lg:mx-0
                   text-base
                   sm:text-lg
                   md:text-xl
                   2xl:text-2xl">
                   Kami menciptakan digital experience modern dengan motion physics, desain timeless, dan performa tinggi.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
+                <div className="mt-5 flex flex-wrap gap-4 justify-center lg:justify-start">
                   <button
                     onClick={() => openModal('Halo, saya tertarik dengan layanan website premium Goding.')}
                     className="px-6 sm:px-8 2xl:px-10 py-3 sm:py-4 2xl:py-5 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl font-semibold hover:scale-105 transition text-sm sm:text-base 2xl:text-lg"
