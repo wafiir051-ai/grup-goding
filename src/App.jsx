@@ -18,6 +18,29 @@ import ParticleBackground from './components/ParticleBackground';
 import WaveDivider from './components/WaveDivider';
 
 function App() {
+  // Handle navigation & smooth scroll
+  const handleLinkClick = (e) => {
+    const href = e.currentTarget?.getAttribute('href');
+    if (!href) return;
+
+    if (href.includes('#')) {
+      e.preventDefault();
+      const hash = href.split('#')[1];
+      const el = document.getElementById(hash);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 80; // offset navbar
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    } else if (href.startsWith('/') && !href.startsWith('//')) {
+      e.preventDefault();
+      window.history.pushState({}, '', href);
+      window.scrollTo(0, 0);
+    }
+  };
+
+
+  
+
   const [path, setPath] = useState(window.location.pathname);
 
   useEffect(() => {
@@ -34,77 +57,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const handleLinkClick = (e) => {
-    const href = e.currentTarget?.getAttribute('href');
-    if (!href) return;
-
-    if (href.includes('#')) {
-      e.preventDefault();
-      const hash = href.split('#')[1];
-      const el = document.getElementById(hash);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    } else if (href.startsWith('/') && !href.startsWith('//') && href !== '/') {
-      e.preventDefault();
-      window.history.pushState({}, '', href);
-      // setPath logic jika ada di component
-    }
-  };);
-      }
-    } else if (href.startsWith('/') && !href.startsWith('//')) {
-      e.preventDefault();
-      window.history.pushState({}, '', href);
-      // setPath logic jika ada
-    }
-  };
-    if (href && href.includes('#')) {
-      e.preventDefault();
-      const hash = href.split('#')[1];
-      const el = document.getElementById(hash);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    }
-  };
+    const handleClick = (e) => {
+      const target = e.target.closest('a');
       if (!target) return;
       const href = target.getAttribute('href');
       if (href && href.startsWith('/') && !href.startsWith('//') && href !== '#') {
-        // Kalau ada hash (misal /#testimonials), handle scroll ke section
-        if (href.includes('#')) {
-          const [pagePath, hash] = href.split('#');
-          e.preventDefault();
-          if (pagePath === '' || pagePath === '/') {
-            // Sudah di homepage, langsung scroll
-            const el = document.getElementById(hash);
-            if (el) {
-              const top = el.getBoundingClientRect().top + window.scrollY - 80;
-              window.scrollTo({ top, behavior: 'smooth' });
-            }
-          } else {
-            // Pindah halaman dulu, lalu scroll setelah render
-            window.history.pushState({}, '', href);
-            setPath(pagePath || '/');
-            setTimeout(() => {
-              const el = document.getElementById(hash);
-              if (el) {
-                const top = el.getBoundingClientRect().top + window.scrollY - 80;
-                window.scrollTo({ top, behavior: 'smooth' });
-              }
-            }, 500);
-          }
-        } else {
-          e.preventDefault();
-          window.history.pushState({}, '', href);
-          setPath(href);
-          window.scrollTo(0, 0);
-        }
+        e.preventDefault();
+        window.history.pushState({}, '', href);
+        setPath(href);
+        window.scrollTo(0, 0);
       }
     };
-    document.addEventListener('click', handleLinkClick);
-    return () => document.removeEventListener('click', handleLinkClick);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
   }, []);
 
   const Layout = ({ children }) => (
