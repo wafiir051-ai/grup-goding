@@ -39,10 +39,29 @@ function App() {
       if (!target) return;
       const href = target.getAttribute('href');
       if (href && href.startsWith('/') && !href.startsWith('//') && href !== '#') {
-        e.preventDefault();
-        window.history.pushState({}, '', href);
-        setPath(href);
-        window.scrollTo(0, 0);
+        // Kalau ada hash (misal /#testimonials), handle scroll ke section
+        if (href.includes('#')) {
+          const [pagePath, hash] = href.split('#');
+          e.preventDefault();
+          if (pagePath === '' || pagePath === '/') {
+            // Sudah di homepage, langsung scroll
+            const el = document.getElementById(hash);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            // Pindah halaman dulu, lalu scroll setelah render
+            window.history.pushState({}, '', href);
+            setPath(pagePath || '/');
+            setTimeout(() => {
+              const el = document.getElementById(hash);
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+          }
+        } else {
+          e.preventDefault();
+          window.history.pushState({}, '', href);
+          setPath(href);
+          window.scrollTo(0, 0);
+        }
       }
     };
     document.addEventListener('click', handleLinkClick);
