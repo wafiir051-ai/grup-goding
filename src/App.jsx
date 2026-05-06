@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import BentoServices from './components/BentoServices';
@@ -61,6 +62,7 @@ function App() {
   if (path === '/admin') return <AuthProvider><AdminPanel /></AuthProvider>;
 
   return (
+    <ThemeProvider>
     <AuthProvider>
       {/* AnimatedCursor */}
       {/* ParticleBackground */}
@@ -78,6 +80,7 @@ function App() {
         <Footer />
       </div>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 export default App;
