@@ -38,8 +38,8 @@ export default function AdminPanel() {
     const { data: m } = await supabase.from('marquee_settings').select('*').maybeSingle();
     const { data: port } = await supabase.from('portfolios').select('*').order('order_index');
     const { data: logo } = await supabase.from('site_settings').select('value').eq('key', 'logo_url').single();
-    setPortfolios(port || []);
     setPlans(p || []); setTestimonials(t || []); setClients(c || []);
+    setPortfolios(port || []);
     if (m) setMarquee(m);
     if (logo) setLogoUrl(logo.value);
   };
@@ -72,16 +72,13 @@ export default function AdminPanel() {
   const editTestimonial = (t) => { setEditingTestimonial(t); setTestiForm({ name: t.name, role: t.role || '', content: t.content, rating: t.rating, avatar: t.avatar || '' }); };
 
   // Clients CRUD
-  const handleClientLogoFile = (e) => {
-    const file = e.target.files[0];
-    if (file) { setClientLogoFile(file); setClientLogoPreview(URL.createObjectURL(file)); }
-  };
+  const handleClientLogoFile = (e) => { const file = e.target.files[0]; if (file) { setClientLogoFile(file); setClientLogoPreview(URL.createObjectURL(file)); } };
   const uploadClientLogoBase64 = () => new Promise((resolve) => { if (!clientLogoFile) resolve(null); else { const reader = new FileReader(); reader.onloadend = () => resolve(reader.result); reader.readAsDataURL(clientLogoFile); } });
   const handleClientSubmit = async (e) => {
     e.preventDefault();
-    let logoUrl = clientForm.logo_url;
-    if (clientLogoFile) logoUrl = await uploadClientLogoBase64();
-    const payload = { name: clientForm.name, logo_url: logoUrl, website: clientForm.website || null, order_index: parseInt(clientForm.order_index), is_active: clientForm.is_active };
+    let logoUrlVal = clientForm.logo_url;
+    if (clientLogoFile) logoUrlVal = await uploadClientLogoBase64();
+    const payload = { name: clientForm.name, logo_url: logoUrlVal, website: clientForm.website || null, order_index: parseInt(clientForm.order_index), is_active: clientForm.is_active };
     if (editingClient) { await supabase.from('clients').update(payload).eq('id', editingClient.id); setMessage('Klien diupdate'); }
     else { await supabase.from('clients').insert([payload]); setMessage('Klien ditambahkan'); }
     setClientForm({ name: '', logo_url: '', website: '', order_index: 0, is_active: true }); setClientLogoFile(null); setClientLogoPreview(''); setEditingClient(null); fetchAll();
@@ -91,11 +88,11 @@ export default function AdminPanel() {
 
   // Marquee
   const handleMarqueeUpdate = async () => {
-    const { error } = await supabase.from('marquee_settings').upsert({ id: marquee.id, text: marquee.text, speed: parseInt(marquee.speed), is_active: marquee.is_active });
-    if (error) setMessage('Gagal update marquee: ' + error.message); else { setMessage('Marquee diupdate'); fetchAll(); }
+    const { error: err } = await supabase.from('marquee_settings').upsert({ id: marquee.id, text: marquee.text, speed: parseInt(marquee.speed), is_active: marquee.is_active });
+    if (err) setMessage('Gagal update marquee: ' + err.message); else { setMessage('Marquee diupdate'); fetchAll(); }
   };
 
-  // Logo website
+  // Logo
   const handleLogoFileChange = (e) => { const file = e.target.files[0]; if (file) { setLogoFile(file); setLogoUrl(URL.createObjectURL(file)); } };
   const handleLogoUpload = async () => {
     if (!logoFile) { setMessage('Pilih file dulu'); return; }
@@ -103,13 +100,14 @@ export default function AdminPanel() {
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64 = reader.result;
-      const { error } = await supabase.from('site_settings').upsert({ key: 'logo_url', value: base64 });
-      if (error) setMessage('Gagal upload: ' + error.message); else { setMessage('Logo berhasil diupdate!'); fetchAll(); }
+      const { error: err } = await supabase.from('site_settings').upsert({ key: 'logo_url', value: base64 });
+      if (err) setMessage('Gagal upload: ' + err.message); else { setMessage('Logo berhasil diupdate!'); fetchAll(); }
       setUploading(false);
     };
     reader.readAsDataURL(logoFile);
   };
 
+  // Portfolio CRUD
   const handlePortfolioSubmit = async (e) => {
     e.preventDefault();
     const tagsArr = portfolioForm.tags.split(',').map(s => s.trim()).filter(Boolean);
@@ -178,7 +176,7 @@ export default function AdminPanel() {
             <div className="grid gap-6">
               {plans.map(p => (
                 <div key={p.id} className="bg-zinc-900 p-6 rounded-3xl flex justify-between items-center">
-                  <div><h3 className="text-2xl font-semibold text-white">{p.name} - Rp {p.price.toLocaleString('id-ID')}</h3><p className="text-zinc-400">{p.description}</p><div className="flex gap-1 mt-1">{p.tech_stack?.map(t => <span key={t} className="text-xs bg-zinc-800 px-2 py-0.5 rounded-full">{t}</span>)}</div></div>
+                  <div><h3 className="text-2xl font-semibold text-white">{p.name} - Rp {p.price.toLocaleString('id-ID')}</h3><p className="text-zinc-400">{p.description}</p><div className="flex gap-1 mt-1">{p.tech_stack?.map(t => <span key={t} className="text-xs bg-zinc-800 px-2 py-0.5 rounded-full text-zinc-300">{t}</span>)}</div></div>
                   <div className="flex gap-3"><button onClick={() => editPlan(p)} className="p-3 bg-zinc-800 rounded-2xl"><Edit2 size={20} className="text-white" /></button><button onClick={() => deletePlan(p.id)} className="p-3 bg-red-900/50 rounded-2xl"><Trash2 size={20} className="text-white" /></button></div>
                 </div>
               ))}
@@ -240,10 +238,9 @@ export default function AdminPanel() {
             <input type="text" value={marquee.text} onChange={e => setMarquee({ ...marquee, text: e.target.value })} className="w-full p-3 bg-zinc-800 rounded-2xl text-white mb-4" />
             <input type="number" value={marquee.speed} onChange={e => setMarquee({ ...marquee, speed: parseInt(e.target.value) })} className="w-full p-3 bg-zinc-800 rounded-2xl text-white mb-4" />
             <label className="flex gap-3 text-white mb-4"><input type="checkbox" checked={marquee.is_active} onChange={e => setMarquee({ ...marquee, is_active: e.target.checked })} /> Aktif</label>
-            <button onClick={handleMarqueeUpdate} className="px-6 py-2 bg-blue-600 rounded-xl">Simpan</button>
+            <button onClick={handleMarqueeUpdate} className="px-6 py-2 bg-blue-600 rounded-xl text-white">Simpan</button>
           </div>
         )}
-
 
         {activeTab === 'portfolio' && (
           <>
@@ -251,56 +248,56 @@ export default function AdminPanel() {
               <h2 className="text-2xl mb-2 text-white font-bold">{editingPortfolio ? 'Edit Portfolio' : 'Tambah Portfolio Baru'}</h2>
               <p className="text-zinc-500 text-sm mb-6">Data akan langsung tampil di halaman /portfolio</p>
               <div className="grid md:grid-cols-2 gap-6">
-                <input placeholder="Judul Proyek *" value={portfolioForm.title} onChange={e => setPortfolioForm({ ...portfolioForm, title: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" required />
-                <input placeholder="Link Website (https://...)" value={portfolioForm.link} onChange={e => setPortfolioForm({ ...portfolioForm, link: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
-                <textarea placeholder="Deskripsi singkat *" rows="2" value={portfolioForm.description} onChange={e => setPortfolioForm({ ...portfolioForm, description: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 focus:border-blue-500 outline-none" required />
-                <textarea placeholder="Deskripsi lengkap (opsional)" rows="3" value={portfolioForm.full_desc} onChange={e => setPortfolioForm({ ...portfolioForm, full_desc: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 focus:border-blue-500 outline-none" />
-                <input placeholder="Tags (pisahkan koma, cth: React,Supabase,UI)" value={portfolioForm.tags} onChange={e => setPortfolioForm({ ...portfolioForm, tags: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 focus:border-blue-500 outline-none" />
+                <input placeholder="Judul Proyek *" value={portfolioForm.title} onChange={e => setPortfolioForm({ ...portfolioForm, title: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none" required />
+                <input placeholder="Link Website (https://...)" value={portfolioForm.link} onChange={e => setPortfolioForm({ ...portfolioForm, link: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none" />
+                <textarea placeholder="Deskripsi singkat *" rows="2" value={portfolioForm.description} onChange={e => setPortfolioForm({ ...portfolioForm, description: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 outline-none" required />
+                <textarea placeholder="Deskripsi lengkap (opsional)" rows="3" value={portfolioForm.full_desc} onChange={e => setPortfolioForm({ ...portfolioForm, full_desc: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 outline-none" />
+                <input placeholder="Tags (pisahkan koma)" value={portfolioForm.tags} onChange={e => setPortfolioForm({ ...portfolioForm, tags: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 outline-none" />
                 <div>
                   <label className="block text-zinc-400 text-sm mb-2">Warna Kartu</label>
-                  <select value={portfolioForm.gradient} onChange={e => setPortfolioForm({ ...portfolioForm, gradient: e.target.value })} className="w-full p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none">
-                    <option value="from-blue-600 via-indigo-600 to-purple-600">🔵 Biru - Ungu</option>
-                    <option value="from-rose-500 via-pink-500 to-orange-500">🔴 Merah - Orange</option>
-                    <option value="from-green-500 via-emerald-500 to-teal-500">🟢 Hijau - Teal</option>
-                    <option value="from-yellow-500 via-orange-500 to-red-500">🟡 Kuning - Merah</option>
-                    <option value="from-cyan-500 via-blue-500 to-indigo-500">🩵 Cyan - Indigo</option>
-                    <option value="from-purple-600 via-pink-500 to-rose-500">💜 Ungu - Pink</option>
+                  <select value={portfolioForm.gradient} onChange={e => setPortfolioForm({ ...portfolioForm, gradient: e.target.value })} className="w-full p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none">
+                    <option value="from-blue-600 via-indigo-600 to-purple-600">Biru - Ungu</option>
+                    <option value="from-rose-500 via-pink-500 to-orange-500">Merah - Orange</option>
+                    <option value="from-green-500 via-emerald-500 to-teal-500">Hijau - Teal</option>
+                    <option value="from-yellow-500 via-orange-500 to-red-500">Kuning - Merah</option>
+                    <option value="from-cyan-500 via-blue-500 to-indigo-500">Cyan - Indigo</option>
+                    <option value="from-purple-600 via-pink-500 to-rose-500">Ungu - Pink</option>
                   </select>
                 </div>
-                <input placeholder="Huruf pada kartu (1 huruf, cth: G)" maxLength="2" value={portfolioForm.image_letter} onChange={e => setPortfolioForm({ ...portfolioForm, image_letter: e.target.value.toUpperCase() })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
-                <input placeholder="Tahun (cth: 2025)" value={portfolioForm.year} onChange={e => setPortfolioForm({ ...portfolioForm, year: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
-                <input placeholder="Kategori (cth: Web App / Company Profile)" value={portfolioForm.category} onChange={e => setPortfolioForm({ ...portfolioForm, category: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
-                <input placeholder="Urutan tampil (angka, 1 = paling atas)" type="number" value={portfolioForm.order_index} onChange={e => setPortfolioForm({ ...portfolioForm, order_index: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 focus:border-blue-500 outline-none" />
+                <input placeholder="Huruf pada kartu (cth: G)" maxLength="2" value={portfolioForm.image_letter} onChange={e => setPortfolioForm({ ...portfolioForm, image_letter: e.target.value.toUpperCase() })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none" />
+                <input placeholder="Tahun (cth: 2025)" value={portfolioForm.year} onChange={e => setPortfolioForm({ ...portfolioForm, year: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none" />
+                <input placeholder="Kategori (cth: Web App)" value={portfolioForm.category} onChange={e => setPortfolioForm({ ...portfolioForm, category: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none" />
+                <input placeholder="Urutan tampil (1 = paling atas)" type="number" value={portfolioForm.order_index} onChange={e => setPortfolioForm({ ...portfolioForm, order_index: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white border border-zinc-700 outline-none" />
                 <label className="flex gap-3 text-white items-center cursor-pointer"><input type="checkbox" className="w-4 h-4" checked={portfolioForm.is_active} onChange={e => setPortfolioForm({ ...portfolioForm, is_active: e.target.checked })} /> Tampilkan di halaman portfolio</label>
               </div>
               <div className="mt-6 flex items-center gap-4 p-4 bg-zinc-800 rounded-2xl w-fit">
                 <div className={"w-16 h-16 rounded-2xl bg-gradient-to-br " + portfolioForm.gradient + " flex items-center justify-center text-white text-2xl font-black shadow-lg"}>{portfolioForm.image_letter || 'P'}</div>
-                <div><p className="text-white font-semibold">{portfolioForm.title || 'Judul Proyek'}</p><p className="text-zinc-400 text-sm">{portfolioForm.category} · {portfolioForm.year}</p></div>
+                <div><p className="text-white font-semibold">{portfolioForm.title || 'Judul Proyek'}</p><p className="text-zinc-400 text-sm">{portfolioForm.category} - {portfolioForm.year}</p></div>
               </div>
               <div className="flex gap-4 mt-6">
-                <button type="submit" className="px-10 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-2xl flex gap-2 font-semibold hover:opacity-90 transition"><Save size={20} /> {editingPortfolio ? 'Simpan Perubahan' : 'Tambah Portfolio'}</button>
-                {editingPortfolio && <button type="button" onClick={() => { setEditingPortfolio(null); setPortfolioForm({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', year: '2025', category: 'Web App', order_index: 0, is_active: true }); }} className="px-6 py-4 bg-zinc-700 text-white rounded-2xl hover:bg-zinc-600 transition">Batal Edit</button>}
+                <button type="submit" className="px-10 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-2xl flex gap-2 font-semibold"><Save size={20} /> {editingPortfolio ? 'Simpan Perubahan' : 'Tambah Portfolio'}</button>
+                {editingPortfolio && <button type="button" onClick={() => { setEditingPortfolio(null); setPortfolioForm({ title: '', description: '', full_desc: '', tags: '', link: '', gradient: 'from-blue-600 via-indigo-600 to-purple-600', image_letter: 'P', year: '2025', category: 'Web App', order_index: 0, is_active: true }); }} className="px-6 py-4 bg-zinc-700 text-white rounded-2xl">Batal</button>}
               </div>
             </form>
             <h3 className="text-xl font-bold text-white mb-4">Daftar Portfolio ({portfolios.length})</h3>
             <div className="grid gap-4">
               {portfolios.map(p => (
-                <div key={p.id} className={"bg-zinc-900 p-6 rounded-3xl flex justify-between items-center gap-4 border " + (p.is_active ? "border-zinc-800" : "border-zinc-800 opacity-50")}>
+                <div key={p.id} className="bg-zinc-900 p-6 rounded-3xl flex justify-between items-center gap-4 border border-zinc-800">
                   <div className="flex items-center gap-4">
-                    <div className={"w-14 h-14 rounded-2xl bg-gradient-to-br " + p.gradient + " flex items-center justify-center text-white text-xl font-black flex-shrink-0 shadow-lg"}>{p.image_letter}</div>
+                    <div className={"w-14 h-14 rounded-2xl bg-gradient-to-br " + p.gradient + " flex items-center justify-center text-white text-xl font-black flex-shrink-0"}>{p.image_letter}</div>
                     <div>
-                      <div className="flex items-center gap-2"><h3 className="text-lg font-semibold text-white">{p.title}</h3>{!p.is_active && <span className="text-xs bg-zinc-700 text-zinc-400 px-2 py-0.5 rounded-full">Disembunyikan</span>}</div>
-                      <p className="text-zinc-500 text-sm">{p.category} · {p.year} · Urutan #{p.order_index}</p>
+                      <h3 className="text-lg font-semibold text-white">{p.title} <span className="text-sm text-zinc-500">({p.year})</span></h3>
+                      <p className="text-zinc-500 text-sm">{p.category} - #{p.order_index} {!p.is_active && <span className="text-xs bg-zinc-700 text-zinc-400 px-2 py-0.5 rounded-full ml-1">Disembunyikan</span>}</p>
                       <div className="flex gap-1 mt-1 flex-wrap">{p.tags?.map(t => <span key={t} className="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-full">{t}</span>)}</div>
                     </div>
                   </div>
                   <div className="flex gap-3 flex-shrink-0">
-                    <button onClick={() => editPortfolio(p)} className="p-3 bg-zinc-800 hover:bg-zinc-700 rounded-2xl transition" title="Edit"><Edit2 size={18} className="text-white" /></button>
-                    <button onClick={() => deletePortfolio(p.id)} className="p-3 bg-red-900/40 hover:bg-red-900/70 rounded-2xl transition" title="Hapus"><Trash2 size={18} className="text-red-400" /></button>
+                    <button onClick={() => editPortfolio(p)} className="p-3 bg-zinc-800 rounded-2xl"><Edit2 size={18} className="text-white" /></button>
+                    <button onClick={() => deletePortfolio(p.id)} className="p-3 bg-red-900/40 rounded-2xl"><Trash2 size={18} className="text-red-400" /></button>
                   </div>
                 </div>
               ))}
-              {portfolios.length === 0 && <div className="text-center py-16 text-zinc-500"><p className="text-lg">Belum ada portfolio</p><p className="text-sm mt-1">Tambahkan proyek pertama kamu di form atas</p></div>}
+              {portfolios.length === 0 && <p className="text-zinc-500 text-center py-12">Belum ada portfolio. Tambahkan di form atas!</p>}
             </div>
           </>
         )}
@@ -310,7 +307,7 @@ export default function AdminPanel() {
             <h2 className="text-2xl font-bold text-white mb-6">Logo Website</h2>
             {logoUrl && <img src={logoUrl} alt="Logo" className="h-20 mb-4" />}
             <input type="file" accept="image/*" onChange={handleLogoFileChange} className="text-white mb-4" />
-            <button onClick={handleLogoUpload} disabled={uploading} className="px-6 py-2 bg-cyan-600 rounded-xl">{uploading ? 'Uploading...' : 'Upload Logo'}</button>
+            <button onClick={handleLogoUpload} disabled={uploading} className="px-6 py-2 bg-cyan-600 rounded-xl text-white">{uploading ? 'Uploading...' : 'Upload Logo'}</button>
           </div>
         )}
       </div>
