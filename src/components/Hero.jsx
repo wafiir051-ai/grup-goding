@@ -30,9 +30,9 @@ export default function Hero() {
         <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
 
         <div className="min-h-screen flex items-center justify-center">
-          <div className="w-full max-w-screen-2xl mx-auto px-8 sm:px-12 md:px-16 lg:px-24 xl:px-32 2xl:px-40 relative z-10 py-28">
+          <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28 2xl:px-36 relative z-10 py-20 sm:py-24 md:py-28">
 
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 xl:gap-24">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-16 xl:gap-20">
 
               {/* Teks - mobile: tengah, desktop: kiri */}
               <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1">
@@ -76,9 +76,9 @@ export default function Hero() {
                   animate={{ y: [0, -14, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                   className="rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm
-                    w-44 h-44
-                    sm:w-56 sm:h-56
-                    md:w-64 md:h-64
+                    w-36 h-36
+                    sm:w-48 sm:h-48
+                    md:w-56 md:h-56
                     lg:w-72 lg:h-72
                     xl:w-80 xl:h-80
                     2xl:w-[28rem] 2xl:h-[28rem]"

@@ -31,13 +31,13 @@ export default function PortfolioPage() {
       <div className="fixed top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-blue-50/80 to-white pointer-events-none z-0" />
       <div className="fixed top-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none z-0" />
 
-      <section className="relative pt-24 pb-20 px-6 z-10">
+      <section className="relative pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 z-10">
         <div className="max-w-6xl mx-auto">
           <motion.button
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             onClick={() => window.history.back()}
-            className="flex items-center gap-2 text-gray-400 hover:text-gray-700 transition-colors group text-sm font-medium mb-16"
+            className="flex items-center gap-2 text-gray-400 hover:text-gray-700 transition-colors group text-sm font-medium mb-8 sm:mb-12 md:mb-16"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Kembali ke Beranda
@@ -64,9 +64,9 @@ export default function PortfolioPage() {
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-4 mt-10"
+              className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6 sm:mt-10"
             >
-              <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
+              <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-3 sm:px-6 py-2 sm:py-3">
                 <span className="text-2xl font-bold text-blue-600">{projects.length}+</span>
                 <span className="text-sm text-gray-500">Proyek Selesai</span>
               </div>
@@ -86,7 +86,7 @@ export default function PortfolioPage() {
       <section className="pb-28 px-6 relative z-10 bg-[#f8faff] pt-12">
         <div className="max-w-6xl mx-auto">
           {loading ? (
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8">
               <div className="h-96 bg-gray-100 rounded-3xl animate-pulse" />
               <div className="h-96 bg-gray-100 rounded-3xl animate-pulse" />
             </div>

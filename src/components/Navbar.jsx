@@ -48,7 +48,7 @@ export default function Navbar() {
   return (
     <>
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
-      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-6xl px-4">
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-6xl px-3 sm:px-4">
         <motion.div 
           initial={{ y: -30, opacity: 0 }} 
           animate={{ y: 0, opacity: 1 }} 
