@@ -7,7 +7,7 @@ export default function ParticleBackground() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let animId;
-    let mouse = { x: null, y: null };
+    let t = 0;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -16,87 +16,44 @@ export default function ParticleBackground() {
     resize();
     window.addEventListener('resize', resize);
 
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-    window.addEventListener('mouseleave', () => {
-      mouse.x = null;
-      mouse.y = null;
-    });
-
-    const COUNT = Math.floor((window.innerWidth * window.innerHeight) / 12000);
-    const particles = Array.from({ length: Math.min(COUNT, 90) }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      r: Math.random() * 2 + 1,
-      alpha: Math.random() * 0.5 + 0.3,
-    }));
-
-    const CONNECT_DIST = 140;
-    const MOUSE_DIST = 180;
+    const orbs = [
+      { x: 0.2, y: 0.3, r: 0.45, color: '56,189,248', speed: 0.0004, ox: 0.12, oy: 0.08 },
+      { x: 0.75, y: 0.6, r: 0.4,  color: '99,102,241', speed: 0.0003, ox: 0.10, oy: 0.14 },
+      { x: 0.5,  y: 0.8, r: 0.35, color: '34,211,238', speed: 0.0005, ox: 0.08, oy: 0.10 },
+      { x: 0.85, y: 0.2, r: 0.3,  color: '139,92,246', speed: 0.0006, ox: 0.06, oy: 0.12 },
+      { x: 0.1,  y: 0.75,r: 0.28, color: '14,165,233', speed: 0.0004, ox: 0.09, oy: 0.07 },
+    ];
 
     const draw = () => {
+      t++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Update & draw particles
-      for (const p of particles) {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      for (const orb of orbs) {
+        const cx = (orb.x + Math.sin(t * orb.speed * 1.3) * orb.ox) * canvas.width;
+        const cy = (orb.y + Math.cos(t * orb.speed) * orb.oy) * canvas.height;
+        const radius = orb.r * Math.min(canvas.width, canvas.height);
 
-        // Mouse repulsion
-        if (mouse.x !== null) {
-          const dx = p.x - mouse.x;
-          const dy = p.y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < MOUSE_DIST) {
-            const force = (MOUSE_DIST - dist) / MOUSE_DIST;
-            p.x += (dx / dist) * force * 1.5;
-            p.y += (dy / dist) * force * 1.5;
-          }
-        }
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        grad.addColorStop(0,   `rgba(${orb.color}, 0.18)`);
+        grad.addColorStop(0.5, `rgba(${orb.color}, 0.07)`);
+        grad.addColorStop(1,   `rgba(${orb.color}, 0)`);
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
         ctx.fill();
       }
 
-      // Draw connections between particles
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < CONNECT_DIST) {
-            const alpha = (1 - dist / CONNECT_DIST) * 0.35;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(34, 211, 238, ${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
-        }
-
-        // Connect to mouse
-        if (mouse.x !== null) {
-          const dx = particles[i].x - mouse.x;
-          const dy = particles[i].y - mouse.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < MOUSE_DIST) {
-            const alpha = (1 - dist / MOUSE_DIST) * 0.6;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(99, 202, 255, ${alpha})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
+      // Subtle dot grid overlay
+      const spacing = 40;
+      const dotSize = 0.8;
+      for (let x = spacing / 2; x < canvas.width; x += spacing) {
+        for (let y = spacing / 2; y < canvas.height; y += spacing) {
+          const pulse = 0.12 + 0.06 * Math.sin(t * 0.008 + x * 0.01 + y * 0.01);
+          ctx.beginPath();
+          ctx.arc(x, y, dotSize, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(148,163,184,${pulse})`;
+          ctx.fill();
         }
       }
 
@@ -115,6 +72,7 @@ export default function ParticleBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
+      style={{ mixBlendMode: 'screen' }}
     />
   );
 }
