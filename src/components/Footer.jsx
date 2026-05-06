@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import RevealOnScroll from './RevealOnScroll';
 import MarqueeText from './MarqueeText';
 import WhatsAppModal from './WhatsAppModal';
+import { supabase } from '../lib/supabase';
 import VisitorStats from './VisitorStats';
 
 export default function Footer() {
@@ -10,11 +11,9 @@ export default function Footer() {
   const [logoUrl, setLogoUrl] = useState('');
 
   useEffect(() => {
-    import('../lib/supabase').then(({ supabase }) => {
-      supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
-        if (data && data.value) setLogoUrl(data.value);
-      });
-    });
+    supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
+      if (data?.value) setLogoUrl(data.value);
+    }).catch(() => {});
   }, []);
   const openModal = (msg) => { setPendingMessage(msg); setIsModalOpen(true); };
   const handleSelectNumber = (phoneNumber, message) => { 

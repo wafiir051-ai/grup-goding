@@ -3,6 +3,7 @@ import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import WhatsAppModal from './WhatsAppModal';
+import { supabase } from '../lib/supabase';
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,11 +12,9 @@ export default function Navbar() {
   const [logoUrl, setLogoUrl] = useState('');
 
   useEffect(() => {
-    import('../lib/supabase').then(({ supabase }) => {
-      supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
-        if (data && data.value) setLogoUrl(data.value);
-      });
-    });
+    supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
+      if (data?.value) setLogoUrl(data.value);
+    }).catch(() => {});
   }, []);
 
   const openModal = (msg) => { setPendingMessage(msg); setIsModalOpen(true); };
