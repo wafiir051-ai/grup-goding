@@ -39,7 +39,6 @@ export default function Navbar() {
     { label: 'Layanan', href: '/#services' },
     { label: 'Harga', href: '/#pricing' },
     { label: 'Klien', action: () => scrollToSection('clients') },
-    { label: 'Testimonial', href: '/#testimonials' },
     { label: 'Portfolio', href: '/portfolio' },
     { label: 'Admin', href: '/admin' },
   ];
