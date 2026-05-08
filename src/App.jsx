@@ -89,7 +89,7 @@ function App() {
     <AuthProvider>
       {/* AnimatedCursor */}
       {/* ParticleBackground */}
-      <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden">
+      <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden w-full max-w-full">
         <Navbar />
         <Hero />
         <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
