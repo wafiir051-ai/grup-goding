@@ -9,8 +9,8 @@ const steps = [
 
 export default function ProcessSticky() {
   return (
-    <section className='bg-zinc-50 py-16 md:py-24' style={{width:'100%', boxSizing:'border-box', padding:'4rem 1.5rem'}}>
-      <div style={{maxWidth:'800px', margin:'0 auto', width:'100%'}}>
+    <section className='bg-zinc-50 py-16 md:py-24' style={{width:'100%', boxSizing:'border-box', padding:'4rem 1rem'}}>
+      <div style={{maxWidth:'100%', margin:'0 auto', width:'100%', padding:'0 0.5rem', boxSizing:'border-box'}}>
         <div style={{textAlign:'center', marginBottom:'2.5rem'}}>
           <div style={{fontSize:'0.75rem', fontWeight:600, textTransform:'uppercase', color:'#2563eb', marginBottom:'0.75rem', letterSpacing:'0.1em'}}>PROSES KAMI</div>
           <h2 style={{fontSize:'clamp(1.5rem, 5vw, 3rem)', fontWeight:700, color:'#1f2937', lineHeight:1.2}}>
