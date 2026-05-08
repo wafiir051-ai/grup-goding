@@ -24,5 +24,5 @@ export default function RevealOnScroll({ children, componentName, once = false, 
   if (settings.direction === 'right') variants.hidden.x = -60 * settings.intensity;
   if (settings.animation_type === 'scale') variants.hidden.scale = 0.7;
   if (settings.animation_type === 'rotate') variants.hidden.rotate = -10;
-  return <motion.div ref={ref} initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={variants} className={className}>{children}</motion.div>;
+  return <motion.div ref={ref} initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={variants} className={className} style={{width:'100%', maxWidth:'100%', boxSizing:'border-box'}}>{children}</motion.div>;
 }
