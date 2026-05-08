@@ -16,7 +16,7 @@ export default function ProcessSticky() {
           <RevealOnScroll componentName="process">
             <div className="text-center lg:text-left">
               <div className="text-xs md:text-sm font-semibold uppercase text-blue-600 mb-3 md:mb-4">PROSES KAMI</div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-800 leading-tight">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-800 leading-tight break-words">
                 Dari ide <br className="hidden sm:block" /> hingga live <br className="hidden sm:block" /> dalam 4 langkah
               </h2>
             </div>
