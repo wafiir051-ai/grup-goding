@@ -30,7 +30,7 @@ export default function Hero() {
         <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
 
         <div className="min-h-screen flex items-center justify-center">
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 py-20 sm:py-24 md:py-28">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 py-16 sm:py-20 md:py-24">
 
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-16 xl:gap-20">
 
@@ -76,12 +76,12 @@ export default function Hero() {
                   animate={{ y: [0, -14, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                   className="rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm
-                    w-36 h-36
-                    sm:w-48 sm:h-48
-                    md:w-56 md:h-56
-                    lg:w-72 lg:h-72
-                    xl:w-80 xl:h-80
-                    2xl:w-[28rem] 2xl:h-[28rem]"
+                    w-28 h-28
+                    sm:w-40 sm:h-40
+                    md:w-52 md:h-52
+                    lg:w-64 lg:h-64
+                    xl:w-72 xl:h-72
+                    2xl:w-96 2xl:h-96"
                 >
                   {logoUrl
                     ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" />
