@@ -10,7 +10,7 @@ const steps = [
 
 export default function ProcessSticky() {
   return (
-    <section className="bg-zinc-50 py-12 md:py-20 w-full overflow-hidden">
+    <section className="bg-zinc-50 py-10 md:py-20 w-full overflow-x-hidden">
       <div className="w-full max-w-2xl mx-auto px-4">
 
         <RevealOnScroll componentName="process">
@@ -30,9 +30,9 @@ export default function ProcessSticky() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.35, delay: i * 0.07 }}
-                className="flex items-start gap-3 bg-white rounded-xl shadow-sm p-4 w-full box-border"
+                className="flex items-start gap-3 bg-white rounded-xl shadow-sm p-3 w-full box-border overflow-hidden"
               >
-                <span className="text-3xl font-bold text-blue-200 leading-none shrink-0 w-10 text-center pt-0.5">
+                <span className="text-2xl font-bold text-blue-200 leading-none shrink-0 w-8 text-center pt-0.5">
                   {step.num}
                 </span>
                 <div className="min-w-0 flex-1 overflow-hidden">

@@ -41,3 +41,6 @@
 * { box-sizing: border-box; }
 .perspective-1000 { perspective: 1000px; }
 [style*="preserve-3d"] { transform-style: preserve-3d; }
+
+/* process-fix: prevent RevealOnScroll children overflow */
+section .flex.flex-col > * { max-width: 100%; overflow: hidden; }
