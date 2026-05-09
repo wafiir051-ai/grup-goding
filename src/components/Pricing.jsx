@@ -119,12 +119,12 @@ export default function Pricing() {
             } : { scale: threeDSettings.scale };
 
             return (
-              <RevealOnScroll key={plan.id} componentName="pricing" customDelay={idx * 0.1}>
+              <RevealOnScroll key={plan.id} componentName="pricing" customDelay={idx * 0.1} className="min-w-[280px] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
                 <motion.div
                   initial={{ rotateX: 0, rotateY: 0, scale: 1 }}
                   whileHover={hoverEffect}
                   style={{ transformStyle: 'preserve-3d' }}
-                  className="relative bg-zinc-900/90 p-5 md:p-6 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm min-w-[280px] sm:min-w-0 snap-center"
+                  className="relative bg-zinc-900/90 p-5 md:p-6 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm h-full"
                 >
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
