@@ -110,7 +110,7 @@ export default function Pricing() {
           </h2>
         </RevealOnScroll>
         <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {plans.map((plan, idx) => {
+          {plans.map((plan, idx) => { const cardKey = plan.id;
             const hoverEffect = threeDSettings.enabled ? {
               rotateX: threeDSettings.intensity * 6,
               rotateY: threeDSettings.intensity * 8,
@@ -119,7 +119,7 @@ export default function Pricing() {
             } : { scale: threeDSettings.scale };
 
             return (
-              <div key={plan.id} className="min-w-[85vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
+              <div  className="min-w-[85vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
                 <motion.div
                   initial={{ rotateX: 0, rotateY: 0, scale: 1 }}
                   whileHover={hoverEffect}
