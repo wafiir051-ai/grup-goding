@@ -31,14 +31,14 @@ export default function PortfolioSection() {
         <div className="absolute bottom-20 left-10 w-80 h-80 bg-cyan-200 rounded-full blur-3xl opacity-30" />
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         <EnhancedRevealOnScroll delay={0.1} direction="up" type="scale">
           <div className="text-center mb-12 md:mb-16">
             <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-sm font-semibold px-4 py-2 rounded-full mb-4">
               <Sparkles className="w-4 h-4" />
               PORTFOLIO KAMI
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter text-gray-800">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-semibold tracking-tighter text-gray-800">
               Proyek yang Telah <span className="gradient-text">Kami Wujudkan</span>
             </h2>
             <p className="mt-4 text-base md:text-xl text-zinc-600 max-w-2xl mx-auto">
