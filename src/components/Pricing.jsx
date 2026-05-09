@@ -141,11 +141,11 @@ export default function Pricing() {
                     <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
                   </div>
                   <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{plan.description}</p>
-                  <div className="mt-4 flex-1 overflow-y-auto max-h-40">
+                  <div className="mt-3 flex-1">
                     <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2 font-semibold">Fitur Utama</p>
-                    <ul className="space-y-1.5">
+                    <ul className="space-y-1">
                       {plan.features?.map((feature, i) => (
-                        <li key={i} className="text-zinc-300 text-xs flex items-start gap-2">
+                        <li key={i} className="text-zinc-300 text-[11px] flex items-start gap-1.5 leading-tight">
                           <span className="text-cyan-400 shrink-0 mt-0.5">✓</span>
                           <span className="break-words leading-relaxed">{feature}</span>
                         </li>
