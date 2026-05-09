@@ -141,7 +141,7 @@ export default function Pricing() {
                     <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
                   </div>
                   <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{plan.description}</p>
-                  <div className="mt-3 flex-1">
+                  <div className="mt-3 flex-1 overflow-y-auto max-h-36 pr-1 scrollbar-thin">
                     <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2 font-semibold">Fitur Utama</p>
                     <ul className="space-y-1">
                       {plan.features?.map((feature, i) => (
