@@ -36,8 +36,8 @@ export default function BentoServices() {
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="services">
           <div className="text-center mb-12 md:mb-20">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-800 mb-4">Layanan Kami</h2>
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-600">Desain premium dengan motion yang hidup</p>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4">Layanan Kami</h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-600">Desain premium dengan motion yang hidup</p>
           </div>
         </RevealOnScroll>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 auto-rows-fr">
@@ -53,8 +53,8 @@ export default function BentoServices() {
                   <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.6 }}>
                     <Icon className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 text-blue-600 mb-5 md:mb-7" />
                   </motion.div>
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-3 md:mb-5">{s.title}</h3>
-                  <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 mb-5 md:mb-7 leading-relaxed">{s.description}</p>
+                  <h3 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2 md:mb-4">{s.title}</h3>
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-4 md:mb-6 leading-relaxed">{s.description}</p>
                   <button
                     onClick={() => openModal(s.whatsapp_msg || `Saya tertarik dengan layanan ${s.title}.`)}
                     className="flex items-center gap-2 text-blue-600 font-semibold text-base sm:text-lg md:text-xl group transition-all hover:gap-3"
