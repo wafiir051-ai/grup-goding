@@ -71,14 +71,14 @@ export default function Hero() {
               </div>
 
               {/* Logo - mobile: bawah teks, desktop: kanan sejajar tengah */}
-              <div className="flex items-center justify-center lg:justify-end flex-shrink-0">
+              <div className="flex items-center justify-center lg:justify-end flex-shrink-0 mt-4 sm:mt-0">
                 <motion.div
                   animate={{ y: [0, -14, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                   className="rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm
-                    w-28 h-28
-                    sm:w-40 sm:h-40
-                    md:w-52 md:h-52
+                    w-44 h-44
+                    sm:w-52 sm:h-52
+                    md:w-60 md:h-60
                     lg:w-64 lg:h-64
                     xl:w-72 xl:h-72
                     2xl:w-96 2xl:h-96"
