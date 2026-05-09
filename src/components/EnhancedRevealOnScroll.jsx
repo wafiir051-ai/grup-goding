@@ -8,7 +8,7 @@ export default function EnhancedRevealOnScroll({ children, delay = 0, direction 
     hidden: {
       opacity: 0,
       y: direction === "up" ? 60 : direction === "down" ? -60 : 0,
-      x: direction === "left" ? 60 : direction === "right" ? -60 : 0,
+      x: 0,
       scale: type === "scale" ? 0.7 : 1,
       rotate: type === "rotate" ? -10 : 0,
       filter: "blur(8px)",
