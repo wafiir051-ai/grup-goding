@@ -101,11 +101,11 @@ export default function Pricing() {
   };
 
   return (
-    <section id="pricing" style={{position:"relative", overflow:"hidden"}} className="py-16 md:py-24 bg-[#0a0a0a] px-4 sm:px-6">
+    <section id="pricing" style={{position:"relative", overflow:"hidden"}} className="py-20 md:py-32 bg-[#0a0a0a] px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="pricing">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-14">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-12 md:mb-20">
             Paket Harga
           </h2>
         </RevealOnScroll>
@@ -119,12 +119,12 @@ export default function Pricing() {
             } : { scale: threeDSettings.scale };
 
             return (
-              <RevealOnScroll key={plan.id} componentName="pricing" customDelay={idx * 0.1} className="min-w-[280px] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
+              <div key={plan.id} className="min-w-[85vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
                 <motion.div
                   initial={{ rotateX: 0, rotateY: 0, scale: 1 }}
                   whileHover={hoverEffect}
                   style={{ transformStyle: 'preserve-3d' }}
-                  className="relative bg-zinc-900/90 p-5 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm"
+                  className="relative bg-zinc-900/90 p-5 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm w-full"
                 >
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -141,7 +141,7 @@ export default function Pricing() {
                     <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
                   </div>
                   <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{plan.description}</p>
-                  <div className="mt-3 flex-1 overflow-y-auto max-h-36 pr-1 scrollbar-thin">
+                  <div className="mt-3 flex-1">
                     <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2 font-semibold">Fitur Utama</p>
                     <ul className="space-y-1">
                       {plan.features?.map((feature, i) => (
@@ -164,7 +164,7 @@ export default function Pricing() {
                     Pilih Paket
                   </button>
                 </motion.div>
-              </RevealOnScroll>
+              </div>
             );
           })}
         </div>
