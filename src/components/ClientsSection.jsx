@@ -26,7 +26,7 @@ export default function ClientsSection() {
         </RevealOnScroll>
         <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-12 md:gap-16 lg:gap-20">
           {clients.map((client) => (
-            <div key={client.id} className="w-40 sm:w-48 md:w-56 lg:w-64 grayscale hover:grayscale-0 transition-all duration-300">
+            <div key={client.id} className="w-24 sm:w-32 md:w-40 lg:w-48 grayscale hover:grayscale-0 transition-all duration-300">
               <img src={client.logo_url} alt={client.name} className="w-full h-auto object-contain" loading="lazy" />
             </div>
           ))}
