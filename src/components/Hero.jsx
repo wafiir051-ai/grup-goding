@@ -30,7 +30,7 @@ export default function Hero() {
         <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
 
         <div className="min-h-screen flex items-center justify-center">
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 pt-24 pb-20 sm:pt-28 sm:pb-24 md:pt-32 md:pb-32">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10 pt-32 pb-20 sm:pt-36 sm:pb-24 md:pt-40 md:pb-32">
 
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-16 xl:gap-20">
 
