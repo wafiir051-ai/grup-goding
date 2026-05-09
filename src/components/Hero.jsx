@@ -39,10 +39,10 @@ export default function Hero() {
                 <h1 className="font-bold text-white leading-[1.1]
                   text-3xl
                   sm:text-4xl
-                  md:text-5xl
-                  lg:text-5xl
-                  xl:text-6xl
-                  2xl:text-6xl">
+                  md:text-4xl
+                  lg:text-4xl
+                  xl:text-5xl
+                  2xl:text-5xl">
                   <span className="block">Solusi Digital Premium</span>
                   <span className="block">untuk</span>
                   <span className="block"><TextGradient>Bisnis Modern</TextGradient></span>

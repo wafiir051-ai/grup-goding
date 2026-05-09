@@ -51,7 +51,7 @@ export default function Navbar() {
           initial={{ y: -30, opacity: 0 }} 
           animate={{ y: 0, opacity: 1 }} 
           transition={{ type: 'spring', stiffness: 120, damping: 15 }} 
-          className="bg-black/90 backdrop-blur-xl rounded-2xl px-3 sm:px-4 md:px-6 py-2.5 md:py-4 flex items-center justify-between border border-white/20 shadow-2xl"
+          className="bg-black/90 backdrop-blur-xl rounded-2xl px-3 sm:px-4 md:px-6 py-2 md:py-2.5 lg:py-3 flex items-center justify-between border border-white/20 shadow-2xl"
         >
           {/* Logo */}
           <a href="/" className="flex items-center gap-2 md:gap-3">
@@ -62,7 +62,7 @@ export default function Navbar() {
                 <span className="text-white font-bold text-lg md:text-xl">G</span>
               </div>
             )}
-            <span className="font-semibold text-lg md:text-xl lg:text-2xl tracking-tight text-white">Goding</span>
+            <span className="font-semibold text-lg md:text-xl lg:text-xl tracking-tight text-white">Goding</span>
           </a>
 
           {/* Desktop Menu */}
