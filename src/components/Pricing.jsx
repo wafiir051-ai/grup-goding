@@ -104,11 +104,9 @@ export default function Pricing() {
     <section id="pricing" style={{position:"relative", overflow:"hidden"}} className="pt-24 pb-16 md:pt-28 md:pb-24 bg-[#0a0a0a] px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
-        <RevealOnScroll componentName="pricing">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-16 pt-4">
-            Paket Harga
-          </h2>
-        </RevealOnScroll>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-16 pt-2">
+          Paket Harga
+        </h2>
         <div className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {plans.map((plan, idx) => { const cardKey = plan.id;
             const hoverEffect = threeDSettings.enabled ? {
