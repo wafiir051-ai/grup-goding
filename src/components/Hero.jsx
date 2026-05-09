@@ -73,15 +73,15 @@ export default function Hero() {
               {/* Logo - mobile: bawah teks, desktop: kanan sejajar tengah */}
               <div className="flex items-center justify-center lg:justify-end flex-shrink-0">
                 <motion.div
-                  animate={{ y: [0, -14, 0] }}
+                  animate={{ y: [0, -8, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                   className="rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm
                     w-44 h-44
                     sm:w-52 sm:h-52
-                    md:w-60 md:h-60
-                    lg:w-64 lg:h-64
-                    xl:w-72 xl:h-72
-                    2xl:w-96 2xl:h-96"
+                    md:w-56 md:h-56
+                    lg:w-60 lg:h-60
+                    xl:w-64 xl:h-64
+                    2xl:w-80 2xl:h-80"
                 >
                   {logoUrl
                     ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover rounded-full" />
