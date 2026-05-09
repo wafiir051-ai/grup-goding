@@ -10,34 +10,34 @@ const steps = [
 
 export default function ProcessSticky() {
   return (
-    <section className="bg-zinc-50 py-16 md:py-24 overflow-hidden">
-      <div className="w-full px-4 sm:px-6 max-w-3xl mx-auto">
+    <section className="bg-zinc-50 py-12 md:py-20 w-full overflow-hidden">
+      <div className="w-full max-w-2xl mx-auto px-4">
 
         <RevealOnScroll componentName="process">
-          <div className="text-center mb-10">
-            <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-3">PROSES KAMI</p>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 leading-snug">
+          <div className="text-center mb-8">
+            <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">PROSES KAMI</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 leading-snug">
               Dari ide hingga live<br />dalam 4 langkah
             </h2>
           </div>
         </RevealOnScroll>
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           {steps.map((step, i) => (
             <RevealOnScroll key={i} componentName="process">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="flex gap-4 bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition-shadow"
+                transition={{ duration: 0.35, delay: i * 0.07 }}
+                className="flex items-start gap-3 bg-white rounded-xl shadow-sm p-4 w-full box-border"
               >
-                <span className="text-4xl sm:text-5xl font-bold text-blue-200 leading-none shrink-0 w-12 sm:w-16 text-center">
+                <span className="text-3xl font-bold text-blue-200 leading-none shrink-0 w-10 text-center pt-0.5">
                   {step.num}
                 </span>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-1">{step.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                <div className="min-w-0 flex-1 overflow-hidden">
+                  <h3 className="text-base font-bold text-gray-800 mb-0.5">{step.title}</h3>
+                  <p className="text-xs sm:text-sm text-gray-500 leading-relaxed break-words">{step.desc}</p>
                 </div>
               </motion.div>
             </RevealOnScroll>
