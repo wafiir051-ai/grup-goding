@@ -57,7 +57,7 @@ export default function Footer() {
           </RevealOnScroll>
         </div>
 
-        <div className="mt-10 md:mt-20 mb-6 md:mb-10 py-4 md:py-6 border-t-2 border-b-2 border-white/20">
+        <div className="mt-16 md:mt-24 mb-6 md:mb-10 py-4 md:py-6 border-t-2 border-b-2 border-white/20">
           <MarqueeText />
         </div>
 
