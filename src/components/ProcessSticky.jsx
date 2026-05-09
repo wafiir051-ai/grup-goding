@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
 
 const steps = [
@@ -9,82 +10,40 @@ const steps = [
 
 export default function ProcessSticky() {
   return (
-    <section style={{
-      backgroundColor: '#fafafa',
-      padding: '4rem 1.25rem',
-      width: '100%',
-      boxSizing: 'border-box',
-    }}>
-      <RevealOnScroll componentName="process">
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <p style={{
-            fontSize: '0.7rem',
-            fontWeight: 700,
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            color: '#2563eb',
-            marginBottom: '0.75rem',
-          }}>PROSES KAMI</p>
-          <h2 style={{
-            fontSize: 'clamp(1.6rem, 6vw, 3.5rem)',
-            fontWeight: 800,
-            color: '#111827',
-            lineHeight: 1.2,
-            margin: 0,
-          }}>
-            Dari ide hingga live<br />dalam 4 langkah
-          </h2>
-        </div>
-      </RevealOnScroll>
+    <section className="bg-zinc-50 py-16 md:py-24 overflow-hidden">
+      <div className="w-full px-4 sm:px-6 max-w-3xl mx-auto">
 
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.875rem',
-        width: '100%',
-        maxWidth: '640px',
-        margin: '0 auto',
-        boxSizing: 'border-box',
-      }}>
-        {steps.map((step, i) => (
-          <RevealOnScroll key={i} componentName="process">
-            <div style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '1rem',
-              backgroundColor: 'white',
-              borderRadius: '1rem',
-              padding: '1.25rem',
-              boxShadow: '0 2px 12px rgba(0,0,0,0.07)',
-              width: '100%',
-              boxSizing: 'border-box',
-            }}>
-              <span style={{
-                fontSize: 'clamp(1.75rem, 7vw, 3rem)',
-                fontWeight: 800,
-                color: '#bfdbfe',
-                lineHeight: 1,
-                flexShrink: 0,
-                minWidth: '2.5rem',
-              }}>{step.num}</span>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <h3 style={{
-                  fontSize: 'clamp(1rem, 4vw, 1.25rem)',
-                  fontWeight: 700,
-                  color: '#111827',
-                  margin: '0 0 0.25rem 0',
-                }}>{step.title}</h3>
-                <p style={{
-                  fontSize: '0.875rem',
-                  color: '#6b7280',
-                  lineHeight: 1.6,
-                  margin: 0,
-                  wordBreak: 'break-word',
-                }}>{step.desc}</p>
-              </div>
-            </div>
-          </RevealOnScroll>
-        ))}
+        <RevealOnScroll componentName="process">
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-3">PROSES KAMI</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 leading-snug">
+              Dari ide hingga live<br />dalam 4 langkah
+            </h2>
+          </div>
+        </RevealOnScroll>
+
+        <div className="flex flex-col gap-4">
+          {steps.map((step, i) => (
+            <RevealOnScroll key={i} componentName="process">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="flex gap-4 bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition-shadow"
+              >
+                <span className="text-4xl sm:text-5xl font-bold text-blue-200 leading-none shrink-0 w-12 sm:w-16 text-center">
+                  {step.num}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-1">{step.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                </div>
+              </motion.div>
+            </RevealOnScroll>
+          ))}
+        </div>
+
       </div>
     </section>
   );
