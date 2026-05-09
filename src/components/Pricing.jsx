@@ -124,7 +124,7 @@ export default function Pricing() {
                   initial={{ rotateX: 0, rotateY: 0, scale: 1 }}
                   whileHover={hoverEffect}
                   style={{ transformStyle: 'preserve-3d' }}
-                  className="relative bg-zinc-900/90 p-5 md:p-6 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm h-full"
+                  className="relative bg-zinc-900/90 p-5 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm"
                 >
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -141,7 +141,7 @@ export default function Pricing() {
                     <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
                   </div>
                   <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{plan.description}</p>
-                  <div className="mt-4 flex-1">
+                  <div className="mt-4 flex-1 overflow-y-auto max-h-40">
                     <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2 font-semibold">Fitur Utama</p>
                     <ul className="space-y-1.5">
                       {plan.features?.map((feature, i) => (
