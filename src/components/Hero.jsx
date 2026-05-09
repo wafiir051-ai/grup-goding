@@ -25,7 +25,7 @@ export default function Hero() {
 
   return (
     <>
-      <section className="min-h-screen w-full relative overflow-hidden" style={{ background: '#050810' }}>
+      <section className="min-h-screen w-full relative overflow-visible" style={{ background: '#050810' }}>
         <Suspense fallback={null}><ThreeBackground /></Suspense>
         <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
 
@@ -71,7 +71,7 @@ export default function Hero() {
               </div>
 
               {/* Logo - mobile: bawah teks, desktop: kanan sejajar tengah */}
-              <div className="flex items-center justify-center lg:justify-end flex-shrink-0 mt-4 lg:mt-16">
+              <div className="flex items-center justify-center lg:justify-end flex-shrink-0">
                 <motion.div
                   animate={{ y: [0, -14, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
