@@ -59,7 +59,7 @@ export default function Hero() {
                     onClick={() => openModal('Halo, saya tertarik dengan layanan website premium Goding.')}
                     className="px-6 sm:px-8 2xl:px-10 py-3 sm:py-4 2xl:py-5 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl font-semibold hover:scale-105 transition text-sm sm:text-base 2xl:text-lg"
                   >
-                    Mulai Proyek
+                    Mulai Sekarang
                   </button>
                   <button
                     onClick={() => window.location.href = '/portfolio'}

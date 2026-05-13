@@ -167,7 +167,7 @@ export default function PortfolioPage() {
                   onClick={() => openModal('Halo, saya tertarik membuat website seperti di portfolio Goding.')}
                   className="bg-white text-blue-600 font-bold px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-base"
                 >
-                  Mulai Proyek Sekarang
+                  Mulai Sekarang
                 </button>
               </div>
             </div>
