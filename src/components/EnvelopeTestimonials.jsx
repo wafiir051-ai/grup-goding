@@ -16,7 +16,7 @@ export default function EnvelopeTestimonials() {
         </RevealOnScroll>
         <RevealOnScroll componentName="testimonials">
           <div className="relative bg-white/90 rounded-2xl md:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 border border-gray-200">
-            <div className="text-center text-zinc-500 mb-4 md:mb-6 text-sm md:text-base">📩 surat dari klien</div>
+            <div className="text-center text-zinc-500 mb-4 md:mb-6 text-sm md:text-base">surat dari klien</div>
             <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3">
               {tests.map((t) => (
                 <div key={t.id} className="min-w-[80vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink bg-gray-50 p-4 sm:p-5 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
