@@ -74,6 +74,17 @@ export default function Footer() {
               </span>
               ayocoding@godingofficial.com
             </a>
+            <a 
+              href="https://instagram.com/goding.id" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-zinc-400 hover:text-pink-400 transition-colors duration-300 text-sm md:text-base group"
+            >
+              <span className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-pink-400/10 transition-colors duration-300">
+                📸
+              </span>
+              @goding.id
+            </a>
           </div>
         </RevealOnScroll>
         
