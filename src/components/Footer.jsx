@@ -64,6 +64,20 @@ export default function Footer() {
         <VisitorStats />
         
         <RevealOnScroll componentName="footer">
+          <div className="flex justify-center mt-6 mb-2">
+            <a 
+              href="mailto:ayocoding@godingofficial.com" 
+              className="flex items-center gap-2 text-zinc-400 hover:text-cyan-400 transition-colors duration-300 text-sm md:text-base group"
+            >
+              <span className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-cyan-400/10 transition-colors duration-300">
+                ✉️
+              </span>
+              ayocoding@godingofficial.com
+            </a>
+          </div>
+        </RevealOnScroll>
+        
+        <RevealOnScroll componentName="footer">
           <div className="text-center text-xs md:text-sm text-zinc-500 pt-4 md:pt-6">
             © 2026 Goding Grup. Semua hak dilindungi.
           </div>
