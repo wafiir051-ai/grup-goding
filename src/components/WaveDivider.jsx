@@ -2,13 +2,13 @@ export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#ffffff'
   return (
     <div style={{ backgroundColor: fromColor, lineHeight: 0, display: 'block' }}>
       <svg
-        viewBox="0 0 1440 200"
+        viewBox="0 0 1440 240"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
-        style={{ display: 'block', width: '100%', height: '200px' }}
+        style={{ display: 'block', width: '100%', height: '240px' }}
       >
         <path
-          d="M0,100 C50,20 80,180 150,80 C200,0 250,160 320,60 C370,10 400,190 480,70 C530,5 580,170 650,90 C700,30 730,180 800,80 C850,10 900,185 970,75 C1020,15 1050,190 1120,85 C1170,25 1220,175 1290,95 C1340,40 1380,160 1440,100 L1440,200 L0,200 Z"
+          d="M0,120 C40,30 70,200 120,100 S180,20 240,90 C280,160 310,40 360,110 S420,200 480,80 C520,10 560,190 620,100 S680,30 740,120 C780,200 820,50 870,110 S930,210 990,90 C1030,20 1070,180 1130,110 S1190,40 1250,100 C1290,170 1330,60 1380,120 S1440,120 1440,120 L1440,240 L0,240 Z"
           fill={toColor}
         />
       </svg>
