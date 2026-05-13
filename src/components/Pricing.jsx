@@ -125,7 +125,7 @@ export default function Pricing() {
                   className="relative bg-zinc-900/90 p-5 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm w-full"
                 >
                   {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
                       <span className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black text-xs px-3 py-1 rounded-full font-bold whitespace-nowrap shadow-lg">
                         ⭐ Populer
                       </span>
