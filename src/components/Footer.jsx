@@ -85,6 +85,17 @@ export default function Footer() {
               </span>
               @goding.id
             </a>
+            <a 
+              href="https://tiktok.com/@goding.id" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors duration-300 text-sm md:text-base group"
+            >
+              <span className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-white/10 transition-colors duration-300">
+                🎵
+              </span>
+              @goding.id
+            </a>
           </div>
         </RevealOnScroll>
         
