@@ -65,7 +65,7 @@ export default function Footer() {
         <VisitorStats />
 
         <RevealOnScroll componentName="footer">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-8 mb-4">
+          <div className="flex flex-row flex-wrap items-center justify-center gap-x-6 gap-y-3 mt-8 mb-4">
             <a href="mailto:ayocoding@godingofficial.com" className="flex items-center gap-2 text-zinc-400 hover:text-cyan-400 transition-colors duration-300 text-sm md:text-base group">
               <span className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center group-hover:bg-cyan-400/10 transition-colors">✉️</span>
               ayocoding@godingofficial.com
