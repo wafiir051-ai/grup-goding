@@ -30,7 +30,7 @@ export default function ThreeBackground() {
     }
 
     function draw() {
-      ctx.fillStyle = '#030508';
+      ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, W, H);
 
       // Aurora glow background
