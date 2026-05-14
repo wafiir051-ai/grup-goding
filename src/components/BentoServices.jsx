@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import WhiteBackground3D from './WhiteBackground3D';
 import { motion } from 'framer-motion';
 import { Sparkles, Globe, Zap, ArrowRight, Code, Palette, ShoppingBag, BarChart } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
@@ -30,6 +31,7 @@ export default function BentoServices() {
   };
 
   return (
+      <WhiteBackground3D />
     <section id="services" style={{position:"relative"}} className="py-20 md:py-28 bg-white relative overflow-hidden px-4 sm:px-6">
       
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
