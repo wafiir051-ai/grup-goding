@@ -33,18 +33,7 @@ export default function ThreeBackground() {
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, W, H);
 
-      // Aurora glow background
-      const aurora1 = ctx.createRadialGradient(W * 0.3, H * 0.6, 0, W * 0.3, H * 0.6, W * 0.5);
-      aurora1.addColorStop(0, `rgba(0,80,255,${0.06 + Math.sin(t * 0.5) * 0.02})`);
-      aurora1.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = aurora1;
-      ctx.fillRect(0, 0, W, H);
-
-      const aurora2 = ctx.createRadialGradient(W * 0.75, H * 0.4, 0, W * 0.75, H * 0.4, W * 0.4);
-      aurora2.addColorStop(0, `rgba(0,200,180,${0.05 + Math.sin(t * 0.7 + 1) * 0.02})`);
-      aurora2.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = aurora2;
-      ctx.fillRect(0, 0, W, H);
+      
 
       const cx = W / 2, cy = H * 0.55;
       const N = 18;
