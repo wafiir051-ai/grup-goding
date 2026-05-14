@@ -1,4 +1,3 @@
-import WhiteBackground3D from "./WhiteBackground3D";
 import { motion } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
 
@@ -12,7 +11,6 @@ const steps = [
 export default function ProcessSticky() {
   return (
     <section style={{width:'100%', overflowX:'hidden', boxSizing:'border-box'}} className="bg-zinc-50 py-10 md:py-20">
-      <WhiteBackground3D />
       <div style={{width:'100%', maxWidth:'600px', margin:'0 auto', padding:'0 16px', boxSizing:'border-box'}}>
 
         <div className="text-center mb-8">
