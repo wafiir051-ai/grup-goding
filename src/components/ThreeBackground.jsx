@@ -121,19 +121,7 @@ export default function ThreeBackground() {
         }
       }
 
-      // Floating particles
-      for (let i = 0; i < 40; i++) {
-        const angle = (i / 40) * Math.PI * 2 + t * 0.15;
-        const radius = 80 + Math.sin(t * 0.5 + i) * 40;
-        const px = cx + Math.cos(angle) * radius * 2.5;
-        const py = cy - 80 + Math.sin(angle * 0.7) * radius * 0.6;
-        const size = 1 + Math.sin(t + i) * 0.5;
-        const alpha = 0.2 + Math.sin(t * 0.8 + i * 0.5) * 0.15;
-        ctx.beginPath();
-        ctx.arc(px, py, size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,200,255,${alpha})`;
-        ctx.fill();
-      }
+      
 
       // Vignette
       const vignette = ctx.createRadialGradient(cx, cy, H * 0.2, cx, cy, H * 0.9);
