@@ -99,14 +99,7 @@ export default function ThreeBackground() {
           const brightness = Math.max(0, Math.min(1, (p.rawY + 90) / 130));
           if (brightness < 0.15) continue;
           const r = Math.floor(brightness * 3.5);
-          const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 4 * p.scale);
-          grd.addColorStop(0, `rgba(${r},${Math.floor(180 + brightness * 75)},255,${0.7 * brightness + 0.1})`);
-          grd.addColorStop(0.5, `rgba(0,150,255,${0.3 * brightness})`);
-          grd.addColorStop(1, 'rgba(0,100,255,0)');
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 4 * p.scale, 0, Math.PI * 2);
-          ctx.fillStyle = grd;
-          ctx.fill();
+          
         }
       }
 
