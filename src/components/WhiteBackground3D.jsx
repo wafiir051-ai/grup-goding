@@ -16,7 +16,7 @@ export default function WhiteBackground3D() {
       
       // Initialize particles
       particles = [];
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 15; i++) {
         particles.push({
           x: Math.random() * W,
           y: Math.random() * H,
@@ -73,7 +73,7 @@ export default function WhiteBackground3D() {
 
         const scale = 1000 / (1000 + p.z);
         const size = 2 + scale * 3;
-        const alpha = 0.1 + scale * 0.15;
+        const alpha = 0.03 + scale * 0.05;
 
         const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size * 3);
         grd.addColorStop(0, `rgba(59, 130, 246, ${alpha})`);
@@ -94,7 +94,7 @@ export default function WhiteBackground3D() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           
           if (dist < 200) {
-            const alpha = (1 - dist / 200) * 0.08;
+            const alpha = (1 - dist / 200) * 0.02;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -113,7 +113,7 @@ export default function WhiteBackground3D() {
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = `rgba(148, 163, 184, ${0.06 + Math.sin(t + i) * 0.02})`;
+        ctx.strokeStyle = `rgba(148, 163, 184, ${0.02 + Math.sin(t + i) * 0.01})`;
         ctx.lineWidth = 2;
         ctx.stroke();
       }
