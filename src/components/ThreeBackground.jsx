@@ -29,7 +29,8 @@ export default function ThreeBackground() {
     }
 
     function draw() {
-      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(0, 0, W, H);
 
       const cx = W / 2, cy = H * 0.55;
       const N = 12;
