@@ -1,3 +1,4 @@
+import WhiteBackground3D from "./WhiteBackground3D";
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import RevealOnScroll from './RevealOnScroll';
@@ -10,6 +11,7 @@ export default function EnvelopeTestimonials() {
 
   return (
     <section id="testimonials" className="py-16 md:py-20 bg-white px-4 sm:px-6">
+      <WhiteBackground3D />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="testimonials">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-800 mb-8 md:mb-12">Apa Kata Klien Kami</h2>
