@@ -126,7 +126,7 @@ export default function ThreeBackground() {
       // Vignette
       const vignette = ctx.createRadialGradient(cx, cy, H * 0.2, cx, cy, H * 0.9);
       vignette.addColorStop(0, 'rgba(0,0,0,0)');
-      vignette.addColorStop(1, 'rgba(3,5,8,0.7)');
+      vignette.addColorStop(1, 'rgba(3,5,8,0.3)');
       ctx.fillStyle = vignette;
       ctx.fillRect(0, 0, W, H);
     }
