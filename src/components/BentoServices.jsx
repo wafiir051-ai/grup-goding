@@ -37,7 +37,7 @@ export default function BentoServices() {
         <RevealOnScroll componentName="services">
           <div className="text-center mb-12 md:mb-20">
             <span className="inline-block bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4 border border-blue-100">✦ Layanan Kami</span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent"}}>Solusi Digital<br/>yang Mengubah Bisnis</h2>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent"}}>Layanan Kami</h2>
             <p className="text-sm sm:text-base md:text-lg text-gray-500 max-w-xl mx-auto">Desain premium dengan motion yang hidup, performa tinggi, dan hasil yang terukur</p>
           </div>
         </RevealOnScroll>
