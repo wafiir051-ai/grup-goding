@@ -10,7 +10,7 @@ const steps = [
 
 export default function ProcessSticky() {
   return (
-    <section style={{width:'100%', overflowX:'hidden', boxSizing:'border-box'}} className="bg-zinc-50 py-10 md:py-20">
+    <section style={{width:'100%', overflowX:'hidden', boxSizing:'border-box'}} style={{background:"linear-gradient(180deg, #ffffff 0%, #f1f5ff 50%, #ffffff 100%)"}} className="py-10 md:py-20">
       <div style={{width:'100%', maxWidth:'600px', margin:'0 auto', padding:'0 16px', boxSizing:'border-box'}}>
 
         <div className="text-center mb-8">

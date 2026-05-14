@@ -18,7 +18,7 @@ export default function ClientsSection() {
   if (loading || clients.length === 0) return null;
 
   return (
-    <section id="clients" className="py-16 md:py-24 bg-white px-4 sm:px-6">
+    <section id="clients" style={{background:"linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #f8faff 100%)"}} className="py-16 md:py-24 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="clients" direction="up" className="text-center mb-16 md:mb-20">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800">Dipercaya Oleh</h2>
