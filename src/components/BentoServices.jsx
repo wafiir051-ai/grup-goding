@@ -31,8 +31,9 @@ export default function BentoServices() {
   };
 
   return (
+    <>
+      <section id="services" style={{position:"relative"}} className="py-20 md:py-28 bg-white relative overflow-hidden px-4 sm:px-6">
       <WhiteBackground3D />
-    <section id="services" style={{position:"relative"}} className="py-20 md:py-28 bg-white relative overflow-hidden px-4 sm:px-6">
       
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
@@ -70,5 +71,6 @@ export default function BentoServices() {
         </div>
       </div>
     </section>
+    </>
   );
 }
