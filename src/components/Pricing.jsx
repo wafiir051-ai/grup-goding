@@ -107,7 +107,7 @@ export default function Pricing() {
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-16 pt-2">
           Paket Harga
         </h2>
-        <div className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory scrollbar-hide sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {plans.map((plan, idx) => { const cardKey = plan.id;
             const hoverEffect = threeDSettings.enabled ? {
               rotateX: threeDSettings.intensity * 6,
