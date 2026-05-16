@@ -1,15 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import RevealOnScroll from './RevealOnScroll';
+import WhiteBackground3D from './WhiteBackground3D';
 
 export default function EnvelopeTestimonials() {
   const [tests, setTests] = useState([]);
+  const scrollRef = useRef(null);
+
   useEffect(() => { 
     supabase.from('testimonials').select('*').then(({ data }) => setTests(data || [])); 
   }, []);
 
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = scrollRef.current.offsetWidth * 0.8;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <section id="testimonials" style={{background:"linear-gradient(135deg, #f8faff 0%, #ffffff 40%, #f0f7ff 100%)"}} className="py-16 md:py-20 px-4 sm:px-6">
+      <WhiteBackground3D />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="testimonials">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-800 mb-8 md:mb-12">Apa Kata Klien Kami</h2>
@@ -17,7 +31,29 @@ export default function EnvelopeTestimonials() {
         <RevealOnScroll componentName="testimonials">
           <div className="relative bg-white/90 rounded-2xl md:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 border border-gray-200">
             <div className="text-center text-zinc-500 mb-4 md:mb-6 text-sm md:text-base"></div>
-            <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3">
+            
+            {/* Navigation Buttons */}
+            <button 
+              onClick={() => scroll('left')}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all hover:scale-110 sm:hidden"
+              aria-label="Previous"
+            >
+              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <button 
+              onClick={() => scroll('right')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/90 shadow-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-all hover:scale-110 sm:hidden"
+              aria-label="Next"
+            >
+              <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+
+            <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 scrollbar-hide">
               {tests.map((t) => (
                 <div key={t.id} className="min-w-[80vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink bg-gray-50 p-4 sm:p-5 md:p-6 rounded-xl md:rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
                   <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
