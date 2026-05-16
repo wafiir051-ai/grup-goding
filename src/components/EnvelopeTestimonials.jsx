@@ -65,12 +65,12 @@ export default function EnvelopeTestimonials() {
                       {t.avatar || t.name.charAt(0)}
                     </div>
                     <div className="min-w-0">
-                      <div className="font-bold text-gray-800 text-sm md:text-base truncate">{t.name}</div>
-                      {t.role && <div className="text-xs text-zinc-400 truncate">{t.role}</div>}
+                      <div className="font-bold text-gray-800 text-sm md:text-base line-clamp-1">{t.name}</div>
+                      {t.role && <div className="text-xs text-zinc-400 line-clamp-1">{t.role}</div>}
                     </div>
                   </div>
                   <div className="text-yellow-500 text-sm">{'★'.repeat(t.rating)}</div>
-                  <p className="mt-2 md:mt-3 italic text-gray-600 text-sm md:text-base leading-relaxed">"{t.content}"</p>
+                  <p className="mt-2 md:mt-3 italic text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed line-clamp-4">"{t.content}"</p>
                 </div>
               ))}
             </div>
