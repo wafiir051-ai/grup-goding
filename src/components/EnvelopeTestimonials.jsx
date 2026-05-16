@@ -13,8 +13,12 @@ export default function EnvelopeTestimonials() {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const scrollAmount = scrollRef.current.offsetWidth * 0.8;
-      scrollRef.current.scrollBy({
+      const container = scrollRef.current;
+      const cardWidth = container.querySelector('div').offsetWidth;
+      const gap = 16; // gap-4 = 16px
+      const scrollAmount = cardWidth + gap;
+      
+      container.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth'
       });
