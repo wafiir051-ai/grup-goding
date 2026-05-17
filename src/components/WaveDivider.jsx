@@ -5,21 +5,23 @@ export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#ffffff'
       lineHeight: 0, 
       display: 'block',
       position: 'relative',
-      overflow: 'hidden'
+      margin: 0,
+      padding: 0
     }}>
       <svg
-        viewBox="0 0 1440 200"
+        viewBox="0 0 1440 320"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
         style={{ 
           display: 'block', 
           width: '100%', 
-          height: '120px',
-          transform: flip ? 'scaleY(-1)' : 'none'
+          height: '200px',
+          transform: flip ? 'scaleY(-1)' : 'none',
+          verticalAlign: 'middle'
         }}
       >
         <path
-          d="M0,100 C180,160 360,40 540,100 C720,160 900,40 1080,100 C1260,160 1380,40 1440,100 L1440,200 L0,200 Z"
+          d="M0,160 C240,280 480,40 720,160 C960,280 1200,40 1440,160 L1440,320 L0,320 Z"
           fill={toColor}
         />
       </svg>
