@@ -16,6 +16,7 @@ import TestimonialsPage from './TestimonialsPage';
 import AnimatedCursor from './components/AnimatedCursor';
 import ParticleBackground from './components/ParticleBackground';
 import WaveDivider from './components/WaveDivider';
+import TSLBackground from './components/TSLBackground';
 
 function App() {
   // Handle navigation & smooth scroll
@@ -92,6 +93,7 @@ function App() {
       <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden w-full max-w-full">
         <Navbar />
         <Hero />
+        <TSLBackground />
         <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
         <BentoServices />
         <ProcessSticky />
