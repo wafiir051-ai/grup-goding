@@ -15,7 +15,7 @@ export default function TSLBackground() {
       H = canvas.height = window.innerHeight;
       
       particles = [];
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 150; i++) {
         particles.push({
           x: Math.random() * W,
           y: Math.random() * H,
@@ -28,7 +28,7 @@ export default function TSLBackground() {
     }
 
     function draw() {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
       ctx.fillRect(0, 0, W, H);
 
       particles.forEach((p, i) => {
@@ -42,7 +42,7 @@ export default function TSLBackground() {
         p.y += Math.cos(t * 0.3 + i) * 0.15;
 
         const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-        gradient.addColorStop(0, `hsla(${p.hue}, 70%, 60%, 0.6)`);
+        gradient.addColorStop(0, `hsla(${p.hue}, 80%, 65%, 0.8)`);
         gradient.addColorStop(0.5, `hsla(${p.hue}, 70%, 50%, 0.3)`);
         gradient.addColorStop(1, `hsla(${p.hue}, 70%, 40%, 0)`);
         
