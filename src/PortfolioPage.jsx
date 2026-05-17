@@ -68,15 +68,15 @@ export default function PortfolioPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
               className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6 sm:mt-10"
             >
-              <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-3 sm:px-6 py-2 sm:py-3">
+              <div className="flex items-center gap-3 bg-white/90 backdrop-blur-md border border-gray-100 shadow-sm rounded-2xl px-3 sm:px-6 py-2 sm:py-3">
                 <span className="text-2xl font-bold text-blue-600">{projects.length}+</span>
                 <span className="text-sm text-gray-500">Proyek Selesai</span>
               </div>
-              <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
+              <div className="flex items-center gap-3 bg-white/90 backdrop-blur-md border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
                 <span className="text-2xl font-bold text-blue-600">100%</span>
                 <span className="text-sm text-gray-500">Klien Puas</span>
               </div>
-              <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
+              <div className="flex items-center gap-3 bg-white/90 backdrop-blur-md border border-gray-100 shadow-sm rounded-2xl px-6 py-3">
                 <span className="text-2xl font-bold text-blue-600">{new Date().getFullYear() === 2026 ? "<1" : (new Date().getFullYear() - 2026) + "+"}</span>
                 <span className="text-sm text-gray-500">Tahun Pengalaman</span>
               </div>
@@ -106,7 +106,7 @@ export default function PortfolioPage() {
                     onHoverEnd={() => setHovered(null)}
                     whileHover={{ y: -10, scale: 1.015 }}
                     transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    className="bg-white border border-gray-100 hover:border-blue-200 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl hover:shadow-blue-100 transition-all duration-300"
+                    className="bg-white/90 backdrop-blur-md border border-gray-100 hover:border-blue-200 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl hover:shadow-blue-100 transition-all duration-300"
                   >
                     <div className="relative h-64 overflow-hidden">
                       {project.image_url ? (
@@ -158,16 +158,16 @@ export default function PortfolioPage() {
           <RevealOnScroll>
             <div className="mt-24 text-center rounded-3xl p-14 bg-gradient-to-br from-blue-600 to-cyan-500 relative overflow-hidden shadow-2xl shadow-blue-200">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(255,255,255,0.15)_0%,_transparent_60%)]" />
-              <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-white/90 backdrop-blur-md/10 rounded-full blur-3xl" />
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 bg-white/20 border border-white/30 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6">
+                <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md/20 border border-white/30 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" /> MULAI PROYEK
                 </div>
                 <h3 className="text-3xl sm:text-4xl font-bold mb-4 text-white">Mau Website Seperti Ini?</h3>
                 <p className="text-white/80 mb-8 max-w-lg mx-auto">Konsultasi gratis, kami siap bantu wujudkan proyek digital kamu dari nol sampai launch.</p>
                 <button
                   onClick={() => openModal('Halo, saya tertarik membuat website seperti di portfolio Goding.')}
-                  className="bg-white text-blue-600 font-bold px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-base"
+                  className="bg-white/90 backdrop-blur-md text-blue-600 font-bold px-10 py-4 rounded-2xl hover:scale-105 transition-all shadow-xl text-base"
                 >
                   Mulai Sekarang
                 </button>
