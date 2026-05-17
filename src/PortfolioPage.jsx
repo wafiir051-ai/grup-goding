@@ -4,6 +4,7 @@ import { ExternalLink, Sparkles, ArrowLeft } from 'lucide-react';
 import RevealOnScroll from './components/RevealOnScroll';
 import WhatsAppModal from './components/WhatsAppModal';
 import { supabase } from './lib/supabase';
+import TSLBackground from './components/TSLBackground';
 
 export default function PortfolioPage() {
   const [projects, setProjects] = useState([]);
@@ -27,6 +28,7 @@ export default function PortfolioPage() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
+      <TSLBackground />
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="fixed top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-blue-50/80 to-white pointer-events-none z-0" />
       <div className="fixed top-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none z-0" />
