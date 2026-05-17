@@ -103,11 +103,32 @@ export default function Pricing() {
   return (
     <section id="pricing" style={{position:"relative", overflow:"hidden"}} className="pt-24 pb-16 md:pt-28 md:pb-24 bg-[#0a0a0a] px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
+      {/* Mobile Navigation Buttons */}
+      <button 
+        onClick={() => scrollPricing('left')}
+        className="fixed left-4 top-[50vh] z-20 w-12 h-12 rounded-full bg-zinc-800/90 backdrop-blur-sm shadow-xl border border-white/20 flex items-center justify-center hover:bg-zinc-700 transition-all hover:scale-110 lg:hidden"
+        aria-label="Previous"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      
+      <button 
+        onClick={() => scrollPricing('right')}
+        className="fixed right-4 top-[50vh] z-20 w-12 h-12 rounded-full bg-zinc-800/90 backdrop-blur-sm shadow-xl border border-white/20 flex items-center justify-center hover:bg-zinc-700 transition-all hover:scale-110 lg:hidden"
+        aria-label="Next"
+      >
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-16 pt-2">
           Paket Harga
         </h2>
-        <div className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div ref={scrollContainerRef} className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 scrollbar-hide">
           {plans.map((plan, idx) => { const cardKey = plan.id;
             const hoverEffect = threeDSettings.enabled ? {
               rotateX: threeDSettings.intensity * 6,
