@@ -30,7 +30,7 @@ export default function PortfolioPage() {
     <div className="min-h-screen bg-transparent text-gray-900 overflow-x-hidden">
       <TSLBackground />
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
-      <div className="fixed top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-blue-50/80 to-white pointer-events-none z-0" />
+      <div className="fixed top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-blue-50/30 to-transparent pointer-events-none z-0" />
       <div className="fixed top-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none z-0" />
 
       <section className="relative pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 z-10">
