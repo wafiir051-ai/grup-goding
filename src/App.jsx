@@ -61,16 +61,37 @@ function App() {
       const target = e.target.closest('a');
       if (!target) return;
       const href = target.getAttribute('href');
-      if (href && href.startsWith('/') && !href.startsWith('//') && href !== '#') {
-        e.preventDefault();
-        window.history.pushState({}, '', href);
-        setPath(href);
-        window.scrollTo(0, 0);
+      if (!href || !href.startsWith('/') || href.startsWith('//')) return;
+
+      e.preventDefault();
+
+      if (href.includes('#')) {
+        const [pathPart, hash] = href.split('#');
+        const targetPath = pathPart || '/';
+        const scrollToHash = () => {
+          const el = document.getElementById(hash);
+          if (el) {
+            const top = el.getBoundingClientRect().top + window.scrollY - 80;
+            window.scrollTo({ top, behavior: 'smooth' });
+          }
+        };
+        if (path !== targetPath) {
+          window.history.pushState({}, '', targetPath);
+          setPath(targetPath);
+          setTimeout(scrollToHash, 100);
+        } else {
+          scrollToHash();
+        }
+        return;
       }
+
+      window.history.pushState({}, '', href);
+      setPath(href);
+      window.scrollTo(0, 0);
     };
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
-  }, []);
+  }, [path]);
 
   const Layout = ({ children }) => (
     <>
