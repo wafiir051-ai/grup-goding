@@ -3,10 +3,8 @@ import { X, Phone, Send } from 'lucide-react';
 
 export default function WhatsAppModal({ isOpen, onClose, onSelect, message }) {
   const phoneNumbers = [
-    { value: '6281219135378', label: '0812-1913-5378', name: 'Admin 1' },
-    { value: '6281291900736', label: '0812-9190-0736', name: 'Admin 2' },
-    { value: '6281919022222', label: '0819-1902-2222', name: 'Admin 3' },
-    { value: '6282117963455', label: '0821-1796-3455', name: 'Admin 4' }
+    { value: '6281219135378', label: '0812-1913-5378', name: 'Owner' },
+    { value: '628998863948', label: '0899-8863-948', name: 'Admin' }
   ];
 
   if (!isOpen) return null;
