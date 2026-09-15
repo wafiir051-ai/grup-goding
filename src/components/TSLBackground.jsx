@@ -28,7 +28,7 @@ export default function TSLBackground() {
     }
 
     function draw() {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.25)';
       ctx.fillRect(0, 0, W, H);
 
       particles.forEach((p, i) => {
