@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { EASE_OUT } from '../lib/scrollMotion';
+import { DURATION, EASE_OUT } from '../lib/scrollMotion';
 
 // Satu query animation_settings per komponen, dibagi semua pemakainya
 // (misalnya keempat kartu layanan memakai componentName yang sama).
@@ -66,7 +66,8 @@ export default function RevealOnScroll({ children, componentName, once = true, c
   const variants = {
     plain: { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, transition: { duration: 0 } },
     hidden,
-    visible: { ...rest, transition: { duration: reduced ? 0.3 : Math.max(0.45, s.speed || 0.6), delay, ease: EASE_OUT } },
+    // Durasi seragam di semua section (kolom speed tidak lagi membuat tempo berbeda-beda).
+    visible: { ...rest, transition: { duration: reduced ? 0.3 : DURATION, delay, ease: EASE_OUT } },
   };
   const state = !settings ? 'plain' : inView ? 'visible' : 'hidden';
   return <motion.div ref={ref} initial="plain" animate={state} variants={variants} className={className} style={{width:'100%', maxWidth:'100%', boxSizing:'border-box'}}>{children}</motion.div>;

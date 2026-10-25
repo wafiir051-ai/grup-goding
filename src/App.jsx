@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
-import { MotionConfig } from 'framer-motion';
+import 'lenis/dist/lenis.css';
+import { MotionConfig, cancelFrame, frame } from 'framer-motion';
+import { setLenis, smoothScrollTo } from './lib/smoothScroll';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Navbar from './components/Navbar';
@@ -47,10 +49,18 @@ function App() {
   useEffect(() => {
     // Smooth scroll ikut dimatikan untuk pengguna prefers-reduced-motion.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-    const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
-    const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
-    requestAnimationFrame(raf);
-    return () => lenis.destroy();
+    // Inersia lembut di mouse/trackpad; sentuhan di HP tetap native supaya ringan.
+    const lenis = new Lenis({ lerp: 0.085, smoothWheel: true, syncTouch: false, wheelMultiplier: 1 });
+    setLenis(lenis);
+    // Lenis berjalan di frame loop framer-motion, jadi scroll dan semua efek parallax
+    // dihitung di frame yang sama, tanpa getaran.
+    const update = (data) => lenis.raf(data.timestamp);
+    frame.update(update, true);
+    return () => {
+      cancelFrame(update);
+      setLenis(null);
+      lenis.destroy();
+    };
   }, []);
 
   useEffect(() => {
@@ -73,10 +83,7 @@ function App() {
         const targetPath = pathPart || '/';
         const scrollToHash = () => {
           const el = document.getElementById(hash);
-          if (el) {
-            const top = el.getBoundingClientRect().top + window.scrollY - 80;
-            window.scrollTo({ top, behavior: 'smooth' });
-          }
+          if (el) smoothScrollTo(el, { offset: -80 });
         };
         if (path !== targetPath) {
           window.history.pushState({}, '', targetPath);
@@ -90,7 +97,7 @@ function App() {
 
       window.history.pushState({}, '', href);
       setPath(href);
-      window.scrollTo(0, 0);
+      smoothScrollTo(0, { immediate: true });
     };
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
@@ -104,7 +111,7 @@ function App() {
     </>
   );
 
-  if (path === '/portfolio') return <ThemeProvider><AuthProvider><PortfolioPage /></AuthProvider></ThemeProvider>;
+  if (path === '/portfolio') return <ThemeProvider><AuthProvider><MotionConfig reducedMotion="user"><PortfolioPage /></MotionConfig></AuthProvider></ThemeProvider>;
   if (path === '/testimonials') return <AuthProvider><Layout><TestimonialsPage /></Layout></AuthProvider>;
   if (path === '/admin') return <AuthProvider><AdminPanel /></AuthProvider>;
 
@@ -114,7 +121,7 @@ function App() {
     <MotionConfig reducedMotion="user">
       {/* AnimatedCursor */}
       {/* ParticleBackground */}
-      <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden w-full max-w-full">
+      <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-clip w-full max-w-full">
         <Navbar />
         <Hero />
         <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />

@@ -1,13 +1,22 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll } from 'framer-motion';
 import { Sparkles, Globe, Zap, ArrowRight, Code, Palette, ShoppingBag, BarChart } from 'lucide-react';
 import RevealOnScroll from './RevealOnScroll';
+import ScrollWords from './ScrollWords';
+import ScrollCard from './ScrollCard';
+import FanCard from './FanCard';
+import { HOVER_SPRING } from '../lib/scrollMotion';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
+import usePinEnabled from '../hooks/usePinEnabled';
+import useMedia from '../hooks/useMedia';
+import useStickyTop from '../hooks/useStickyTop';
 
 const ICON_MAP = {
   Sparkles, Globe, Zap, Code, Palette, ShoppingBag, BarChart
 };
+
+const SECTION_BG = "linear-gradient(135deg, #f8faff 0%, #ffffff 40%, #f0f7ff 100%)";
 
 export default function BentoServices() {
   const [services, setServices] = useState([]);
@@ -29,16 +38,47 @@ export default function BentoServices() {
     setIsModalOpen(false);
   };
 
+  // Pin saat keempat kartu tampil sebaris: kartu menyebar dari tumpukan di tengah.
+  const pinBase = usePinEnabled();
+  const wide = useMedia('(min-width: 1024px)');
+  const pinOn = pinBase && wide;
+  const wrapRef = useRef(null);
+  const sectionRef = useRef(null);
+  const stickyTop = useStickyTop(sectionRef, 0, pinOn);
+  // Offset ditulis dengan px supaya framer memakai pelacakan JS, bukan ViewTimeline native.
+  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start 0px', 'end end'] });
+
+  const renderCard = (s, Icon) => (
+    <motion.div
+      whileHover={{ y: -6, scale: 1.02, boxShadow: "0 30px 50px -20px rgba(0,0,0,0.25)" }}
+      transition={HOVER_SPRING}
+      className={`${s.span} ${s.color} p-6 sm:p-7 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl cursor-pointer`} style={{boxShadow:"0 4px 24px rgba(37,99,235,0.08)", border:"1px solid rgba(37,99,235,0.1)"}}
+    >
+      <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.6 }}>
+        <Icon className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 text-blue-600 mb-5 md:mb-7" />
+      </motion.div>
+      <h3 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2 md:mb-4">{s.title}</h3>
+      <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-4 md:mb-6 leading-relaxed">{s.description}</p>
+      <button
+        onClick={() => openModal(s.whatsapp_msg || `Saya tertarik dengan layanan ${s.title}.`)}
+        className="flex items-center gap-2 text-blue-600 font-semibold text-base sm:text-lg md:text-xl group transition-all hover:gap-3"
+      >
+        Pelajari lebih lanjut <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition" />
+      </button>
+    </motion.div>
+  );
+
   return (
     <>
-      <section id="services" style={{position:"relative"}} style={{background:"linear-gradient(135deg, #f8faff 0%, #ffffff 40%, #f0f7ff 100%)"}} className="py-20 md:py-28 relative overflow-hidden px-4 sm:px-6">
+      <div ref={wrapRef} style={pinOn ? { background: SECTION_BG } : undefined}>
+      <section ref={sectionRef} id="services" style={{position:"relative"}} style={{background: SECTION_BG, ...(pinOn ? { position: 'sticky', top: stickyTop } : {})}} className="py-20 md:py-28 relative overflow-hidden px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="services">
           <div className="text-center mb-12 md:mb-20">
             <span className="inline-block bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4 border border-blue-100">✦ Layanan Kami</span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent"}}>Layanan Kami</h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-500 max-w-xl mx-auto">Desain premium dengan motion yang hidup, performa tinggi, dan hasil yang terukur</p>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent"}}><ScrollWords text="Layanan Kami" /></h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-500 max-w-xl mx-auto"><ScrollWords text="Desain premium dengan motion yang hidup, performa tinggi, dan hasil yang terukur" /></p>
           </div>
         </RevealOnScroll>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 auto-rows-fr">
@@ -46,29 +86,24 @@ export default function BentoServices() {
             const Icon = ICON_MAP[s.icon] || Globe;
             return (
               <RevealOnScroll key={s.id} componentName="services" customDelay={0.1 + (idx % 4) * 0.08}>
-                <motion.div
-                  whileHover={{ scale: 1.03, boxShadow: "0 30px 50px -20px rgba(0,0,0,0.25)" }}
-                  transition={{ type: 'spring', stiffness: 200 }}
-                  className={`${s.span} ${s.color} p-6 sm:p-7 md:p-8 lg:p-10 rounded-2xl md:rounded-3xl cursor-pointer transition-all`} style={{boxShadow:"0 4px 24px rgba(37,99,235,0.08)", border:"1px solid rgba(37,99,235,0.1)"}}
-                >
-                  <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.6 }}>
-                    <Icon className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 text-blue-600 mb-5 md:mb-7" />
-                  </motion.div>
-                  <h3 className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2 md:mb-4">{s.title}</h3>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-4 md:mb-6 leading-relaxed">{s.description}</p>
-                  <button
-                    onClick={() => openModal(s.whatsapp_msg || `Saya tertarik dengan layanan ${s.title}.`)}
-                    className="flex items-center gap-2 text-blue-600 font-semibold text-base sm:text-lg md:text-xl group transition-all hover:gap-3"
-                  >
-                    Pelajari lebih lanjut <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition" />
-                  </button>
-                </motion.div>
+                {pinOn ? (
+                  <FanCard index={idx} count={services.length} progress={scrollYProgress}>
+                    {renderCard(s, Icon)}
+                  </FanCard>
+                ) : (
+                  <ScrollCard range={['start 0.9', 'start 0.55']}>
+                    {renderCard(s, Icon)}
+                  </ScrollCard>
+                )}
               </RevealOnScroll>
             );
           })}
         </div>
       </div>
     </section>
+    {/* Jarak tahan pin: elemen di dalam pembungkus, padding tidak dihitung oleh sticky. */}
+    {pinOn && <div aria-hidden="true" style={{ height: '80vh' }} />}
+    </div>
     </>
   );
 }

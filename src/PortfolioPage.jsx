@@ -1,10 +1,28 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ExternalLink, Sparkles, ArrowLeft } from 'lucide-react';
 import RevealOnScroll from './components/RevealOnScroll';
 import WhatsAppModal from './components/WhatsAppModal';
+import ScrollCard from './components/ScrollCard';
+import ScrollWords from './components/ScrollWords';
+import { HOVER_SPRING } from './lib/scrollMotion';
 import { supabase } from './lib/supabase';
 import TSLBackground from './components/TSLBackground';
+
+// Gambar proyek bergeser pelan di dalam bingkainya saat kartu melintasi layar,
+// seperti dilihat dari jendela. Di tengah layar gambar berada di posisi aslinya.
+function ParallaxMedia({ children }) {
+  const ref = useRef(null);
+  const reduced = useReducedMotion();
+  // Offset ditulis dengan px supaya framer memakai pelacakan JS, bukan ViewTimeline native.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end 0px'] });
+  const y = useTransform(scrollYProgress, [0, 0.5, 1], [16, 0, -16]);
+  return (
+    <motion.div ref={ref} className="w-full h-full" style={reduced ? undefined : { y }}>
+      {children}
+    </motion.div>
+  );
+}
 
 export default function PortfolioPage() {
   const [projects, setProjects] = useState([]);
@@ -12,6 +30,16 @@ export default function PortfolioPage() {
   const [hovered, setHovered] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
+
+  // Header berlapis: judul, lencana, dan statistik bergeser beda kecepatan saat di-scroll keluar.
+  const headerRef = useRef(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress: leaving } = useScroll({ target: headerRef, offset: ['start 0px', 'end 0px'] });
+  const badgeY = useTransform(leaving, [0, 1], [0, -40]);
+  const titleY = useTransform(leaving, [0, 1], [0, -90]);
+  const titleOpacity = useTransform(leaving, [0.3, 1], [1, 0.2]);
+  const statsY = useTransform(leaving, [0, 1], [0, -150]);
+  const depth = (style) => (reduced ? undefined : style);
 
   useEffect(() => {
     supabase.from('portfolios').select('*').eq('is_active', true).order('order_index').then(({ data }) => {
@@ -33,7 +61,7 @@ export default function PortfolioPage() {
       <div className="fixed top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none z-0" />
       <div className="fixed top-20 left-1/2 -translate-x-1/2 w-[900px] h-[400px] bg-cyan-400/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
-      <section className="relative pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 z-10">
+      <section ref={headerRef} className="relative pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 z-10">
         <div className="max-w-6xl mx-auto">
           <motion.button
             initial={{ opacity: 0, x: -20 }}
@@ -46,40 +74,46 @@ export default function PortfolioPage() {
           </motion.button>
 
           <div className="text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full mb-8 border bg-cyan-500/10 border-cyan-500/20 text-cyan-400"
-            >
-              <Sparkles className="w-4 h-4" /> PORTFOLIO KAMI
+            <motion.div style={depth({ y: badgeY })}>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+                className="inline-flex items-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-full mb-8 border bg-cyan-500/10 border-cyan-500/20 text-cyan-400"
+              >
+                <Sparkles className="w-4 h-4" /> PORTFOLIO KAMI
+              </motion.div>
             </motion.div>
 
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight mb-6 text-white"
-            >
-              Karya Digital<br />
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">Terbaik Kami</span>
-            </motion.h1>
+            <motion.div style={depth({ y: titleY, opacity: titleOpacity })}>
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+                className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight mb-6 text-white"
+              >
+                Karya Digital<br />
+                <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 bg-clip-text text-transparent">Terbaik Kami</span>
+              </motion.h1>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-              className="text-base md:text-lg text-zinc-400 max-w-xl mx-auto mb-6"
-            >
-              Setiap proyek adalah bukti komitmen kami dalam menghadirkan solusi digital berkualitas tinggi.
-            </motion.p>
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+                className="text-base md:text-lg text-zinc-400 max-w-xl mx-auto mb-6"
+              >
+                Setiap proyek adalah bukti komitmen kami dalam menghadirkan solusi digital berkualitas tinggi.
+              </motion.p>
+            </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-              className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6 sm:mt-10"
-            >
-              <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl px-3 sm:px-6 py-2 sm:py-3">
-                <span className="text-2xl font-bold text-cyan-400">{projects.length}+</span>
-                <span className="text-sm text-zinc-400">Proyek Selesai</span>
-              </div>
-              <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-3">
-                <span className="text-2xl font-bold text-cyan-400">100%</span>
-                <span className="text-sm text-zinc-400">Klien Puas</span>
-              </div>
-              <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-3">
-                <span className="text-2xl font-bold text-cyan-400">{new Date().getFullYear() === 2026 ? "<1" : (new Date().getFullYear() - 2026) + "+"}</span>
-                <span className="text-sm text-zinc-400">Tahun Pengalaman</span>
-              </div>
+            <motion.div style={depth({ y: statsY })}>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+                className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-6 sm:mt-10"
+              >
+                <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl px-3 sm:px-6 py-2 sm:py-3">
+                  <span className="text-2xl font-bold text-cyan-400">{projects.length}+</span>
+                  <span className="text-sm text-zinc-400">Proyek Selesai</span>
+                </div>
+                <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-3">
+                  <span className="text-2xl font-bold text-cyan-400">100%</span>
+                  <span className="text-sm text-zinc-400">Klien Puas</span>
+                </div>
+                <div className="flex items-center gap-3 bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-2xl px-6 py-3">
+                  <span className="text-2xl font-bold text-cyan-400">{new Date().getFullYear() === 2026 ? "<1" : (new Date().getFullYear() - 2026) + "+"}</span>
+                  <span className="text-sm text-zinc-400">Tahun Pengalaman</span>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -101,29 +135,37 @@ export default function PortfolioPage() {
             <div className="grid md:grid-cols-2 gap-8 items-stretch">
               {projects.map((project, idx) => (
                 <RevealOnScroll key={project.id} customDelay={idx * 0.15}>
+                  {/* Kartu naik dan sedikit miring sesuai posisi scroll, kolom kanan sedikit tertinggal. */}
+                  <ScrollCard className="h-full">
                   <motion.div
                     onHoverStart={() => setHovered(project.id)}
                     onHoverEnd={() => setHovered(null)}
                     whileHover={{ y: -8 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    className="bg-white border border-gray-100 hover:border-cyan-400/60 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-cyan-100 transition-all duration-300 flex flex-col h-full"
+                    transition={HOVER_SPRING}
+                    className="bg-white border border-gray-100 hover:border-cyan-400/60 rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-cyan-100 transition-[border-color,box-shadow] duration-300 flex flex-col h-full"
                   >
                     <div className="relative h-52 overflow-hidden bg-gray-50 border-b border-gray-100">
                       {project.image_url ? (
-                        <img src={project.image_url} alt={project.title} className="w-full h-full object-contain p-8"
-                          style={{ transform: hovered === project.id ? 'scale(1.06)' : 'scale(1)', transition: 'transform 0.5s' }} />
+                        <ParallaxMedia>
+                          <img src={project.image_url} alt={project.title} className="w-full h-full object-contain p-8"
+                            style={{ transform: hovered === project.id ? 'scale(1.06)' : 'scale(1)', transition: 'transform 0.5s' }} />
+                        </ParallaxMedia>
                       ) : (
                         <div className={'w-full h-full bg-gradient-to-br ' + project.gradient + ' flex items-center justify-center relative'}>
                           <div className="absolute inset-0 bg-black/20" />
-                          <motion.span
-                            animate={{ scale: hovered === project.id ? 1.15 : 1, rotate: hovered === project.id ? 4 : 0 }}
-                            transition={{ duration: 0.4 }}
-                            className="text-white/90 font-black drop-shadow-2xl select-none relative z-10"
-                            style={{ fontSize: 'clamp(5rem, 12vw, 9rem)' }}
-                          >{project.image_letter}</motion.span>
+                          <ParallaxMedia>
+                            <div className="w-full h-full flex items-center justify-center">
+                              <motion.span
+                                animate={{ scale: hovered === project.id ? 1.15 : 1, rotate: hovered === project.id ? 4 : 0 }}
+                                transition={{ duration: 0.4 }}
+                                className="text-white/90 font-black drop-shadow-2xl select-none relative z-10"
+                                style={{ fontSize: 'clamp(5rem, 12vw, 9rem)' }}
+                              >{project.image_letter}</motion.span>
+                            </div>
+                          </ParallaxMedia>
                         </div>
                       )}
-                      
+
                       <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">{project.category}</div>
                       <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-gray-800 text-xs font-semibold px-3 py-1.5 rounded-full border border-gray-200 shadow-sm">{project.year}</div>
                     </div>
@@ -143,35 +185,38 @@ export default function PortfolioPage() {
                       )}
                       {project.link && (
                         <a href={project.link} target="_blank" rel="noopener noreferrer"
-                          className="mt-auto inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-semibold px-6 py-3 rounded-xl hover:opacity-90 hover:scale-105 transition-all text-sm w-fit"
+                          className="mt-auto inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-semibold px-6 py-3 rounded-xl hover:opacity-90 hover:scale-105 transition-all duration-300 ease-out text-sm w-fit"
                         >
                           Kunjungi Website <ExternalLink className="w-4 h-4" />
                         </a>
                       )}
                     </div>
                   </motion.div>
+                  </ScrollCard>
                 </RevealOnScroll>
               ))}
             </div>
           )}
 
           <RevealOnScroll>
+            <ScrollCard range={['start 0.95', 'start 0.6']}>
             <div className="mt-24 text-center rounded-3xl p-8 md:p-14 bg-zinc-900/80 backdrop-blur-md border border-white/10 relative overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(34,211,238,0.08)_0%,_transparent_60%)]" />
               <div className="relative z-10">
                 <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-semibold px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" /> MULAI PROYEK
                 </div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white">Mau Website Seperti Ini?</h3>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"><ScrollWords text="Mau Website Seperti Ini?" /></h3>
                 <p className="text-zinc-400 mb-8 max-w-lg mx-auto">Konsultasi gratis, kami siap bantu wujudkan proyek digital kamu dari nol sampai launch.</p>
                 <button
                   onClick={() => openModal('Halo, saya tertarik membuat website seperti di portfolio Goding.')}
-                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold px-10 py-4 rounded-2xl hover:scale-105 transition-all text-base"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold px-10 py-4 rounded-2xl hover:scale-105 transition-all duration-300 ease-out text-base"
                 >
                   Mulai Sekarang
                 </button>
               </div>
             </div>
+            </ScrollCard>
           </RevealOnScroll>
         </div>
       </section>

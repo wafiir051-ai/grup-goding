@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
 import useActiveSection from '../hooks/useActiveSection';
+import { smoothScrollTo } from '../lib/smoothScroll';
 import { EASE_OUT } from '../lib/scrollMotion';
 
 export default function Navbar() {
@@ -29,7 +30,7 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
     if (id === 'clients') {
       const el = document.getElementById('clients');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) smoothScrollTo(el, { offset: -80 });
     } else {
       window.location.assign(id);
     }
@@ -98,7 +99,7 @@ export default function Navbar() {
           {/* Desktop CTA */}
           <button
             onClick={() => openModal('Halo, saya ingin konsultasi VIP dengan Goding.')}
-            className="hidden lg:block px-4 xl:px-6 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl text-xs xl:text-sm font-semibold text-white shadow-lg hover:scale-105 transition"
+            className="hidden lg:block px-4 xl:px-6 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl text-xs xl:text-sm font-semibold text-white shadow-lg hover:scale-105 transition duration-300 ease-out"
           >
             Konsultasi VIP
           </button>
