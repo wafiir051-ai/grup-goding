@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { createOrderAndGetPaymentUrl } from '../lib/orders';
 import RevealOnScroll from './RevealOnScroll';
+import { VIEWPORT, fadeUp, stagger } from '../lib/scrollMotion';
 import WhatsAppModal from './WhatsAppModal';
 
 const formatPrice = (price) => new Intl.NumberFormat('id-ID').format(price);
@@ -183,13 +184,25 @@ export default function Pricing() {
         isCreatingOrder={isCreatingOrder}
       />
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-16 pt-2">
+        <motion.h2
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-16 pt-2"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+        >
           Paket Harga
-        </h2>
+        </motion.h2>
         {orderError && (
           <p className="text-center text-red-400 text-sm mb-4">{orderError}</p>
         )}
-        <div className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <motion.div
+          className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+          variants={stagger(0.08, 0.1)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+        >
           {plans.map((plan) => {
             const hoverEffect = threeDSettings.enabled ? {
               rotateX: threeDSettings.intensity * 6,
@@ -199,7 +212,7 @@ export default function Pricing() {
             } : { scale: threeDSettings.scale };
 
             return (
-              <div key={plan.id} className="min-w-[85vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
+              <motion.div key={plan.id} variants={fadeUp} className="min-w-[85vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
                 <motion.div
                   initial={{ rotateX: 0, rotateY: 0, scale: 1 }}
                   whileHover={hoverEffect}
@@ -244,10 +257,10 @@ export default function Pricing() {
                     Pilih Paket
                   </button>
                 </motion.div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

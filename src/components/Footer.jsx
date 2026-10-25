@@ -45,7 +45,7 @@ export default function Footer() {
             </div>
           </RevealOnScroll>
 
-          <RevealOnScroll componentName="footer">
+          <RevealOnScroll componentName="footer" customDelay={0.2}>
             <div className="text-center md:text-right">
               <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold">Siap membuat website luar biasa?</h3>
               <button

@@ -1,28 +1,73 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-export default function RevealOnScroll({ children, componentName, once = false, className = '', customDelay = null }) {
-  const [settings, setSettings] = useState(null);
-  const [ref, inView] = useInView({ triggerOnce: once, threshold: 0.2, rootMargin: '-50px' });
+import { EASE_OUT } from '../lib/scrollMotion';
+
+// Satu query animation_settings per komponen, dibagi semua pemakainya
+// (misalnya keempat kartu layanan memakai componentName yang sama).
+const settingsCache = new Map();
+function loadSettings(componentName) {
+  if (!settingsCache.has(componentName)) {
+    settingsCache.set(
+      componentName,
+      supabase
+        .from('animation_settings')
+        .select('animation_type, speed, delay, intensity, direction')
+        .eq('component', componentName)
+        .maybeSingle()
+        .then(({ data }) => data, () => null),
+    );
+  }
+  return settingsCache.get(componentName);
+}
+
+export default function RevealOnScroll({ children, componentName, once = true, className = '', customDelay = null }) {
+  // undefined = masih dimuat, null = tidak ada pengaturan (tampil biasa seperti dulu).
+  const [settings, setSettings] = useState(undefined);
+  const reduced = useReducedMotion();
+  // Ambang kecil: baris terakhir footer (copyright) tetap bisa muncul di ujung halaman.
+  const [ref, inView] = useInView({ triggerOnce: once, threshold: 0, rootMargin: '0px 0px -20px 0px' });
   useEffect(() => {
-    const fetchAnim = async () => {
-      const { data } = await supabase.from('animation_settings').select('animation_type, speed, delay, intensity, direction').eq('component', componentName).maybeSingle();
-      if (data) setSettings(data);
+    if (!componentName) return undefined;
+    let alive = true;
+    loadSettings(componentName).then((data) => {
+      if (alive) setSettings(data || null);
+    });
+    return () => {
+      alive = false;
     };
-    fetchAnim();
   }, [componentName]);
-  if (!settings) return <div className={className}>{children}</div>;
-  const delay = customDelay !== null ? customDelay : settings.delay;
+  if (!componentName) return <div className={className}>{children}</div>;
+
+  const s = settings || {};
+  const k = s.intensity || 1;
+  // Posisi diam yang tampil di situs saat ini. Varian versi sebelumnya tidak
+  // mengembalikan geser/skala ke nol, jadi elemen berhenti di sini; dipertahankan
+  // supaya tampilan homepage tidak berubah.
+  const rest = { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0 };
+  if (s.direction === 'up') rest.y = 60 * k;
+  if (s.direction === 'down') rest.y = -60 * k;
+  if (s.direction === 'left') rest.x = 60 * k;
+  if (s.direction === 'right') rest.x = -60 * k;
+  if (s.animation_type === 'scale') rest.scale = 0.7;
+  if (s.animation_type === 'rotate') rest.rotate = -10;
+
+  // Masuk: fade dan geser pendek menuju posisi diam, tanpa blur supaya ringan di HP.
+  const hidden = { ...rest, opacity: 0, transition: { duration: 0 } };
+  if (!reduced) {
+    if (s.direction === 'up') hidden.y = rest.y + 24;
+    if (s.direction === 'down') hidden.y = rest.y - 24;
+    if (s.direction === 'left') hidden.x = rest.x + 24;
+    if (s.direction === 'right') hidden.x = rest.x - 24;
+    if (s.animation_type === 'scale') hidden.scale = rest.scale * 0.96;
+  }
+  const delay = customDelay !== null ? customDelay : s.delay || 0;
   const variants = {
-    hidden: { opacity: 0, filter: 'blur(4px)' },
-    visible: { opacity: 1, filter: 'blur(0px)', transition: { type: 'spring', stiffness: 120, damping: 15, delay, duration: settings.speed } }
+    plain: { opacity: 1, x: 0, y: 0, scale: 1, rotate: 0, transition: { duration: 0 } },
+    hidden,
+    visible: { ...rest, transition: { duration: reduced ? 0.3 : Math.max(0.45, s.speed || 0.6), delay, ease: EASE_OUT } },
   };
-  if (settings.direction === 'up') variants.hidden.y = 60 * settings.intensity;
-  if (settings.direction === 'down') variants.hidden.y = -60 * settings.intensity;
-  if (settings.direction === 'left') variants.hidden.x = 60 * settings.intensity;
-  if (settings.direction === 'right') variants.hidden.x = -60 * settings.intensity;
-  if (settings.animation_type === 'scale') variants.hidden.scale = 0.7;
-  if (settings.animation_type === 'rotate') variants.hidden.rotate = -10;
-  return <motion.div ref={ref} initial="hidden" animate={inView ? 'visible' : 'hidden'} variants={variants} className={className} style={{width:'100%', maxWidth:'100%', boxSizing:'border-box'}}>{children}</motion.div>;
+  const state = !settings ? 'plain' : inView ? 'visible' : 'hidden';
+  return <motion.div ref={ref} initial="plain" animate={state} variants={variants} className={className} style={{width:'100%', maxWidth:'100%', boxSizing:'border-box'}}>{children}</motion.div>;
 }

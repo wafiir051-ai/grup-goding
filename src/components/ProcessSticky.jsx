@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
+import { EASE_OUT, VIEWPORT, fadeUp } from '../lib/scrollMotion';
 
 const steps = [
   { num: "01", title: "Discovery", desc: "Memahami visi, audiens, dan tujuan bisnis Anda" },
@@ -10,15 +11,15 @@ const steps = [
 
 export default function ProcessSticky() {
   return (
-    <section style={{width:'100%', overflowX:'hidden', boxSizing:'border-box'}} style={{background:"linear-gradient(180deg, #ffffff 0%, #f1f5ff 50%, #ffffff 100%)"}} className="py-10 md:py-20">
+    <section id="process" style={{width:'100%', overflowX:'hidden', boxSizing:'border-box'}} style={{background:"linear-gradient(180deg, #ffffff 0%, #f1f5ff 50%, #ffffff 100%)"}} className="py-10 md:py-20">
       <div style={{width:'100%', maxWidth:'600px', margin:'0 auto', padding:'0 16px', boxSizing:'border-box'}}>
 
-        <div className="text-center mb-8">
+        <motion.div className="text-center mb-8" variants={fadeUp} initial="hidden" whileInView="visible" viewport={VIEWPORT}>
           <p className="text-xs font-bold uppercase tracking-widest text-blue-600 mb-2">PROSES KAMI</p>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 leading-snug">
             Dari ide hingga live<br />dalam 4 langkah
           </h2>
-        </div>
+        </motion.div>
 
         <div style={{display:'flex', flexDirection:'column', gap:'12px', width:'100%'}}>
           {steps.map((step, i) => (
@@ -27,7 +28,7 @@ export default function ProcessSticky() {
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: i * 0.07 }}
+              transition={{ duration: 0.55, delay: 0.1 + i * 0.08, ease: EASE_OUT }}
               style={{
                 display:'flex',
                 alignItems:'flex-start',

@@ -45,7 +45,7 @@ export default function BentoServices() {
           {services.map((s, idx) => {
             const Icon = ICON_MAP[s.icon] || Globe;
             return (
-              <RevealOnScroll key={s.id} componentName="services">
+              <RevealOnScroll key={s.id} componentName="services" customDelay={0.1 + (idx % 4) * 0.08}>
                 <motion.div
                   whileHover={{ scale: 1.03, boxShadow: "0 30px 50px -20px rgba(0,0,0,0.25)" }}
                   transition={{ type: 'spring', stiffness: 200 }}

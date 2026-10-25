@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { MotionConfig } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Navbar from './components/Navbar';
@@ -44,6 +45,8 @@ function App() {
   const [path, setPath] = useState(window.location.pathname);
 
   useEffect(() => {
+    // Smooth scroll ikut dimatikan untuk pengguna prefers-reduced-motion.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
     const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
     const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
@@ -108,6 +111,7 @@ function App() {
   return (
     <ThemeProvider>
     <AuthProvider>
+    <MotionConfig reducedMotion="user">
       {/* AnimatedCursor */}
       {/* ParticleBackground */}
       <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-hidden w-full max-w-full">
@@ -123,6 +127,7 @@ function App() {
         <EnvelopeTestimonials />
         <Footer />
       </div>
+    </MotionConfig>
     </AuthProvider>
     </ThemeProvider>
   );

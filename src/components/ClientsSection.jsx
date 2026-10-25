@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
+import { VIEWPORT, fadeUp, stagger } from '../lib/scrollMotion';
 import RevealOnScroll from './RevealOnScroll';
 
 export default function ClientsSection() {
@@ -24,13 +26,21 @@ export default function ClientsSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800">Dipercaya Oleh</h2>
           <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-600">Brand & UMKM Terpercaya yang Telah Bekerja Sama dengan Kami</p>
         </RevealOnScroll>
-        <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-12 md:gap-16 lg:gap-20">
+        <motion.div
+          className="flex flex-wrap justify-center items-center gap-10 sm:gap-12 md:gap-16 lg:gap-20"
+          variants={stagger(0.08, 0.1)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={VIEWPORT}
+        >
           {clients.map((client) => (
-            <div key={client.id} className="w-24 sm:w-32 md:w-40 lg:w-48 grayscale hover:grayscale-0 transition-all duration-300">
-              <img src={client.logo_url} alt={client.name} className="w-full h-auto object-contain" loading="lazy" />
-            </div>
+            <motion.div key={client.id} variants={fadeUp}>
+              <div className="w-24 sm:w-32 md:w-40 lg:w-48 grayscale hover:grayscale-0 transition-all duration-300">
+                <img src={client.logo_url} alt={client.name} className="w-full h-auto object-contain" loading="lazy" />
+              </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

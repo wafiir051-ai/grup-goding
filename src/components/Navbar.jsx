@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
+import useActiveSection from '../hooks/useActiveSection';
+import { EASE_OUT } from '../lib/scrollMotion';
 
 export default function Navbar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,19 +31,36 @@ export default function Navbar() {
       const el = document.getElementById('clients');
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     } else {
-      window.location.href = id;
+      window.location.assign(id);
     }
   };
 
   const { dark, setDark } = useTheme();
   const navLinks = [
-    { label: 'Beranda', href: '/' },
-    { label: 'Layanan', href: '/#services' },
-    { label: 'Harga', href: '/#pricing' },
-    { label: 'Klien', action: () => scrollToSection('clients') },
+    { label: 'Beranda', href: '/', section: 'beranda' },
+    { label: 'Layanan', href: '/#services', section: 'services' },
+    { label: 'Harga', href: '/#pricing', section: 'pricing' },
+    { label: 'Klien', action: () => scrollToSection('clients'), section: 'clients' },
     { label: 'Portfolio', href: '/portfolio' },
     { label: 'Admin', href: '/admin' },
   ];
+
+  // Menandai section homepage yang sedang dibaca.
+  const activeSection = useActiveSection();
+  const isActive = (link) => !!link.section && link.section === activeSection;
+  const desktopClass = (link) =>
+    `relative ${isActive(link) ? 'text-cyan-400' : 'text-white/80'} hover:text-cyan-400 transition-colors`;
+  const mobileClass = (link) =>
+    `${isActive(link) ? 'text-cyan-400 bg-white/5' : 'text-white/80'} hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-colors text-sm font-medium`;
+  const indicator = (link) =>
+    isActive(link) && (
+      <motion.span
+        layoutId="nav-active"
+        aria-hidden="true"
+        className="absolute -bottom-1.5 left-0 right-0 h-0.5 rounded-full bg-cyan-400"
+        transition={{ duration: 0.35, ease: EASE_OUT }}
+      />
+    );
 
   return (
     <>
@@ -69,9 +88,9 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium">
             {navLinks.map((link) => (
               link.action ? (
-                <button key={link.label} onClick={link.action} className="text-white/80 hover:text-cyan-400 transition-colors">{link.label}</button>
+                <button key={link.label} onClick={link.action} aria-current={isActive(link) ? 'location' : undefined} className={desktopClass(link)}>{link.label}{indicator(link)}</button>
               ) : (
-                <a key={link.label} href={link.href} className="text-white/80 hover:text-cyan-400 transition-colors">{link.label}</a>
+                <a key={link.label} href={link.href} aria-current={isActive(link) ? 'location' : undefined} className={desktopClass(link)}>{link.label}{indicator(link)}</a>
               )
             ))}
           </div>
@@ -109,7 +128,8 @@ export default function Navbar() {
                     <button 
                       key={link.label} 
                       onClick={link.action}
-                      className="block w-full text-left px-4 py-3 text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-colors text-sm font-medium"
+                      aria-current={isActive(link) ? 'location' : undefined}
+                      className={`block w-full text-left px-4 py-3 ${mobileClass(link)}`}
                     >
                       {link.label}
                     </button>
@@ -118,7 +138,8 @@ export default function Navbar() {
                       key={link.label} 
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-white/80 hover:text-cyan-400 hover:bg-white/5 rounded-xl transition-colors text-sm font-medium"
+                      aria-current={isActive(link) ? 'location' : undefined}
+                      className={`block px-4 py-3 ${mobileClass(link)}`}
                     >
                       {link.label}
                     </a>

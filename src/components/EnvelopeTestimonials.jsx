@@ -1,6 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
+import { motion } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
+import { VIEWPORT, fadeUp, stagger } from '../lib/scrollMotion';
 import WhiteBackground3D from './WhiteBackground3D';
 
 export default function EnvelopeTestimonials() {
@@ -57,9 +59,16 @@ export default function EnvelopeTestimonials() {
               </svg>
             </button>
 
-            <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 scrollbar-hide">
+            <motion.div
+              ref={scrollRef}
+              className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 scrollbar-hide"
+              variants={stagger(0.08, 0.2)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={VIEWPORT}
+            >
               {tests.map((t) => (
-                <div key={t.id} className="min-w-[85vw] xs:min-w-[75vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink bg-gray-50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl md:rounded-2xl min-h-[180px] sm:min-h-[200px] flex flex-col shadow-sm hover:shadow-md transition-shadow duration-300">
+                <motion.div key={t.id} variants={fadeUp} className="min-w-[85vw] xs:min-w-[75vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink bg-gray-50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl md:rounded-2xl min-h-[180px] sm:min-h-[200px] flex flex-col shadow-sm hover:shadow-md transition-shadow duration-300">
                   <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
                     <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold text-sm md:text-base shrink-0">
                       {t.avatar || t.name.charAt(0)}
@@ -71,9 +80,9 @@ export default function EnvelopeTestimonials() {
                   </div>
                   <div className="text-yellow-500 text-sm">{'★'.repeat(t.rating)}</div>
                   <p className="mt-2 md:mt-3 italic text-gray-600 text-xs sm:text-sm md:text-base leading-relaxed break-words">"{t.content}"</p>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </RevealOnScroll>
       </div>

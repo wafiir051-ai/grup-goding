@@ -1,15 +1,25 @@
 import { lazy, Suspense } from 'react';
 const ThreeBackground = lazy(() => import('./ThreeBackground'));
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import TextGradient from './TextGradient';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
+import { EASE_OUT, fadeUp, stagger } from '../lib/scrollMotion';
 
 export default function Hero() {
   const [logoUrl, setLogoUrl] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
+
+  // Parallax ringan: mesh (lapisan terjauh) tertinggal paling banyak, logo di tengah.
+  const heroRef = useRef(null);
+  const reduced = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const meshY = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const meshOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.45]);
+  const logoY = useTransform(scrollYProgress, [0, 1], [0, 90]);
+  const logoScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
 
   useEffect(() => {
     supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
@@ -25,8 +35,10 @@ export default function Hero() {
 
   return (
     <>
-      <section className="min-h-screen w-full relative overflow-visible" style={{ background: '#050810' }}>
-        <Suspense fallback={null}><ThreeBackground /></Suspense>
+      <section id="beranda" ref={heroRef} className="min-h-screen w-full relative overflow-visible" style={{ background: '#050810' }}>
+        <motion.div aria-hidden="true" className="absolute inset-0" style={reduced ? undefined : { y: meshY, opacity: meshOpacity }}>
+          <Suspense fallback={null}><ThreeBackground /></Suspense>
+        </motion.div>
         <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
 
         <div className="min-h-screen flex items-center justify-center">
@@ -35,8 +47,13 @@ export default function Hero() {
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-16 xl:gap-20">
 
               {/* Teks - mobile: tengah, desktop: kiri */}
-              <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1">
-                <h1 className="font-bold text-white leading-[1.1]
+              <motion.div
+                className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1"
+                variants={stagger(0.1, 0.15)}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.h1 variants={fadeUp} className="font-bold text-white leading-[1.1]
                   text-3xl
                   sm:text-4xl
                   md:text-4xl
@@ -46,15 +63,15 @@ export default function Hero() {
                   <span className="block">Solusi Digital Premium</span>
                   <span className="block">untuk</span>
                   <span className="block"><TextGradient>Bisnis Modern</TextGradient></span>
-                </h1>
-                <p className="mt-3 text-zinc-400 max-w-xl mx-auto lg:mx-0
+                </motion.h1>
+                <motion.p variants={fadeUp} className="mt-3 text-zinc-400 max-w-xl mx-auto lg:mx-0
                   text-base
                   sm:text-lg
                   md:text-xl
                   2xl:text-2xl">
                   Kami menciptakan digital experience modern dengan motion physics, desain timeless, dan performa tinggi.
-                </p>
-                <div className="mt-5 flex flex-wrap gap-4 justify-center lg:justify-start">
+                </motion.p>
+                <motion.div variants={fadeUp} className="mt-5 flex flex-wrap gap-4 justify-center lg:justify-start">
                   <button
                     onClick={() => openModal('Halo, saya tertarik dengan layanan website premium Goding.')}
                     className="px-6 sm:px-8 2xl:px-10 py-3 sm:py-4 2xl:py-5 bg-gradient-to-r from-blue-700 to-cyan-500 text-white rounded-2xl font-semibold hover:scale-105 transition text-sm sm:text-base 2xl:text-lg"
@@ -67,14 +84,18 @@ export default function Hero() {
                   >
                     Lihat Portfolio
                   </button>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
 
               {/* Logo - mobile: bawah teks, desktop: kanan sejajar tengah */}
-              <div className="flex items-center justify-center lg:justify-end flex-shrink-0">
+              <motion.div
+                className="flex items-center justify-center lg:justify-end flex-shrink-0"
+                style={reduced ? undefined : { y: logoY, scale: logoScale }}
+              >
                 <motion.div
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0 }}
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.9, delay: 0.3, ease: EASE_OUT }}
                   className="rounded-full shadow-2xl flex items-center justify-center overflow-hidden bg-white/10 backdrop-blur-sm
                     w-44 h-44
                     sm:w-52 sm:h-52
@@ -88,7 +109,7 @@ export default function Hero() {
                     : <div className="text-white font-bold" style={{fontSize:'clamp(3rem, 8vw, 8rem)'}}>G</div>
                   }
                 </motion.div>
-              </div>
+              </motion.div>
 
             </div>
           </div>

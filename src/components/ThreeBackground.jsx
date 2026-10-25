@@ -103,7 +103,21 @@ export default function ThreeBackground() {
     resize();
     loop();
 
+    // Berhenti menggambar saat hero sudah lewat, supaya scroll tetap ringan di HP.
+    let paused = false;
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting && !paused) {
+        paused = true;
+        cancelAnimationFrame(animId);
+      } else if (entry.isIntersecting && paused) {
+        paused = false;
+        loop();
+      }
+    });
+    io.observe(canvas);
+
     return () => {
+      io.disconnect();
       cancelAnimationFrame(animId);
       canvas.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', resize);
