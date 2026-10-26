@@ -3,7 +3,7 @@ import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { MotionConfig, cancelFrame, frame } from 'framer-motion';
 import { setLenis, smoothScrollTo } from './lib/smoothScroll';
-import { SMOOTH_SCROLL } from './lib/scrollMotion';
+import { SMOOTH_SCROLL, easeOutCubic } from './lib/scrollMotion';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import Navbar from './components/Navbar';
@@ -50,9 +50,10 @@ function App() {
   useEffect(() => {
     // Smooth scroll ikut dimatikan untuk pengguna prefers-reduced-motion.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-    // Inersia lembut di mouse/trackpad; sentuhan di HP tetap native supaya ringan.
+    // Luncuran lembut di mouse/trackpad; sentuhan di HP tetap native supaya ringan.
     const lenis = new Lenis({
-      lerp: SMOOTH_SCROLL.lerp,
+      duration: SMOOTH_SCROLL.duration,
+      easing: easeOutCubic,
       wheelMultiplier: SMOOTH_SCROLL.wheelMultiplier,
       smoothWheel: true,
       syncTouch: false,
