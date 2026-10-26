@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
-export default function ThreeBackground() {
+// `flight` (opsional): progres scroll 0..1 yang menerbangkan kamera di atas jaring.
+export default function ThreeBackground({ flight }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -16,15 +17,15 @@ export default function ThreeBackground() {
       H = canvas.height = window.innerHeight;
     }
 
-    function project(x, y, z, cx, cy) {
-      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
-      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    function project(x, y, z, cx, cy, rx, ry, camDist) {
+      const cosX = Math.cos(rx), sinX = Math.sin(rx);
+      const cosY = Math.cos(ry), sinY = Math.sin(ry);
       const y1 = y * cosX - z * sinX;
       const z1 = y * sinX + z * cosX;
       const x1 = x * cosY + z1 * sinY;
       const z2 = -x * sinY + z1 * cosY;
       const fov = 700;
-      const scale = fov / (fov + z2 + 400);
+      const scale = fov / Math.max(60, fov + z2 + camDist);
       return { x: cx + x1 * scale, y: cy + y1 * scale, z: z2, scale };
     }
 
@@ -32,7 +33,16 @@ export default function ThreeBackground() {
       ctx.fillStyle = '#0a0a0a';
       ctx.fillRect(0, 0, W, H);
 
-      const cx = W / 2, cy = H * 0.55;
+      // Kamera terbang seperti kamera hanggar Wamos: saat hero di-scroll, kamera menunduk dari
+      // sudut miring ke hampir tegak lurus, berputar sedikit, dan menukik mendekat ke jaring.
+      const f = flight ? Math.min(1, Math.max(0, flight.get())) : 0;
+      const e = f * f * (3 - 2 * f);
+      const rx = rotX + e * 1.0;
+      const ry = rotY + e * 0.5;
+      const camDist = 400 - e * 260;
+      const cx = W / 2, cy = H * (0.55 - e * 0.07);
+      // Jaring makin terang saat kamera mendekat.
+      const glow = 1 + e * 0.9;
       const N = 12;
       const step = Math.min(W, H) * 0.09;
       const pts = [];
@@ -47,7 +57,7 @@ export default function ThreeBackground() {
           const wave2 = Math.sin(i * 0.4 + t) * 15;
           const wave3 = Math.cos(j * 0.35 + t * 0.8) * 12;
           const y = -50 + wave1 + wave2 + wave3;
-          pts[i][j] = { ...project(x, y, z, cx, cy), rawY: y };
+          pts[i][j] = { ...project(x, y, z, cx, cy, rx, ry, camDist), rawY: y };
         }
       }
 
@@ -62,7 +72,7 @@ export default function ThreeBackground() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(0,${Math.floor(180 + avg * 75)},255,${0.15 + avg * 0.3})`;
+            ctx.strokeStyle = `rgba(0,${Math.floor(180 + avg * 75)},255,${(0.15 + avg * 0.3) * glow})`;
             ctx.lineWidth = 0.5 + avg * 0.5;
             ctx.stroke();
           }
@@ -73,7 +83,7 @@ export default function ThreeBackground() {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p3.x, p3.y);
-            ctx.strokeStyle = `rgba(0,${Math.floor(180 + avg * 75)},255,${0.15 + avg * 0.3})`;
+            ctx.strokeStyle = `rgba(0,${Math.floor(180 + avg * 75)},255,${(0.15 + avg * 0.3) * glow})`;
             ctx.lineWidth = 0.5 + avg * 0.5;
             ctx.stroke();
           }
@@ -122,7 +132,7 @@ export default function ThreeBackground() {
       canvas.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', resize);
     };
-  }, []);
+  }, [flight]);
 
   return (
     <canvas

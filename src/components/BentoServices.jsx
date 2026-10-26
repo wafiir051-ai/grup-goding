@@ -4,7 +4,7 @@ import { Sparkles, Globe, Zap, ArrowRight, Code, Palette, ShoppingBag, BarChart 
 import RevealOnScroll from './RevealOnScroll';
 import ScrollWords from './ScrollWords';
 import ScrollCard from './ScrollCard';
-import FanCard from './FanCard';
+import FilmCard from './FilmCard';
 import { HOVER_SPRING, PIN_LENGTH } from '../lib/scrollMotion';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
@@ -38,7 +38,7 @@ export default function BentoServices() {
     setIsModalOpen(false);
   };
 
-  // Pin saat keempat kartu tampil sebaris: kartu menyebar dari tumpukan di tengah.
+  // Pin saat keempat kartu tampil sebaris: kartu bergulir di pita film melengkung lalu merata.
   const pinBase = usePinEnabled();
   const wide = useMedia('(min-width: 1024px)');
   const pinOn = pinBase && wide;
@@ -89,9 +89,9 @@ export default function BentoServices() {
             return (
               <RevealOnScroll key={s.id} componentName="services" customDelay={0.1 + (idx % 4) * 0.08}>
                 {pinOn ? (
-                  <FanCard index={idx} count={services.length} progress={scrollYProgress}>
+                  <FilmCard index={idx} progress={scrollYProgress}>
                     {renderCard(s, Icon)}
-                  </FanCard>
+                  </FilmCard>
                 ) : (
                   <ScrollCard range={['start 0.9', 'start 0.55']}>
                     {renderCard(s, Icon)}

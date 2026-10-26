@@ -138,7 +138,7 @@ function App() {
         <Hero />
         <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
         {/* Layanan -> Proses -> Klien dan Testimoni -> Footer bertumpuk seperti kartu. */}
-        <StackSection leave><BentoServices /></StackSection>
+        <StackSection leave mono><BentoServices /></StackSection>
         <StackSection enter leave><ProcessSticky /></StackSection>
         <StackSection enter><ClientsSection /></StackSection>
         <WaveDivider fromColor="#ffffff" toColor="#0a0a0a" />

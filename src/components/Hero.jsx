@@ -58,10 +58,10 @@ export default function Hero() {
   // ViewTimeline native yang salah membaca progres di sekitar elemen sticky/overflow.
   const { scrollYProgress: pinned } = useScroll({ target: heroRef, offset: ['start 0px', 'end end'] });
   const { scrollYProgress: leaving } = useScroll({ target: heroRef, offset: ['start 0px', 'end 0px'] });
-  // Mesh "terbang" mendekat saat hero tertahan.
-  const pinMeshScale = useTransform(pinned, [0, 1], [1, 1.6]);
+  // Mesh mendekat saat hero tertahan; kamera di dalam kanvas ikut terbang (lihat ThreeBackground).
+  const pinMeshScale = useTransform(pinned, [0, 1], [1, 1.15]);
   const pinMeshY = useTransform(pinned, [0, 1], [0, 40]);
-  const pinMeshOpacity = useTransform(pinned, [0, 1], [1, 0.25]);
+  const pinMeshOpacity = useTransform(pinned, [0.6, 1], [1, 0.55]);
   const pinLogoY = useTransform(pinned, [0, 1], [0, -160]);
   const pinLogoScale = useTransform(pinned, [0, 1], [1, 0.82]);
   const pinLogoRotate = useTransform(pinned, [0, 1], [0, -8]);
@@ -121,7 +121,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.6, ease: EASE_OUT }}
           >
-            <Suspense fallback={null}><ThreeBackground /></Suspense>
+            <Suspense fallback={null}><ThreeBackground flight={reduced ? undefined : pinOn ? pinned : leaving} /></Suspense>
           </motion.div>
         </motion.div>
         <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />

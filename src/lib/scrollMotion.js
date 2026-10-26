@@ -32,6 +32,7 @@ export const PIN_LENGTH = {
   hero: '80vh',
   services: '120vh',
   process: '150vh',
+  clients: '170vh',
   pricing: '150vh',
   testimonials: '170vh',
 };

@@ -7,7 +7,8 @@ import useModalOpen from '../hooks/useModalOpen';
 // menjadi kartu bersudut bulat dan meredup; section yang datang (enter) naik dengan
 // sudut atas membulat lalu merapat. Di posisi diam tidak ada clip, jadi tampilannya
 // sama persis dengan aslinya. Mati di HP, untuk reduced-motion, dan selama modal terbuka.
-export default function StackSection({ enter = false, leave = false, dim = true, children }) {
+// mono: section yang ditinggalkan juga memudar ke hitam-putih, seperti kenangan (ala Scout).
+export default function StackSection({ enter = false, leave = false, dim = true, mono = false, children }) {
   const ref = useRef(null);
   const pinOn = usePinEnabled();
   const modalOpen = useModalOpen();
@@ -24,9 +25,11 @@ export default function StackSection({ enter = false, leave = false, dim = true,
     return `inset(0 ${side}% 0 ${side}% round ${top}px ${top}px ${leaveR}px ${leaveR}px)`;
   });
   const shade = useTransform(outP, [0, 1], [0, 0.55]);
+  // Filter hanya terpasang selama transisi: filter membuat elemen fixed di dalamnya ikut terkurung.
+  const filter = useTransform(outP, (o) => (o < 0.01 ? 'none' : `grayscale(${Math.min(1, o * 1.4)}) contrast(${1 - o * 0.08})`));
 
   return (
-    <motion.div ref={ref} style={{ position: dim && leave ? 'relative' : undefined, clipPath: active ? clipPath : 'none' }}>
+    <motion.div ref={ref} style={{ position: dim && leave ? 'relative' : undefined, clipPath: active ? clipPath : 'none', filter: active && mono ? filter : 'none' }}>
       {children}
       {leave && dim && (
         <motion.div

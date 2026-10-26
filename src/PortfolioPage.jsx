@@ -17,8 +17,16 @@ function ParallaxMedia({ children }) {
   // Offset ditulis dengan px supaya framer memakai pelacakan JS, bukan ViewTimeline native.
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end 0px'] });
   const y = useTransform(scrollYProgress, [0, 0.5, 1], [16, 0, -16]);
+  // Media terbuka di dalam bingkainya (ala Porsche dan Scout): mulai terpotong dan sedikit
+  // diperbesar, lalu membuka penuh dan mengendur ke ukuran aslinya.
+  const { scrollYProgress: reveal } = useScroll({ target: ref, offset: ['start end', 'start 0.55'] });
+  const clipPath = useTransform(reveal, (v) => {
+    const k = 1 - v * v * (3 - 2 * v);
+    return k < 0.005 ? 'none' : `inset(${k * 16}% round ${k * 28}px)`;
+  });
+  const scale = useTransform(reveal, [0, 1], [1.25, 1]);
   return (
-    <motion.div ref={ref} className="w-full h-full" style={reduced ? undefined : { y }}>
+    <motion.div ref={ref} className="w-full h-full" style={reduced ? undefined : { y, scale, clipPath }}>
       {children}
     </motion.div>
   );
