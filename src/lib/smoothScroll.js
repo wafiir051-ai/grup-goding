@@ -37,7 +37,7 @@ export function enableSmoothKeys(instance) {
     const t = e.target instanceof Element ? e.target : null;
     if (t?.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]')) return;
     if (e.key === ' ' && t?.closest('button, a, [role="button"]')) return;
-    const glide = { duration: SMOOTH_SCROLL.duration, easing: easeOutCubic };
+    const glide = { duration: SMOOTH_SCROLL.keyDuration, easing: easeOutCubic };
     if (e.key === 'Home' || e.key === 'End') {
       e.preventDefault();
       instance.scrollTo(e.key === 'Home' ? 0 : instance.limit, { ...glide, duration: SMOOTH_SCROLL.anchorDuration });
