@@ -18,9 +18,9 @@ export const SMOOTH_SCROLL = {
   duration: 1.8,
   wheelMultiplier: 0.55,
   anchorDuration: 2.2,
-  keyDuration: 1.1,
-  keyStep: 160,
-  keyMaxLead: 360,
+  keyDuration: 0.7,
+  keyStep: 220,
+  keyMaxLead: 600,
 };
 
 // Kurva luncuran: mulai tenang lalu melambat halus sampai berhenti. Kecepatan puncaknya
