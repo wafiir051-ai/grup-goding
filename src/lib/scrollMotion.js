@@ -7,6 +7,19 @@ export const EASE_OUT = [0.22, 1, 0.36, 1];
 export const DURATION = 0.8;
 export const STAGGER = 0.08;
 
+// Kecepatan scroll (pengatur utama). wheelMultiplier lebih kecil = halaman bergerak
+// lebih pendek per putaran roda mouse; lerp lebih kecil = luncuran lebih panjang dan lembut.
+export const SMOOTH_SCROLL = { lerp: 0.06, wheelMultiplier: 0.7, anchorDuration: 1.9 };
+
+// Jarak scroll selama section tertahan (pin). Makin besar, makin pelan animasinya terputar.
+export const PIN_LENGTH = {
+  hero: '80vh',
+  services: '120vh',
+  process: '150vh',
+  pricing: '150vh',
+  testimonials: '170vh',
+};
+
 export const VIEWPORT = { once: true, amount: 0.15, margin: '0px 0px -40px 0px' };
 
 export const fadeUp = {

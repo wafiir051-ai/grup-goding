@@ -9,6 +9,7 @@ import ScrollWords from './ScrollWords';
 import ScrollCard from './ScrollCard';
 import WhatsAppModal from './WhatsAppModal';
 import usePinEnabled from '../hooks/usePinEnabled';
+import { PIN_LENGTH } from '../lib/scrollMotion';
 import useMedia from '../hooks/useMedia';
 import useStickyTop from '../hooks/useStickyTop';
 
@@ -309,7 +310,7 @@ export default function Pricing() {
       </div>
     </section>
     {/* Jarak tahan pin: elemen di dalam pembungkus, padding tidak dihitung oleh sticky. */}
-    {pinOn && <div aria-hidden="true" style={{ height: '110vh' }} />}
+    {pinOn && <div aria-hidden="true" style={{ height: PIN_LENGTH.pricing }} />}
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
 import ScrollWords from './ScrollWords';
-import { DURATION, EASE_OUT, STAGGER } from '../lib/scrollMotion';
+import { DURATION, EASE_OUT, PIN_LENGTH, STAGGER } from '../lib/scrollMotion';
 import usePinEnabled from '../hooks/usePinEnabled';
 
 const steps = [
@@ -118,7 +118,7 @@ export default function ProcessSticky() {
 
       </div>
     </section>
-    {pinOn && <div aria-hidden="true" style={{ height: '100vh' }} />}
+    {pinOn && <div aria-hidden="true" style={{ height: PIN_LENGTH.process }} />}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTran
 import TextGradient from './TextGradient';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
-import { DURATION, EASE_OUT, STAGGER, fadeUp, stagger } from '../lib/scrollMotion';
+import { DURATION, EASE_OUT, fadeUp, PIN_LENGTH, STAGGER, stagger } from '../lib/scrollMotion';
 import usePinEnabled from '../hooks/usePinEnabled';
 
 export default function Hero() {
@@ -151,7 +151,7 @@ export default function Hero() {
         </div>
       </section>
       {/* Jarak tahan pin: harus elemen di dalam pembungkus, padding tidak dihitung oleh sticky. */}
-      {pinOn && <div aria-hidden="true" style={{ height: '55vh' }} />}
+      {pinOn && <div aria-hidden="true" style={{ height: PIN_LENGTH.hero }} />}
       </div>
     </>
   );

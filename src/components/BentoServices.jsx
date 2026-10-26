@@ -5,7 +5,7 @@ import RevealOnScroll from './RevealOnScroll';
 import ScrollWords from './ScrollWords';
 import ScrollCard from './ScrollCard';
 import FanCard from './FanCard';
-import { HOVER_SPRING } from '../lib/scrollMotion';
+import { HOVER_SPRING, PIN_LENGTH } from '../lib/scrollMotion';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
 import usePinEnabled from '../hooks/usePinEnabled';
@@ -102,7 +102,7 @@ export default function BentoServices() {
       </div>
     </section>
     {/* Jarak tahan pin: elemen di dalam pembungkus, padding tidak dihitung oleh sticky. */}
-    {pinOn && <div aria-hidden="true" style={{ height: '80vh' }} />}
+    {pinOn && <div aria-hidden="true" style={{ height: PIN_LENGTH.services }} />}
     </div>
     </>
   );

@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabase';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import RevealOnScroll from './RevealOnScroll';
 import ScrollWords from './ScrollWords';
-import { HOVER_SPRING, VIEWPORT, fadeUp, stagger } from '../lib/scrollMotion';
+import { fadeUp, HOVER_SPRING, PIN_LENGTH, stagger, VIEWPORT } from '../lib/scrollMotion';
 import WhiteBackground3D from './WhiteBackground3D';
 import usePinEnabled from '../hooks/usePinEnabled';
 import useMedia from '../hooks/useMedia';
@@ -140,7 +140,7 @@ export default function EnvelopeTestimonials() {
         </RevealOnScroll>
       </div>
       {/* Jarak tahan pin: elemen di dalam section, padding tidak dihitung oleh sticky. */}
-      {pinOn && <div aria-hidden="true" style={{ height: '110vh' }} />}
+      {pinOn && <div aria-hidden="true" style={{ height: PIN_LENGTH.testimonials }} />}
     </section>
   );
 }
