@@ -48,7 +48,7 @@ export default function Footer() {
 
           <RevealOnScroll componentName="footer" customDelay={0.2}>
             <div className="text-center md:text-right">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold"><ScrollWords text="Siap membuat website luar biasa?" /></h3>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-semibold"><ScrollWords text="Siap membuat website luar biasa?" end="start 0.8" /></h3>
               <button
                 onClick={() => openModal('Halo, saya tertarik untuk konsultasi dengan Goding.')}
                 className="mt-4 md:mt-6 px-6 md:px-10 py-3 md:py-4 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-xl text-base md:text-lg font-semibold hover:scale-105 transition-all duration-300"

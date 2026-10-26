@@ -71,14 +71,16 @@ export default function BentoServices() {
   return (
     <>
       <div ref={wrapRef} style={pinOn ? { background: SECTION_BG } : undefined}>
-      <section ref={sectionRef} id="services" style={{position:"relative"}} style={{background: SECTION_BG, ...(pinOn ? { position: 'sticky', top: stickyTop } : {})}} className="py-20 md:py-28 relative overflow-hidden px-4 sm:px-6">
+      {/* Selama modal di dalamnya terbuka, section diangkat ke lapisan teratas: section sticky
+          membentuk lapisan tumpukan sendiri, jadi tanpa ini modal bisa tertimpa section berikutnya. */}
+      <section ref={sectionRef} id="services" style={{position:"relative"}} style={{background: SECTION_BG, ...(pinOn ? { position: 'sticky', top: stickyTop } : {}), ...(isModalOpen ? { zIndex: 9998 } : {})}} className="py-20 md:py-28 relative overflow-hidden px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="services">
           <div className="text-center mb-12 md:mb-20">
             <span className="inline-block bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4 border border-blue-100">✦ Layanan Kami</span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent"}}><ScrollWords text="Layanan Kami" /></h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-500 max-w-xl mx-auto"><ScrollWords text="Desain premium dengan motion yang hidup, performa tinggi, dan hasil yang terukur" /></p>
+            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style={{background:"linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #06b6d4 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent"}}><ScrollWords text="Layanan Kami" mode="fade" /></h2>
+            <p className="text-sm sm:text-base md:text-lg text-gray-500 max-w-xl mx-auto"><ScrollWords text="Desain premium dengan motion yang hidup, performa tinggi, dan hasil yang terukur" mode="fade" /></p>
           </div>
         </RevealOnScroll>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 auto-rows-fr">

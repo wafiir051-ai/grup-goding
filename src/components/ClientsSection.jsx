@@ -26,7 +26,7 @@ export default function ClientsSection() {
       <div className="max-w-7xl mx-auto">
         <RevealOnScroll componentName="clients" direction="up" className="text-center mb-16 md:mb-20">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800"><ScrollWords text="Dipercaya Oleh" /></h2>
-          <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-600"><ScrollWords text="Brand & UMKM Terpercaya yang Telah Bekerja Sama dengan Kami" /></p>
+          <p className="mt-4 text-sm sm:text-base md:text-lg text-gray-600"><ScrollWords text="Brand & UMKM Terpercaya yang Telah Bekerja Sama dengan Kami" mode="fade" /></p>
         </RevealOnScroll>
         {/* Logo naik bergelombang dari kiri ke kanan mengikuti scroll, dan mundur lagi saat scroll ke atas. */}
         <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-12 md:gap-16 lg:gap-20">

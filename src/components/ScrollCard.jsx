@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import useVelocitySkew from '../hooks/useVelocitySkew';
 
 // Kartu yang naik dan sedikit miring sesuai posisi scroll, lalu mundur lagi saat
 // di-scroll ke atas. Kartu di kanan sedikit tertinggal, jadi barisan naik
@@ -8,6 +9,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 export default function ScrollCard({ children, className, style, range = ['start end', 'start 0.7'] }) {
   const ref = useRef(null);
   const reduced = useReducedMotion();
+  const skew = useVelocitySkew();
   const [lag, setLag] = useState(0);
 
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function ScrollCard({ children, className, style, range = ['start
     <motion.div
       ref={ref}
       className={className}
-      style={reduced ? style : { ...style, y, rotateX, opacity, transformPerspective: 900 }}
+      style={reduced ? style : { ...style, y, rotateX, opacity, transformPerspective: 900, ...skew }}
     >
       {children}
     </motion.div>

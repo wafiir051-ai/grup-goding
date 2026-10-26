@@ -8,6 +8,7 @@ import WhiteBackground3D from './WhiteBackground3D';
 import usePinEnabled from '../hooks/usePinEnabled';
 import useMedia from '../hooks/useMedia';
 import useStickyTop from '../hooks/useStickyTop';
+import useVelocitySkew from '../hooks/useVelocitySkew';
 
 const CARD_LAYOUT = 'min-w-[85vw] xs:min-w-[75vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink';
 const CARD_LOOK = 'bg-gray-50 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-xl md:rounded-2xl min-h-[180px] sm:min-h-[200px] flex flex-col shadow-sm hover:shadow-md transition-shadow duration-300';
@@ -39,13 +40,14 @@ function CardBody({ t, quote }) {
 // Saat section tertahan: kartu yang gilirannya tiba menyala dan terangkat sedikit,
 // lalu kutipannya terbaca kata per kata. Di akhir semuanya kembali ke tampilan asli.
 function PinnedCard({ t, index, count, progress }) {
+  const skew = useVelocitySkew();
   const [s, e] = turn(index, count);
   const lift = useTransform(progress, [s, (s + e) / 2, e], [0, -10, 0]);
   const opacity = useTransform(progress, [s - 0.06, s], [index === 0 ? 1 : 0.45, 1]);
   return (
-    <motion.div className={CARD_LAYOUT} style={{ y: lift, opacity }}>
+    <motion.div className={CARD_LAYOUT} style={{ y: lift, opacity, ...skew }}>
       <motion.div whileHover={{ y: -4 }} transition={HOVER_SPRING} className={`${CARD_LOOK} h-full`}>
-        <CardBody t={t} quote={<ScrollWords text={t.content} progress={progress} range={[s + 0.01, e - 0.01]} />} />
+        <CardBody t={t} quote={<ScrollWords text={t.content} progress={progress} range={[s + 0.01, e - 0.01]} mode="fade" />} />
       </motion.div>
     </motion.div>
   );
@@ -131,7 +133,7 @@ export default function EnvelopeTestimonials() {
                   <PinnedCard key={t.id} t={t} index={index} count={tests.length} progress={scrollYProgress} />
                 ) : (
                   <motion.div key={t.id} variants={fadeUp} whileHover={{ y: -4 }} transition={HOVER_SPRING} className={`${CARD_LAYOUT} ${CARD_LOOK}`}>
-                    <CardBody t={t} quote={<ScrollWords text={t.content} />} />
+                    <CardBody t={t} quote={<ScrollWords text={t.content} mode="fade" />} />
                   </motion.div>
                 )
               ))}

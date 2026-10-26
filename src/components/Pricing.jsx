@@ -12,6 +12,7 @@ import usePinEnabled from '../hooks/usePinEnabled';
 import { PIN_LENGTH } from '../lib/scrollMotion';
 import useMedia from '../hooks/useMedia';
 import useStickyTop from '../hooks/useStickyTop';
+import useVelocitySkew from '../hooks/useVelocitySkew';
 
 const formatPrice = (price) => new Intl.NumberFormat('id-ID').format(price);
 
@@ -28,13 +29,14 @@ function PriceCount({ value, progress, range }) {
 // Kartu yang dibagikan dari kedalaman saat section Harga tertahan. Kartu Populer
 // terangkat sebentar di akhir, lalu kembali ke posisi aslinya.
 function DealtCard({ index, progress, popular, className, children }) {
+  const skew = useVelocitySkew();
   const [start, end] = dealRange(index);
   const y = useTransform(progress, popular ? [start, end, 0.86, 0.92, 1] : [start, end], popular ? [90, 0, 0, -12, 0] : [90, 0]);
   const rotateX = useTransform(progress, [start, end], [16, 0]);
   const scale = useTransform(progress, [start, end], [0.9, 1]);
   const opacity = useTransform(progress, [start, start + 0.18], [0, 1]);
   return (
-    <motion.div className={className} style={{ y, rotateX, scale, opacity, transformPerspective: 1000 }}>
+    <motion.div className={className} style={{ y, rotateX, scale, opacity, transformPerspective: 1000, ...skew }}>
       {children}
     </motion.div>
   );
@@ -231,7 +233,9 @@ export default function Pricing() {
 
   return (
     <div ref={wrapRef} style={pinOn ? { background: '#0a0a0a' } : undefined}>
-    <section ref={sectionRef} id="pricing" style={{position: pinOn ? 'sticky' : 'relative', top: pinOn ? stickyTop : undefined, overflow:"hidden"}} className="pt-24 pb-16 md:pt-28 md:pb-24 bg-[#0a0a0a] px-4 sm:px-6">
+    {/* Selama modal di dalamnya terbuka, section diangkat ke lapisan teratas: section sticky
+        membentuk lapisan tumpukan sendiri, jadi tanpa ini modal bisa tertimpa section berikutnya. */}
+    <section ref={sectionRef} id="pricing" style={{position: pinOn ? 'sticky' : 'relative', top: pinOn ? stickyTop : undefined, overflow:"hidden", zIndex: isModalOpen || isChoiceOpen ? 9998 : undefined}} className="pt-24 pb-16 md:pt-28 md:pb-24 bg-[#0a0a0a] px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <CheckoutChoiceModal
         isOpen={isChoiceOpen}

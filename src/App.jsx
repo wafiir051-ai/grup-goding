@@ -20,6 +20,8 @@ import TestimonialsPage from './TestimonialsPage';
 import AnimatedCursor from './components/AnimatedCursor';
 import ParticleBackground from './components/ParticleBackground';
 import WaveDivider from './components/WaveDivider';
+import StackSection from './components/StackSection';
+import VelocitySkewProvider from './components/VelocitySkewProvider';
 
 function App() {
   // Handle navigation & smooth scroll
@@ -120,7 +122,7 @@ function App() {
     </>
   );
 
-  if (path === '/portfolio') return <ThemeProvider><AuthProvider><MotionConfig reducedMotion="user"><PortfolioPage /></MotionConfig></AuthProvider></ThemeProvider>;
+  if (path === '/portfolio') return <ThemeProvider><AuthProvider><MotionConfig reducedMotion="user"><VelocitySkewProvider><PortfolioPage /></VelocitySkewProvider></MotionConfig></AuthProvider></ThemeProvider>;
   if (path === '/testimonials') return <AuthProvider><Layout><TestimonialsPage /></Layout></AuthProvider>;
   if (path === '/admin') return <AuthProvider><AdminPanel /></AuthProvider>;
 
@@ -128,21 +130,24 @@ function App() {
     <ThemeProvider>
     <AuthProvider>
     <MotionConfig reducedMotion="user">
+    <VelocitySkewProvider>
       {/* AnimatedCursor */}
       {/* ParticleBackground */}
       <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-clip w-full max-w-full">
         <Navbar />
         <Hero />
         <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
-        <BentoServices />
-        <ProcessSticky />
-        <ClientsSection />
+        {/* Layanan -> Proses -> Klien dan Testimoni -> Footer bertumpuk seperti kartu. */}
+        <StackSection leave><BentoServices /></StackSection>
+        <StackSection enter leave><ProcessSticky /></StackSection>
+        <StackSection enter><ClientsSection /></StackSection>
         <WaveDivider fromColor="#ffffff" toColor="#0a0a0a" />
         <Pricing />
         <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
-        <EnvelopeTestimonials />
-        <Footer />
+        <StackSection leave dim={false}><EnvelopeTestimonials /></StackSection>
+        <StackSection enter><Footer /></StackSection>
       </div>
+    </VelocitySkewProvider>
     </MotionConfig>
     </AuthProvider>
     </ThemeProvider>

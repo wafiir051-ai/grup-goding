@@ -206,7 +206,7 @@ export default function PortfolioPage() {
                 <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-semibold px-4 py-2 rounded-full mb-6">
                   <Sparkles className="w-4 h-4" /> MULAI PROYEK
                 </div>
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"><ScrollWords text="Mau Website Seperti Ini?" /></h3>
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 text-white"><ScrollWords text="Mau Website Seperti Ini?" end="start 0.8" /></h3>
                 <p className="text-zinc-400 mb-8 max-w-lg mx-auto">Konsultasi gratis, kami siap bantu wujudkan proyek digital kamu dari nol sampai launch.</p>
                 <button
                   onClick={() => openModal('Halo, saya tertarik membuat website seperti di portfolio Goding.')}

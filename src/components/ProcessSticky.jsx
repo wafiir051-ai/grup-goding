@@ -4,6 +4,7 @@ import RevealOnScroll from './RevealOnScroll';
 import ScrollWords from './ScrollWords';
 import { DURATION, EASE_OUT, PIN_LENGTH, STAGGER } from '../lib/scrollMotion';
 import usePinEnabled from '../hooks/usePinEnabled';
+import useVelocitySkew from '../hooks/useVelocitySkew';
 
 const steps = [
   { num: "01", title: "Discovery", desc: "Memahami visi, audiens, dan tujuan bisnis Anda" },
@@ -47,6 +48,7 @@ function StepContent({ step, numColor }) {
 // Langkah ke-i menyala ketika progres melewati i/4. Nomor langkah yang sedang aktif
 // berwarna biru dan kartunya disorot; di akhir semuanya kembali ke tampilan asli.
 function PinnedStep({ step, i, progress }) {
+  const skew = useVelocitySkew();
   const at = i * 0.25;
   const next = i < steps.length - 1 ? at + 0.25 : 0.95;
   const opacity = useTransform(progress, [at - 0.12, at], [i === 0 ? 1 : 0.3, 1]);
@@ -58,7 +60,7 @@ function PinnedStep({ step, i, progress }) {
   );
   const boxShadow = useTransform(progress, [at - 0.12, at, next - 0.04, next], [BASE_SHADOW, LIT_SHADOW, LIT_SHADOW, BASE_SHADOW]);
   return (
-    <motion.div style={{ ...stepStyle, opacity, x, boxShadow }}>
+    <motion.div style={{ ...stepStyle, opacity, x, boxShadow, ...skew }}>
       <StepContent step={step} numColor={numColor} />
     </motion.div>
   );

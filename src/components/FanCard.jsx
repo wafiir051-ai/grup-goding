@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useTransform } from 'framer-motion';
+import useVelocitySkew from '../hooks/useVelocitySkew';
 
 // Kartu yang mulai bertumpuk di tengah barisnya (seperti setumpuk kartu), lalu menyebar
 // ke posisi aslinya mengikuti progres section yang tertahan. Di akhir progres kartu
 // berada persis di tempatnya semula.
 export default function FanCard({ index, count, progress, children }) {
   const ref = useRef(null);
+  const skew = useVelocitySkew();
   const [dx, setDx] = useState(0);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function FanCard({ index, count, progress, children }) {
   const scale = useTransform(progress, [start, end], [0.9, 1]);
 
   return (
-    <motion.div ref={ref} style={{ x, y, rotate, scale }}>
+    <motion.div ref={ref} style={{ x, y, rotate, scale, ...skew }}>
       {children}
     </motion.div>
   );
