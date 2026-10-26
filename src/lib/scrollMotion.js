@@ -11,7 +11,15 @@ export const STAGGER = 0.08;
 // `duration` detik dengan kurva ease-out yang melambat pelan di akhir.
 // wheelMultiplier lebih kecil = halaman bergerak lebih pendek per putaran roda;
 // duration lebih besar = luncuran lebih panjang dan lembut.
-export const SMOOTH_SCROLL = { duration: 1.8, wheelMultiplier: 0.55, anchorDuration: 2.2 };
+// keyStep = jarak satu tekan tombol panah; keyMaxLead = batas seberapa jauh tujuan scroll
+// boleh mendahului posisi saat tombol ditahan (makin kecil, makin pelan saat ditahan).
+export const SMOOTH_SCROLL = {
+  duration: 1.8,
+  wheelMultiplier: 0.55,
+  anchorDuration: 2.2,
+  keyStep: 110,
+  keyMaxLead: 220,
+};
 
 // Kurva luncuran: mulai tenang lalu melambat halus sampai berhenti. Kecepatan puncaknya
 // sekitar setengah kurva ease-out-expo bawaan Lenis, jadi scroll tidak terasa melesat.

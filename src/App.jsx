@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { MotionConfig, cancelFrame, frame } from 'framer-motion';
-import { setLenis, smoothScrollTo } from './lib/smoothScroll';
+import { enableSmoothKeys, setLenis, smoothScrollTo } from './lib/smoothScroll';
 import { SMOOTH_SCROLL, easeOutCubic } from './lib/scrollMotion';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
@@ -59,12 +59,14 @@ function App() {
       syncTouch: false,
     });
     setLenis(lenis);
+    const stopKeys = enableSmoothKeys(lenis);
     // Lenis berjalan di frame loop framer-motion, jadi scroll dan semua efek parallax
     // dihitung di frame yang sama, tanpa getaran.
     const update = (data) => lenis.raf(data.timestamp);
     frame.update(update, true);
     return () => {
       cancelFrame(update);
+      stopKeys();
       setLenis(null);
       lenis.destroy();
     };
