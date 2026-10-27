@@ -53,7 +53,7 @@ export default function Footer() {
                 onClick={() => openModal('Halo, saya tertarik untuk konsultasi dengan Goding.')}
                 className="mt-4 md:mt-6 px-6 md:px-10 py-3 md:py-4 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-xl text-base md:text-lg font-semibold hover:scale-105 transition-all duration-300"
               >
-                Hubungi Kami
+                Konsultasi Sekarang
               </button>
             </div>
           </RevealOnScroll>

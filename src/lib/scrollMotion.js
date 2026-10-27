@@ -29,12 +29,12 @@ export const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
 // Jarak scroll selama section tertahan (pin). Makin besar, makin pelan animasinya terputar.
 export const PIN_LENGTH = {
-  hero: '80vh',
-  services: '120vh',
-  process: '150vh',
-  clients: '170vh',
-  pricing: '150vh',
-  testimonials: '170vh',
+  hero: '60vh',
+  services: '80vh',
+  process: '100vh',
+  clients: '110vh',
+  pricing: '100vh',
+  testimonials: '110vh',
 };
 
 export const VIEWPORT = { once: true, amount: 0.15, margin: '0px 0px -40px 0px' };

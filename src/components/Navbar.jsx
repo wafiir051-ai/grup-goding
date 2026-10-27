@@ -43,7 +43,6 @@ export default function Navbar() {
     { label: 'Harga', href: '/#pricing', section: 'pricing' },
     { label: 'Klien', action: () => scrollToSection('clients'), section: 'clients' },
     { label: 'Portfolio', href: '/portfolio' },
-    { label: 'Admin', href: '/admin' },
   ];
 
   // Menandai section homepage yang sedang dibaca.
@@ -98,10 +97,10 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <button
-            onClick={() => openModal('Halo, saya ingin konsultasi VIP dengan Goding.')}
+            onClick={() => openModal('Halo, saya ingin konsultasi dengan Goding.')}
             className="hidden lg:block px-4 xl:px-6 py-2 xl:py-2.5 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-2xl text-xs xl:text-sm font-semibold text-white shadow-lg hover:scale-105 transition duration-300 ease-out"
           >
-            Konsultasi VIP
+            Konsultasi Sekarang
           </button>
 
           {/* Mobile Menu Button */}
@@ -148,10 +147,10 @@ export default function Navbar() {
                 ))}
                 <div className="pt-2 border-t border-white/10 mt-2">
                   <button 
-                    onClick={() => { setIsMobileMenuOpen(false); openModal('Halo, saya ingin konsultasi VIP dengan Goding.'); }}
+                    onClick={() => { setIsMobileMenuOpen(false); openModal('Halo, saya ingin konsultasi dengan Goding.'); }}
                     className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-400 rounded-xl text-sm font-semibold text-white"
                   >
-                    Konsultasi VIP
+                    Konsultasi Sekarang
                   </button>
                 </div>
               </div>

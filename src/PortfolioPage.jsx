@@ -228,7 +228,7 @@ export default function PortfolioPage() {
                   onClick={() => openModal('Halo, saya tertarik membuat website seperti di portfolio Goding.')}
                   className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black font-bold px-10 py-4 rounded-2xl hover:scale-105 transition-all duration-300 ease-out text-base"
                 >
-                  Mulai Sekarang
+                  Konsultasi Sekarang
                 </button>
               </div>
             </div>

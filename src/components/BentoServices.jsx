@@ -63,7 +63,7 @@ export default function BentoServices() {
         onClick={() => openModal(s.whatsapp_msg || `Saya tertarik dengan layanan ${s.title}.`)}
         className="flex items-center gap-2 text-blue-600 font-semibold text-base sm:text-lg md:text-xl group transition-all hover:gap-3"
       >
-        Pelajari lebih lanjut <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition" />
+        Konsultasi <ArrowRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition" />
       </button>
     </motion.div>
   );
