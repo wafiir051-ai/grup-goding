@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import runCanvasLoop from '../lib/canvasLoop';
 
 export default function WhiteBackground3D() {
   const canvasRef = useRef(null);
@@ -7,7 +8,7 @@ export default function WhiteBackground3D() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let W, H, t = 0, animId;
+    let W, H, t = 0;
     let particles = [];
 
     function resize() {
@@ -26,6 +27,19 @@ export default function WhiteBackground3D() {
           vz: (Math.random() - 0.5) * 2,
         });
       }
+    }
+
+    function step() {
+      t += 0.015;
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.z += p.vz;
+
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        if (p.z < 0 || p.z > 1000) p.vz *= -1;
+      });
     }
 
     function draw() {
@@ -62,15 +76,7 @@ export default function WhiteBackground3D() {
       }
 
       // 3D particles with depth
-      particles.forEach((p, idx) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.z += p.vz;
-
-        if (p.x < 0 || p.x > W) p.vx *= -1;
-        if (p.y < 0 || p.y > H) p.vy *= -1;
-        if (p.z < 0 || p.z > 1000) p.vz *= -1;
-
+      particles.forEach((p) => {
         const scale = 1000 / (1000 + p.z);
         const size = 2 + scale * 3;
         const alpha = 0.03 + scale * 0.05;
@@ -119,18 +125,13 @@ export default function WhiteBackground3D() {
       }
     }
 
-    function loop() {
-      t += 0.015;
-      draw();
-      animId = requestAnimationFrame(loop);
-    }
-
     window.addEventListener('resize', resize);
     resize();
-    loop();
+    // Berhenti saat testimoni di luar layar; sebelumnya kanvas ini menggambar terus.
+    const stop = runCanvasLoop(canvas, { step, draw });
 
     return () => {
-      cancelAnimationFrame(animId);
+      stop();
       window.removeEventListener('resize', resize);
     };
   }, []);

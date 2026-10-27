@@ -50,3 +50,10 @@ section .flex.flex-col > * { max-width: 100%; overflow: hidden; }
 .scrollbar-thin::-webkit-scrollbar { width: 3px; }
 .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
 .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 99px; }
+
+/* Mode ringan (lib/perf.js): blur latar dihitung ulang setiap frame selama halaman bergerak,
+   jadi dimatikan. Latar navbar dan modal sudah hampir pekat, jadi bedanya nyaris tak terlihat. */
+html[data-perf='lite'] [class*='backdrop-blur'] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}

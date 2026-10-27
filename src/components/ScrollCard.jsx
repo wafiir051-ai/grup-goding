@@ -1,14 +1,37 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import useVelocitySkew from '../hooks/useVelocitySkew';
+import usePerfLite from '../hooks/usePerfLite';
+import { EASE_OUT } from '../lib/scrollMotion';
 
 // Kartu yang naik dan sedikit miring sesuai posisi scroll, lalu mundur lagi saat
 // di-scroll ke atas. Kartu di kanan sedikit tertinggal, jadi barisan naik
 // bergelombang. Setelah bagian atas kartu melewati 70% tinggi layar, kartu diam
 // di posisi aslinya.
-export default function ScrollCard({ children, className, style, range = ['start end', 'start 0.7'] }) {
-  const ref = useRef(null);
+// Mode ringan: kartu naik sekali saat terlihat, tanpa pelacakan scroll di setiap frame.
+export default function ScrollCard(props) {
   const reduced = useReducedMotion();
+  const lite = usePerfLite();
+  if (lite && !reduced) {
+    const { children, className, style } = props;
+    return (
+      <motion.div
+        className={className}
+        style={{ ...style, transformPerspective: 900 }}
+        initial={{ opacity: 0, y: 56, rotateX: 12 }}
+        whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.8, ease: EASE_OUT }}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+  return <TrackedCard {...props} reduced={reduced} />;
+}
+
+function TrackedCard({ children, className, style, range = ['start end', 'start 0.7'], reduced }) {
+  const ref = useRef(null);
   const skew = useVelocitySkew();
   const [lag, setLag] = useState(0);
 

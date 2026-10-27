@@ -8,12 +8,20 @@ import ScrollWords from './components/ScrollWords';
 import { HOVER_SPRING } from './lib/scrollMotion';
 import { supabase } from './lib/supabase';
 import TSLBackground from './components/TSLBackground';
+import usePerfLite from './hooks/usePerfLite';
 
 // Gambar proyek bergeser pelan di dalam bingkainya saat kartu melintasi layar,
 // seperti dilihat dari jendela. Di tengah layar gambar berada di posisi aslinya.
 function ParallaxMedia({ children }) {
-  const ref = useRef(null);
   const reduced = useReducedMotion();
+  const lite = usePerfLite();
+  // Reduced-motion dan mode ringan: gambar diam di tempatnya, tanpa pelacakan scroll.
+  if (reduced || lite) return <div className="w-full h-full">{children}</div>;
+  return <MovingMedia>{children}</MovingMedia>;
+}
+
+function MovingMedia({ children }) {
+  const ref = useRef(null);
   // Offset ditulis dengan px supaya framer memakai pelacakan JS, bukan ViewTimeline native.
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end 0px'] });
   const y = useTransform(scrollYProgress, [0, 0.5, 1], [16, 0, -16]);
@@ -26,7 +34,7 @@ function ParallaxMedia({ children }) {
   });
   const scale = useTransform(reveal, [0, 1], [1.25, 1]);
   return (
-    <motion.div ref={ref} className="w-full h-full" style={reduced ? undefined : { y, scale, clipPath }}>
+    <motion.div ref={ref} className="w-full h-full" style={{ y, scale, clipPath }}>
       {children}
     </motion.div>
   );

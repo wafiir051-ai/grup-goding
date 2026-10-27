@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import usePerfLite from '../hooks/usePerfLite';
 
 // Gelombang yang sama dengan sebelumnya (satu periode = 720 unit), diperpanjang satu
 // periode ke kiri dan kanan supaya tepinya tidak kosong saat digeser mengikuti scroll.
@@ -8,18 +9,27 @@ const WAVE_PATH =
 
 // Dua lapis: gelombang utama dan bayangannya yang tembus pandang, bergeser berlawanan
 // arah. Di tengah layar keduanya berimpit persis, jadi bentuknya sama dengan aslinya.
-export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#ffffff', flip = false }) {
-  const ref = useRef(null);
+// Untuk reduced-motion dan mode ringan gelombang diam (tanpa pelacakan scroll).
+export default function WaveDivider(props) {
   const reduced = useReducedMotion();
+  const lite = usePerfLite();
+  return reduced || lite ? <Wave {...props} /> : <MovingWave {...props} />;
+}
+
+function MovingWave(props) {
+  const ref = useRef(null);
   // Offset ditulis dengan px supaya framer memakai pelacakan JS; versi preset dipindah ke
   // ViewTimeline native yang salah membaca progres di sekitar elemen sticky/overflow.
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end 0px'] });
   const x = useTransform(scrollYProgress, [0, 1], [220, -220]);
   const backX = useTransform(scrollYProgress, [0, 1], [-160, 160]);
   const backY = useTransform(scrollYProgress, [0, 0.5, 1], [-30, 0, -30]);
+  return <Wave {...props} waveRef={ref} x={x} backX={backX} backY={backY} />;
+}
 
+function Wave({ fromColor = '#0a0a0a', toColor = '#ffffff', flip = false, waveRef, x, backX, backY }) {
   return (
-    <div ref={ref} style={{
+    <div ref={waveRef} style={{
       backgroundColor: fromColor,
       lineHeight: 0,
       display: 'block',
@@ -39,13 +49,13 @@ export default function WaveDivider({ fromColor = '#0a0a0a', toColor = '#ffffff'
           verticalAlign: 'middle'
         }}
       >
-        {!reduced && (
+        {backX && (
           <motion.path aria-hidden="true" d={WAVE_PATH} fill={toColor} fillOpacity={0.35} style={{ x: backX, y: backY }} />
         )}
         <motion.path
           d={WAVE_PATH}
           fill={toColor}
-          style={reduced ? undefined : { x }}
+          style={x ? { x } : undefined}
         />
       </svg>
     </div>

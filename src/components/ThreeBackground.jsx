@@ -1,4 +1,7 @@
 import { useEffect, useRef } from 'react';
+import runCanvasLoop from '../lib/canvasLoop';
+
+const LEVELS = 15;
 
 // `flight` (opsional): progres scroll 0..1 yang menerbangkan kamera di atas jaring.
 export default function ThreeBackground({ flight }) {
@@ -8,7 +11,7 @@ export default function ThreeBackground({ flight }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let W, H, t = 0, animId;
+    let W, H, t = 0;
     let rotX = 0.25, rotY = 0.15;
     let targetRotX = 0.25, targetRotY = 0.15;
 
@@ -61,43 +64,36 @@ export default function ThreeBackground({ flight }) {
         }
       }
 
+      // Garis dikelompokkan per tingkat terang lalu digambar sekaligus per kelompok: tampilannya
+      // sama, tetapi perintah gambar per frame turun dari sekitar 300 menjadi paling banyak 16.
+      const level = (p) => Math.max(0, Math.min(1, (p.rawY + 70) / 110));
+      const groups = Array.from({ length: LEVELS + 1 }, () => []);
       for (let i = 0; i <= N; i++) {
         for (let j = 0; j <= N; j++) {
           const p = pts[i][j];
-          const brightness = Math.max(0, Math.min(1, (p.rawY + 70) / 110));
-
-          if (i < N) {
-            const p2 = pts[i + 1][j];
-            const avg = (brightness + Math.max(0, Math.min(1, (p2.rawY + 70) / 110))) / 2;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(0,${Math.floor(180 + avg * 75)},255,${(0.15 + avg * 0.3) * glow})`;
-            ctx.lineWidth = 0.5 + avg * 0.5;
-            ctx.stroke();
-          }
-
-          if (j < N) {
-            const p3 = pts[i][j + 1];
-            const avg = (brightness + Math.max(0, Math.min(1, (p3.rawY + 70) / 110))) / 2;
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p3.x, p3.y);
-            ctx.strokeStyle = `rgba(0,${Math.floor(180 + avg * 75)},255,${(0.15 + avg * 0.3) * glow})`;
-            ctx.lineWidth = 0.5 + avg * 0.5;
-            ctx.stroke();
-          }
+          if (i < N) groups[Math.round(((level(p) + level(pts[i + 1][j])) / 2) * LEVELS)].push(p, pts[i + 1][j]);
+          if (j < N) groups[Math.round(((level(p) + level(pts[i][j + 1])) / 2) * LEVELS)].push(p, pts[i][j + 1]);
         }
       }
+      groups.forEach((segs, k) => {
+        if (!segs.length) return;
+        const avg = k / LEVELS;
+        ctx.beginPath();
+        for (let n = 0; n < segs.length; n += 2) {
+          ctx.moveTo(segs[n].x, segs[n].y);
+          ctx.lineTo(segs[n + 1].x, segs[n + 1].y);
+        }
+        ctx.strokeStyle = `rgba(0,${Math.floor(180 + avg * 75)},255,${(0.15 + avg * 0.3) * glow})`;
+        ctx.lineWidth = 0.5 + avg * 0.5;
+        ctx.stroke();
+      });
     }
 
-    function loop() {
+    function step() {
       t += 0.008;
       targetRotY += 0.001;
       rotX += (targetRotX - rotX) * 0.05;
       rotY += (targetRotY - rotY) * 0.05;
-      draw();
-      animId = requestAnimationFrame(loop);
     }
 
     const onMouseMove = (e) => {
@@ -111,24 +107,11 @@ export default function ThreeBackground({ flight }) {
     canvas.addEventListener('mousemove', onMouseMove);
     window.addEventListener('resize', resize);
     resize();
-    loop();
-
-    // Berhenti menggambar saat hero sudah lewat, supaya scroll tetap ringan di HP.
-    let paused = false;
-    const io = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting && !paused) {
-        paused = true;
-        cancelAnimationFrame(animId);
-      } else if (entry.isIntersecting && paused) {
-        paused = false;
-        loop();
-      }
-    });
-    io.observe(canvas);
+    // Berhenti menggambar saat hero sudah lewat, supaya scroll tetap ringan.
+    const stop = runCanvasLoop(canvas, { step, draw });
 
     return () => {
-      io.disconnect();
-      cancelAnimationFrame(animId);
+      stop();
       canvas.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', resize);
     };
