@@ -1,62 +1,18 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { createOrderAndGetPaymentUrl } from '../lib/orders';
-import RevealOnScroll from './RevealOnScroll';
-import ScrollWords from './ScrollWords';
-import ScrollCard from './ScrollCard';
 import WhatsAppModal from './WhatsAppModal';
-import usePinEnabled from '../hooks/usePinEnabled';
-import { PIN_LENGTH } from '../lib/scrollMotion';
-import useMedia from '../hooks/useMedia';
-import useStickyTop from '../hooks/useStickyTop';
-import useVelocitySkew from '../hooks/useVelocitySkew';
 
 const formatPrice = (price) => new Intl.NumberFormat('id-ID').format(price);
-
-// Rentang progres pin untuk kartu ke-i: kartu dibagikan bergiliran dari kiri ke kanan.
-const dealRange = (i) => [0.05 + i * 0.12, 0.37 + i * 0.12];
-
-// Harga berputar naik ke angka aslinya selama kartunya dibagikan.
-function PriceCount({ value, progress, range }) {
-  const amount = useTransform(progress, range, [value * 0.4, value]);
-  const text = useTransform(amount, (v) => `Rp${formatPrice(v >= value ? value : Math.round(v / 1000) * 1000)}`);
-  return <motion.span>{text}</motion.span>;
-}
-
-// Kartu yang dibagikan dari kedalaman saat section Harga tertahan. Kartu Populer
-// terangkat sebentar di akhir, lalu kembali ke posisi aslinya.
-function DealtCard({ index, progress, popular, className, children }) {
-  const skew = useVelocitySkew();
-  const [start, end] = dealRange(index);
-  const y = useTransform(progress, popular ? [start, end, 0.86, 0.92, 1] : [start, end], popular ? [90, 0, 0, -12, 0] : [90, 0]);
-  const rotateX = useTransform(progress, [start, end], [16, 0]);
-  const scale = useTransform(progress, [start, end], [0.9, 1]);
-  const opacity = useTransform(progress, [start, start + 0.18], [0, 1]);
-  return (
-    <motion.div className={className} style={{ y, rotateX, scale, opacity, transformPerspective: 1000, ...skew }}>
-      {children}
-    </motion.div>
-  );
-}
 
 const POPULAR_BADGE = (
   <span className="bg-gradient-to-r from-cyan-500 to-blue-500 text-black text-xs px-3 py-1 rounded-full font-bold whitespace-nowrap shadow-lg">
     ⭐ Populer
   </span>
 );
-
-// Lencana Populer membesar sebentar bersamaan dengan kartunya terangkat.
-function PopularBadge({ progress }) {
-  const scale = useTransform(progress, [0.86, 0.92, 1], [1, 1.15, 1]);
-  return (
-    <motion.div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20" style={{ scale }}>
-      {POPULAR_BADGE}
-    </motion.div>
-  );
-}
 
 function TechCarousel({ techs }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, align: 'start', dragFree: true });
@@ -220,22 +176,16 @@ export default function Pricing() {
     }
   };
 
-  // Pin hanya saat kelima kartu muat dalam satu baris (layar lebar).
-  const pinBase = usePinEnabled();
-  const wide = useMedia('(min-width: 1280px)');
-  const pinOn = pinBase && wide;
-  const wrapRef = useRef(null);
-  const sectionRef = useRef(null);
-  const stickyTop = useStickyTop(sectionRef, 0, pinOn);
-  // Offset ditulis dengan px supaya framer memakai pelacakan JS; versi preset dipindah ke
-  // ViewTimeline native yang salah membaca progres di sekitar elemen sticky/overflow.
-  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start 0px', 'end end'] });
+  // Hover kartu: sangat tipis (tanpa rotasi 3D). Skala dari pengaturan admin dibatasi maksimal 1.02.
+  const hoverEffect = {
+    scale: Math.min(threeDSettings.scale || 1, 1.02),
+    transition: { type: 'spring', stiffness: 300, damping: 30 },
+  };
 
   return (
-    <div ref={wrapRef} style={pinOn ? { background: '#0a0a0a' } : undefined}>
-    {/* Selama modal di dalamnya terbuka, section diangkat ke lapisan teratas: section sticky
-        membentuk lapisan tumpukan sendiri, jadi tanpa ini modal bisa tertimpa section berikutnya. */}
-    <section ref={sectionRef} id="pricing" style={{position: pinOn ? 'sticky' : 'relative', top: pinOn ? stickyTop : undefined, overflow:"hidden", zIndex: isModalOpen || isChoiceOpen ? 9998 : undefined}} className="pt-24 pb-16 md:pt-28 md:pb-24 bg-[#0a0a0a] px-4 sm:px-6">
+    // Halaman Harga sengaja tanpa efek scroll: tanpa pin, tanpa miring, tanpa kata-per-kata.
+    // Angka dan isi paket harus langsung terbaca. zIndex naik hanya saat modal terbuka.
+    <section id="pricing" style={{ position: 'relative', overflow: 'hidden', zIndex: isModalOpen || isChoiceOpen ? 9998 : undefined }} className="pt-24 pb-16 md:pt-28 md:pb-24 bg-[#0a0a0a] px-4 sm:px-6">
       <WhatsAppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelect={handleSelectNumber} message={pendingMessage} />
       <CheckoutChoiceModal
         isOpen={isChoiceOpen}
@@ -247,74 +197,56 @@ export default function Pricing() {
       />
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-center font-bold text-white mb-10 md:mb-16 pt-2">
-          <ScrollWords text="Paket Harga" />
+          Paket Harga
         </h2>
         {orderError && (
           <p className="text-center text-red-400 text-sm mb-4">{orderError}</p>
         )}
         <div className="flex gap-4 overflow-x-auto pb-6 mt-8 snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {plans.map((plan, index) => {
-            const Wrapper = pinOn ? DealtCard : ScrollCard;
-            const wrapperProps = pinOn ? { index, progress: scrollYProgress, popular: !!plan.popular } : {};
-            const hoverEffect = threeDSettings.enabled ? {
-              rotateX: threeDSettings.intensity * 6,
-              rotateY: threeDSettings.intensity * 8,
-              scale: threeDSettings.scale,
-              transition: { type: 'spring', stiffness: 300, damping: 20 }
-            } : { scale: threeDSettings.scale };
-
-            return (
-              <Wrapper key={plan.id} {...wrapperProps} className="min-w-[85vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
-                <motion.div
-                  initial={{ rotateX: 0, rotateY: 0, scale: 1 }}
-                  whileHover={hoverEffect}
-                  style={{ transformStyle: 'preserve-3d' }}
-                  className="relative bg-zinc-900/90 p-5 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm w-full mt-4"
+          {plans.map((plan) => (
+            <div key={plan.id} className="min-w-[85vw] sm:min-w-0 snap-center flex-shrink-0 sm:flex-shrink">
+              <motion.div
+                whileHover={hoverEffect}
+                className="relative bg-zinc-900/90 p-5 rounded-2xl border border-white/10 hover:border-cyan-400 transition-colors flex flex-col shadow-lg backdrop-blur-sm w-full mt-4"
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">{POPULAR_BADGE}</div>
+                )}
+                <h3 className="text-lg md:text-xl text-cyan-400 font-bold mt-1">{plan.name}</h3>
+                <div className="mt-2">
+                  <span className="text-white font-bold" style={{fontSize: "clamp(0.85rem, 2.5vw, 1.6rem)", wordBreak: "break-all", lineHeight: "1.1", display: "block"}}>
+                    {`Rp${formatPrice(plan.price)}`}
+                  </span>
+                  <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
+                </div>
+                <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{plan.description}</p>
+                <div className="mt-3 flex-1">
+                  <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2 font-semibold">Fitur Utama</p>
+                  <ul className="space-y-1">
+                    {plan.features?.map((feature, i) => (
+                      <li key={i} className="text-zinc-300 text-[11px] flex items-start gap-1.5 leading-tight">
+                        <span className="text-cyan-400 shrink-0 mt-0.5">✓</span>
+                        <span className="break-words leading-relaxed">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <TechCarousel techs={plan.tech_stack} />
+                <button
+                  onClick={() => openChoice(plan)}
+                  className={`mt-5 w-full py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all ${
+                    plan.popular
+                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-black hover:shadow-cyan-500/30 hover:shadow-lg'
+                      : 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg'
+                  }`}
                 >
-                  {plan.popular && (pinOn ? (
-                    <PopularBadge progress={scrollYProgress} />
-                  ) : (
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">{POPULAR_BADGE}</div>
-                  ))}
-                  <h3 className="text-lg md:text-xl text-cyan-400 font-bold mt-1">{plan.name}</h3>
-                  <div className="mt-2">
-                    <span className="text-white font-bold" style={{fontSize: "clamp(0.85rem, 2.5vw, 1.6rem)", wordBreak: "break-all", lineHeight: "1.1", display: "block"}}>
-                      {pinOn ? <PriceCount value={plan.price} progress={scrollYProgress} range={dealRange(index)} /> : `Rp${formatPrice(plan.price)}`}
-                    </span>
-                    <p className="text-xs text-zinc-400 mt-1">/{plan.period}</p>
-                  </div>
-                  <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{plan.description}</p>
-                  <div className="mt-3 flex-1">
-                    <p className="text-cyan-400 text-xs uppercase tracking-wider mb-2 font-semibold">Fitur Utama</p>
-                    <ul className="space-y-1">
-                      {plan.features?.map((feature, i) => (
-                        <li key={i} className="text-zinc-300 text-[11px] flex items-start gap-1.5 leading-tight">
-                          <span className="text-cyan-400 shrink-0 mt-0.5">✓</span>
-                          <span className="break-words leading-relaxed">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <TechCarousel techs={plan.tech_stack} />
-                  <button
-                    onClick={() => openChoice(plan)}
-                    className={`mt-5 w-full py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all ${
-                      plan.popular
-                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-black hover:shadow-cyan-500/30 hover:shadow-lg'
-                        : 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:shadow-lg'
-                    }`}
-                  >
-                    Pilih Paket
-                  </button>
-                </motion.div>
-              </Wrapper>
-            );
-          })}
+                  Pilih Paket
+                </button>
+              </motion.div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
-    {/* Jarak tahan pin: elemen di dalam pembungkus, padding tidak dihitung oleh sticky. */}
-    {pinOn && <div aria-hidden="true" style={{ height: PIN_LENGTH.pricing }} />}
-    </div>
   );
 }
