@@ -17,6 +17,8 @@ import Footer from './components/Footer';
 import AdminPanel from './components/AdminPanel';
 import PortfolioPage from './PortfolioPage';
 import TestimonialsPage from './TestimonialsPage';
+import SponsorPage from './SponsorPage';
+import DocsPage from './DocsPage';
 import AnimatedCursor from './components/AnimatedCursor';
 import ParticleBackground from './components/ParticleBackground';
 import WaveDivider from './components/WaveDivider';
@@ -125,6 +127,8 @@ function App() {
   if (path === '/portfolio') return <ThemeProvider><AuthProvider><MotionConfig reducedMotion="user"><VelocitySkewProvider><PortfolioPage /></VelocitySkewProvider></MotionConfig></AuthProvider></ThemeProvider>;
   if (path === '/testimonials') return <AuthProvider><Layout><TestimonialsPage /></Layout></AuthProvider>;
   if (path === '/admin') return <AuthProvider><AdminPanel /></AuthProvider>;
+  if (path === '/sponsor' || path === '/sponsor/') return <SponsorPage />;
+  if (path === '/dokumentasi' || path.startsWith('/dokumentasi/')) return <DocsPage path={path} />;
 
   return (
     <ThemeProvider>

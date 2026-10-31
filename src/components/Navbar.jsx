@@ -30,7 +30,24 @@ export default function Navbar() {
     setIsMobileMenuOpen(false);
     if (id === 'clients') {
       const el = document.getElementById('clients');
-      if (el) smoothScrollTo(el, { offset: -80 });
+      if (el) {
+        smoothScrollTo(el, { offset: -80 });
+      } else {
+        // Di halaman lain (Sponsor, Dokumentasi) section Klien tidak ada: pindah ke
+        // homepage tanpa reload, lalu tunggu section-nya muncul sebelum menggulir.
+        window.history.pushState({}, '', '/');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+        let tries = 0;
+        const timer = setInterval(() => {
+          const target = document.getElementById('clients');
+          if (target) {
+            clearInterval(timer);
+            smoothScrollTo(target, { offset: -80 });
+          } else if (++tries > 20) {
+            clearInterval(timer);
+          }
+        }, 150);
+      }
     } else {
       window.location.assign(id);
     }
@@ -43,11 +60,16 @@ export default function Navbar() {
     { label: 'Harga', href: '/#pricing', section: 'pricing' },
     { label: 'Klien', action: () => scrollToSection('clients'), section: 'clients' },
     { label: 'Portfolio', href: '/portfolio' },
+    { label: 'Sponsor', href: '/sponsor', path: '/sponsor' },
+    { label: 'Dokumentasi', href: '/dokumentasi', path: '/dokumentasi' },
   ];
 
-  // Menandai section homepage yang sedang dibaca.
+  // Menandai section homepage yang sedang dibaca, atau halaman yang sedang dibuka.
   const activeSection = useActiveSection();
-  const isActive = (link) => !!link.section && link.section === activeSection;
+  const currentPath = window.location.pathname;
+  const isActive = (link) =>
+    (!!link.section && link.section === activeSection) ||
+    (!!link.path && (currentPath === link.path || currentPath.startsWith(`${link.path}/`)));
   const desktopClass = (link) =>
     `relative ${isActive(link) ? 'text-cyan-400' : 'text-white/80'} hover:text-cyan-400 transition-colors`;
   const mobileClass = (link) =>
