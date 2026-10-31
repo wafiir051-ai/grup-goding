@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Edit2, Trash2, LogOut, Save } from 'lucide-react';
+import SponsorAdmin from './SponsorAdmin';
+import DocsAdmin from './DocsAdmin';
+import DropZone from './DropZone';
 
 export default function AdminPanel() {
   const { user, signIn, signOut } = useAuth();
@@ -171,6 +174,8 @@ export default function AdminPanel() {
           <button onClick={() => setActiveTab('clients')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'clients' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Klien</button>
           <button onClick={() => setActiveTab('marquee')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'marquee' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Marquee</button>
           <button onClick={() => setActiveTab('portfolio')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'portfolio' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Portfolio</button>
+          <button onClick={() => setActiveTab('sponsor')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'sponsor' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Sponsor</button>
+          <button onClick={() => setActiveTab('docs')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'docs' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Dokumentasi</button>
           <button onClick={() => setActiveTab('settings')} className={`py-2 px-6 rounded-t-lg ${activeTab === 'settings' ? 'bg-blue-600 text-white' : 'text-gray-400'}`}>Pengaturan</button>
         </div>
 
@@ -270,7 +275,7 @@ export default function AdminPanel() {
                 <textarea placeholder="Deskripsi lengkap (opsional)" rows="3" value={portfolioForm.full_desc} onChange={e => setPortfolioForm({ ...portfolioForm, full_desc: e.target.value })} className="p-4 bg-zinc-800 rounded-2xl text-white md:col-span-2 border border-zinc-700 outline-none" />
                 <div className="md:col-span-2">
                   <label className="block text-zinc-400 text-sm mb-2">Gambar Proyek (opsional, akan menggantikan huruf)</label>
-                  <input type="file" accept="image/*" onChange={handlePortfolioImageFile} className="text-white text-sm mb-3 block" />
+                  <div className="mb-3"><DropZone accept="image/*" hint="Gambar proyek (JPG / PNG / WEBP)" onFiles={(files) => (files[0].type.startsWith('image/') ? handlePortfolioImageFile({ target: { files } }) : setMessage('File harus berupa gambar.'))} /></div>
                   {(portfolioImagePreview || portfolioForm.image_url) && (
                     <div className="relative w-fit">
                       <img src={portfolioImagePreview || portfolioForm.image_url} alt="preview" className="h-32 w-auto rounded-2xl object-cover border border-zinc-700" />
@@ -335,6 +340,9 @@ export default function AdminPanel() {
             </div>
           </>
         )}
+
+        {activeTab === 'sponsor' && <SponsorAdmin />}
+        {activeTab === 'docs' && <DocsAdmin />}
 
         {activeTab === 'settings' && (
           <div className="bg-zinc-900 p-8 rounded-3xl">

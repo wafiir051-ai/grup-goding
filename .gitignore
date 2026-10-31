@@ -32,3 +32,4 @@ logs/
 .vercel
 .env*.local
 .env*
+supabase/.temp

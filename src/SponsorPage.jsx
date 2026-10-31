@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Handshake, Sparkles, Check } from 'lucide-react';
 import PageShell from './components/PageShell';
 import WhatsAppModal from './components/WhatsAppModal';
-import { SPONSORS, SPONSOR_TIERS } from './data/sponsors';
+import { SPONSOR_TIERS } from './data/sponsors';
+import { fetchSponsors } from './lib/content';
 
 // Tampilan tiap tingkatan: lebar grid, tinggi kotak logo, dan warna aksen.
 const TIER_STYLE = {
@@ -49,6 +50,14 @@ function SponsorCard({ sponsor, tierId }) {
 export default function SponsorPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
+  const [sponsors, setSponsors] = useState(null);
+
+  useEffect(() => {
+    let alive = true;
+    fetchSponsors().then((list) => alive && setSponsors(list));
+    return () => { alive = false; };
+  }, []);
+  const SPONSORS = sponsors || [];
 
   const openModal = (msg) => {
     setPendingMessage(msg);
@@ -112,7 +121,9 @@ export default function SponsorPage() {
       {/* Daftar sponsor per tingkatan */}
       <div className="px-4 sm:px-6 pb-16">
         <div className="max-w-6xl mx-auto space-y-14">
-          {tiersWithSponsors.length === 0 ? (
+          {sponsors === null ? (
+            <p className="text-center text-zinc-500 py-16">Memuat sponsor...</p>
+          ) : tiersWithSponsors.length === 0 ? (
             <div className="text-center rounded-3xl border border-dashed border-white/15 bg-zinc-900/40 px-6 py-16">
               <div className="mx-auto w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-5">
                 <Sparkles className="w-6 h-6 text-cyan-400" />
@@ -141,7 +152,7 @@ export default function SponsorPage() {
                   <div className={`grid gap-4 sm:gap-6 ${style.grid}`}>
                     {items.map((s) => (
                       <motion.div
-                        key={s.name}
+                        key={s.id || s.name}
                         initial={{ opacity: 0, y: 24 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '0px 0px -40px 0px' }}
