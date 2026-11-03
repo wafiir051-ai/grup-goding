@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Edit2, Trash2, Save, Upload, ArrowLeft } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { explainError, shrinkImage, slugify } from '../lib/content';
+import DropZone from './DropZone';
 
 const BUCKET = 'dokumentasi';
 const EMPTY = { title: '', slug: '', description: '', event_date: '', order_index: 0, is_published: true };
@@ -18,6 +19,7 @@ export default function DocsAdmin() {
   const [photos, setPhotos] = useState([]);
   const [form, setForm] = useState(EMPTY);
   const [editing, setEditing] = useState(null);
+  const [pending, setPending] = useState([]);
   const [openAlbum, setOpenAlbum] = useState(null);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState('');
@@ -36,7 +38,7 @@ export default function DocsAdmin() {
   useEffect(() => { load(); }, []);
 
   const photosOf = (id) => photos.filter((p) => p.album_id === id);
-  const reset = () => { setForm(EMPTY); setEditing(null); };
+  const reset = () => { setForm(EMPTY); setEditing(null); setPending([]); };
 
   const submitAlbum = async (e) => {
     e.preventDefault();
@@ -52,13 +54,17 @@ export default function DocsAdmin() {
       order_index: parseInt(form.order_index, 10) || 0,
       is_published: form.is_published,
     };
-    const q = editing ? supabase.from('doc_albums').update(payload).eq('id', editing.id) : supabase.from('doc_albums').insert([payload]);
-    const { error } = await q;
+    const q = editing
+      ? supabase.from('doc_albums').update(payload).eq('id', editing.id).select('id').single()
+      : supabase.from('doc_albums').insert([payload]).select('id').single();
+    const { data: saved, error } = await q;
     setBusy(false);
     if (error) return setMsg({ type: 'err', text: explainError(error) });
-    setMsg({ type: 'ok', text: editing ? 'Album diperbarui.' : 'Album dibuat. Klik "Kelola foto" untuk mengunggah foto.' });
+    const files = pending;
     reset();
-    load();
+    await load();
+    if (files.length) return uploadFiles(files, saved.id);
+    setMsg({ type: 'ok', text: editing ? 'Album diperbarui.' : 'Album dibuat. Seret foto ke barisnya untuk menambah foto.' });
   };
 
   const editAlbum = (a) => {
@@ -77,6 +83,7 @@ export default function DocsAdmin() {
   };
 
   const [dragging, setDragging] = useState(false);
+  const [dragRow, setDragRow] = useState(null);
 
   const onPick = (e) => {
     const files = Array.from(e.target.files || []);
@@ -90,13 +97,13 @@ export default function DocsAdmin() {
     uploadFiles(Array.from(e.dataTransfer.files || []));
   };
 
-  const uploadFiles = async (files) => {
-    if (!files.length || !openAlbum || busy) return;
+  const uploadFiles = async (files, albumId = openAlbum) => {
+    if (!files.length || !albumId || busy) return;
     setBusy(true);
     setMsg({ type: '', text: '' });
     let done = 0;
     const failed = [];
-    let order = photosOf(openAlbum).reduce((m, p) => Math.max(m, p.order_index), -1) + 1;
+    let order = photosOf(albumId).reduce((m, p) => Math.max(m, p.order_index), -1) + 1;
     for (const original of files) {
       setProgress(`Mengunggah ${done + failed.length + 1} dari ${files.length}...`);
       try {
@@ -104,11 +111,11 @@ export default function DocsAdmin() {
         const blob = await shrinkImage(original);
         if (blob.size > MAX_UPLOAD) throw new Error('lebih dari 5 MB');
         const ext = blob.type === 'image/webp' ? 'webp' : blob.type === 'image/png' ? 'png' : 'jpg';
-        const path = `${openAlbum}/${crypto.randomUUID()}.${ext}`;
+        const path = `${albumId}/${crypto.randomUUID()}.${ext}`;
         const up = await supabase.storage.from(BUCKET).upload(path, blob, { contentType: blob.type });
         if (up.error) throw up.error;
         const url = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-        const ins = await supabase.from('doc_photos').insert([{ album_id: openAlbum, image_url: url, storage_path: path, order_index: order++ }]);
+        const ins = await supabase.from('doc_photos').insert([{ album_id: albumId, image_url: url, storage_path: path, order_index: order++ }]);
         if (ins.error) {
           await supabase.storage.from(BUCKET).remove([path]);
           throw ins.error;
@@ -184,6 +191,7 @@ export default function DocsAdmin() {
   return (
     <>
       {banner}
+      {busy && progress && <div className="bg-blue-900/50 text-blue-200 p-4 rounded-2xl mb-6">{progress}</div>}
       <form onSubmit={submitAlbum} className="bg-zinc-900 p-8 rounded-3xl mb-12">
         <h2 className="text-2xl mb-2 text-white font-bold">{editing ? 'Edit Album' : 'Buat Album Dokumentasi'}</h2>
         <p className="text-zinc-500 text-sm mb-6">Satu album = satu kegiatan/acara. Foto diunggah setelah album dibuat.</p>
@@ -193,20 +201,41 @@ export default function DocsAdmin() {
           <input type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} className={input} />
           <input placeholder="Urutan (kecil = lebih atas)" type="number" value={form.order_index} onChange={(e) => setForm({ ...form, order_index: e.target.value })} className={input} />
           <textarea placeholder="Deskripsi singkat (opsional)" rows="2" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className={`${input} md:col-span-2`} />
+          <div className="md:col-span-2">
+            <DropZone
+              multiple
+              accept="image/png,image/jpeg,image/webp"
+              hint="Seret banyak foto sekaligus. Foto ikut terunggah saat album disimpan."
+              onFiles={(files) => setPending((p) => [...p, ...files])}
+            />
+            {pending.length > 0 && (
+              <div className="mt-3 flex items-start justify-between gap-3 text-sm text-zinc-300 bg-zinc-800 rounded-2xl p-4">
+                <p className="min-w-0 break-words"><b>{pending.length} foto siap diunggah:</b> {pending.slice(0, 5).map((f) => f.name).join(', ')}{pending.length > 5 ? ` dan ${pending.length - 5} lainnya` : ''}</p>
+                <button type="button" onClick={() => setPending([])} className="text-red-400 shrink-0">Kosongkan</button>
+              </div>
+            )}
+          </div>
           <label className="flex gap-3 text-white items-center"><input type="checkbox" checked={form.is_published} onChange={(e) => setForm({ ...form, is_published: e.target.checked })} /> Tampilkan di halaman</label>
         </div>
         <div className="flex gap-4 mt-6">
-          <button type="submit" disabled={busy} className="px-10 py-4 bg-blue-600 text-white rounded-2xl flex gap-2 disabled:opacity-60"><Save size={20} /> {editing ? 'Simpan' : 'Buat Album'}</button>
+          <button type="submit" disabled={busy} className="px-10 py-4 bg-blue-600 text-white rounded-2xl flex gap-2 disabled:opacity-60"><Save size={20} /> {editing ? 'Simpan' : 'Buat Album'}{pending.length ? ` + ${pending.length} foto` : ''}</button>
           {editing && <button type="button" onClick={reset} className="px-6 py-4 bg-zinc-800 text-zinc-300 rounded-2xl">Batal</button>}
         </div>
       </form>
 
-      <h3 className="text-xl font-bold text-white mb-4">Daftar Album ({albums.length})</h3>
+      <h3 className="text-xl font-bold text-white mb-1">Daftar Album ({albums.length})</h3>
+      <p className="text-zinc-500 text-sm mb-4">Tip: seret foto dari Finder langsung ke baris album untuk menambah foto.</p>
       <div className="grid gap-4">
         {albums.map((a) => {
           const list = photosOf(a.id);
           return (
-            <div key={a.id} className="bg-zinc-900 p-5 rounded-3xl flex justify-between items-center gap-4 border border-zinc-800">
+            <div
+              key={a.id}
+              onDragOver={(e) => { e.preventDefault(); setDragRow(a.id); }}
+              onDragLeave={() => setDragRow(null)}
+              onDrop={(e) => { e.preventDefault(); setDragRow(null); uploadFiles(Array.from(e.dataTransfer.files || []), a.id); }}
+              className={`p-5 rounded-3xl flex justify-between items-center gap-4 border transition-colors ${dragRow === a.id ? 'border-cyan-400 bg-cyan-500/10' : 'bg-zinc-900 border-zinc-800'}`}
+            >
               <div className="flex items-center gap-4 min-w-0">
                 {list[0] ? <img src={list[0].image_url} alt="" className="w-16 h-16 rounded-2xl object-cover shrink-0" /> : <div className="w-16 h-16 rounded-2xl bg-zinc-800 shrink-0" />}
                 <div className="min-w-0">
