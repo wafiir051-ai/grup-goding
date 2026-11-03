@@ -24,6 +24,7 @@ import ParticleBackground from './components/ParticleBackground';
 import WaveDivider from './components/WaveDivider';
 import StackSection from './components/StackSection';
 import VelocitySkewProvider from './components/VelocitySkewProvider';
+import SponsorStrip from './components/SponsorStrip';
 
 function App() {
   // Handle navigation & smooth scroll
@@ -140,6 +141,7 @@ function App() {
       <div className="relative z-10 bg-[#0a0a0a] text-white min-h-screen overflow-x-clip w-full max-w-full">
         <Navbar />
         <Hero />
+        <SponsorStrip className="relative z-10 bg-[#0a0a0a] px-4 sm:px-6 pt-4 pb-12 md:pb-16" />
         <WaveDivider fromColor="#0a0a0a" toColor="#ffffff" />
         {/* Layanan -> Proses -> Klien dan Testimoni -> Footer bertumpuk seperti kartu. */}
         <StackSection leave mono><BentoServices /></StackSection>

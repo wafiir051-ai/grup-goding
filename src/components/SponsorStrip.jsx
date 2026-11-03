@@ -10,9 +10,9 @@ const SIZE = {
   supporter: 'h-12 sm:h-14 min-w-[5.5rem] sm:min-w-[6.5rem]',
 };
 
-// Deretan logo sponsor di footer. Tidak tampil sama sekali kalau belum ada sponsor,
+// Deretan logo sponsor di bawah Hero beranda. Tidak tampil sama sekali kalau belum ada sponsor,
 // dan disembunyikan di halaman /sponsor karena daftarnya sudah ada di halaman itu.
-export default function SponsorStrip() {
+export default function SponsorStrip({ className = '' }) {
   const [list, setList] = useState([]);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function SponsorStrip() {
   const sorted = [...list].sort((a, b) => ORDER.indexOf(a.tier) - ORDER.indexOf(b.tier));
 
   return (
-    <section aria-label="Sponsor" className="mt-12 md:mt-16 text-center">
+    <section aria-label="Sponsor" className={`text-center ${className}`}>
       <p className="text-xs md:text-sm font-semibold tracking-[0.2em] uppercase text-zinc-500 mb-6">Didukung oleh</p>
       <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
         {sorted.map((s) => {
