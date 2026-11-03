@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
 import useActiveSection from '../hooks/useActiveSection';
@@ -13,12 +13,23 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [pendingMessage, setPendingMessage] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreRef = useRef(null);
 
   useEffect(() => {
     supabase.from('site_settings').select('value').eq('key', 'logo_url').single().then(({ data }) => {
       if (data?.value) setLogoUrl(data.value);
     }).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!moreOpen) return undefined;
+    const onDown = (e) => { if (moreRef.current && !moreRef.current.contains(e.target)) setMoreOpen(false); };
+    const onKey = (e) => { if (e.key === 'Escape') setMoreOpen(false); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [moreOpen]);
 
   const openModal = (msg) => { setPendingMessage(msg); setIsModalOpen(true); };
   const handleSelectNumber = (phoneNumber, message) => { 
@@ -64,12 +75,18 @@ export default function Navbar() {
     { label: 'Dokumentasi', href: '/dokumentasi', path: '/dokumentasi' },
   ];
 
+  // Di desktop, menu yang jarang dipakai dikelompokkan ke dropdown "Lainnya".
+  const MORE_LABELS = ['Klien', 'Sponsor', 'Dokumentasi'];
+  const mainLinks = navLinks.filter((l) => !MORE_LABELS.includes(l.label));
+  const moreLinks = navLinks.filter((l) => MORE_LABELS.includes(l.label));
+
   // Menandai section homepage yang sedang dibaca, atau halaman yang sedang dibuka.
   const activeSection = useActiveSection();
   const currentPath = window.location.pathname;
   const isActive = (link) =>
     (!!link.section && link.section === activeSection) ||
     (!!link.path && (currentPath === link.path || currentPath.startsWith(`${link.path}/`)));
+  const moreActive = moreLinks.some(isActive);
   const desktopClass = (link) =>
     `relative ${isActive(link) ? 'text-cyan-400' : 'text-white/80'} hover:text-cyan-400 transition-colors`;
   const mobileClass = (link) =>
@@ -108,13 +125,43 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-5 xl:gap-6 text-sm font-medium">
-            {navLinks.map((link) => (
+            {mainLinks.map((link) => (
               link.action ? (
                 <button key={link.label} onClick={link.action} aria-current={isActive(link) ? 'location' : undefined} className={desktopClass(link)}>{link.label}{indicator(link)}</button>
               ) : (
                 <a key={link.label} href={link.href} aria-current={isActive(link) ? 'location' : undefined} className={desktopClass(link)}>{link.label}{indicator(link)}</a>
               )
             ))}
+            <div ref={moreRef} className="relative">
+              <button
+                onClick={() => setMoreOpen((o) => !o)}
+                aria-expanded={moreOpen}
+                aria-haspopup="menu"
+                className={`flex items-center gap-1 ${moreActive ? 'text-cyan-400' : 'text-white/80'} hover:text-cyan-400 transition-colors`}
+              >
+                Lainnya <ChevronDown className={`w-4 h-4 transition-transform ${moreOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <AnimatePresence>
+                {moreOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.15 }}
+                    role="menu"
+                    className="absolute right-0 top-full mt-4 min-w-[11rem] bg-black/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-2"
+                  >
+                    {moreLinks.map((link) => (
+                      link.action ? (
+                        <button key={link.label} role="menuitem" onClick={() => { setMoreOpen(false); link.action(); }} className={`block w-full text-left px-4 py-2.5 ${mobileClass(link)}`}>{link.label}</button>
+                      ) : (
+                        <a key={link.label} role="menuitem" href={link.href} onClick={() => setMoreOpen(false)} className={`block px-4 py-2.5 ${mobileClass(link)}`}>{link.label}</a>
+                      )
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Desktop CTA */}
