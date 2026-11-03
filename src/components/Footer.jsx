@@ -5,6 +5,7 @@ import MarqueeText from './MarqueeText';
 import WhatsAppModal from './WhatsAppModal';
 import { supabase } from '../lib/supabase';
 import VisitorStats from './VisitorStats';
+import SponsorStrip from './SponsorStrip';
 
 export default function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,6 +59,8 @@ export default function Footer() {
             </div>
           </RevealOnScroll>
         </div>
+
+        <SponsorStrip />
 
         <div className="mt-16 md:mt-24 mb-6 md:mb-10 py-4 md:py-6 border-t-2 border-b-2 border-white/20">
           <MarqueeText />

@@ -76,8 +76,9 @@ export default function Navbar() {
   ];
 
   // Di desktop, menu yang jarang dipakai dikelompokkan ke dropdown "Lainnya".
-  const MORE_LABELS = ['Klien', 'Sponsor', 'Dokumentasi'];
-  const mainLinks = navLinks.filter((l) => !MORE_LABELS.includes(l.label));
+  const MORE_LABELS = []; // isi label (mis. 'Klien') untuk dikelompokkan ke dropdown "Lainnya"
+  const HIDE_DESKTOP = ['Beranda']; // logo Goding sudah mengarah ke beranda
+  const mainLinks = navLinks.filter((l) => !MORE_LABELS.includes(l.label) && !HIDE_DESKTOP.includes(l.label));
   const moreLinks = navLinks.filter((l) => MORE_LABELS.includes(l.label));
 
   // Menandai section homepage yang sedang dibaca, atau halaman yang sedang dibuka.
@@ -132,6 +133,7 @@ export default function Navbar() {
                 <a key={link.label} href={link.href} aria-current={isActive(link) ? 'location' : undefined} className={desktopClass(link)}>{link.label}{indicator(link)}</a>
               )
             ))}
+            {moreLinks.length > 0 && (
             <div ref={moreRef} className="relative">
               <button
                 onClick={() => setMoreOpen((o) => !o)}
@@ -162,6 +164,7 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
+            )}
           </div>
 
           {/* Desktop CTA */}
